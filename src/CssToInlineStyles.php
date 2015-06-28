@@ -152,6 +152,46 @@ class CssToInlineStyles
         $document = $this->createDOMDocument();
 
         // create new XPath
+        $xPath = $this->createXPath($document);
+
+        // strip original style tags if we need to
+        if ($this->stripOriginalStyleTags === true) {
+            $this->stripOriginalStyleTags($xPath);
+        }
+
+        // cleanup the HTML if we need to
+        if ($this->cleanup === true) {
+          $this->cleanupHTML($xPath);
+        }
+
+        // should we output XHTML?
+        if ($outputXHTML === true) {
+            // set formatting
+            $document->formatOutput = true;
+
+            // get the HTML as XML
+            $html = $document->saveXML(null, LIBXML_NOEMPTYTAG);
+
+            // remove the XML-header
+            $html = UTF8::ltrim(preg_replace('/<\?xml.*\?>/', '', $html));
+        } // just regular HTML 4.01 as it should be used in newsletters
+        else {
+            // get the HTML
+            $html = $document->saveHTML();
+        }
+
+        // return
+        return $html;
+    }
+
+    /**
+     * create XPath
+     *
+     * @param $document
+     *
+     * @return \DOMXPath
+     */
+    private function createXPath($document) {
         $xPath = new \DOMXPath($document);
 
         // any rules?
@@ -357,35 +397,9 @@ class CssToInlineStyles
             }
         }
 
-        // strip original style tags if we need to
-        if ($this->stripOriginalStyleTags === true) {
-            $this->stripOriginalStyleTags($xPath);
-        }
-
-        // cleanup the HTML if we need to
-        if ($this->cleanup === true) {
-          $this->cleanupHTML($xPath);
-        }
-
-        // should we output XHTML?
-        if ($outputXHTML === true) {
-            // set formatting
-            $document->formatOutput = true;
-
-            // get the HTML as XML
-            $html = $document->saveXML(null, LIBXML_NOEMPTYTAG);
-
-            // remove the XML-header
-            $html = UTF8::ltrim(preg_replace('/<\?xml.*\?>/', '', $html));
-        } // just regular HTML 4.01 as it should be used in newsletters
-        else {
-            // get the HTML
-            $html = $document->saveHTML();
-        }
-
-        // return
-        return $html;
+        return $xPath;
     }
+
 
     /**
      * get css from inline-html style-block
