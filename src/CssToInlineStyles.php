@@ -187,11 +187,11 @@ class CssToInlineStyles
     /**
      * create XPath
      *
-     * @param $document
+     * @param \DOMDocument $document
      *
      * @return \DOMXPath
      */
-    private function createXPath($document) {
+    private function createXPath(\DOMDocument $document) {
         $xPath = new \DOMXPath($document);
 
         // any rules?
