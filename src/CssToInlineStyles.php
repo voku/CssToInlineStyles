@@ -142,23 +142,7 @@ class CssToInlineStyles
 
         // should we use inline style-block
         if ($this->useInlineStylesBlock) {
-            // init var
-            $matches = array();
-
-            if ($this->excludeConditionalInlineStylesBlock === true) {
-                $this->html = preg_replace('/<!--(\n\ |.)*<style(.|\s)*?-->/', '', $this->html);
-            }
-
-            // match the style blocks
-            preg_match_all('|<style(.*)>(.*)</style>|isU', $this->html, $matches);
-
-            // any style-blocks found?
-            if (!empty($matches[2])) {
-                // add
-                foreach ($matches[2] as $match) {
-                    $this->css .= UTF8::trim($match) . "\n";
-                }
-            }
+            $this->css .= $this->getCssFromInlineHtmlStyleBlock();
         }
 
         // process css
@@ -401,6 +385,35 @@ class CssToInlineStyles
 
         // return
         return $html;
+    }
+
+    /**
+     * get css from inline-html style-block
+     *
+     * @return string
+     */
+    public function getCssFromInlineHtmlStyleBlock()
+    {
+        // init var
+        $css = '';
+        $matches = array();
+
+        if ($this->excludeConditionalInlineStylesBlock === true) {
+            $this->html = preg_replace('/<!--(\n\ |.)*<style(.|\s)*?-->/', '', $this->html);
+        }
+
+        // match the style blocks
+        preg_match_all('|<style(.*)>(.*)</style>|isU', $this->html, $matches);
+
+        // any style-blocks found?
+        if (!empty($matches[2])) {
+            // add
+            foreach ($matches[2] as $match) {
+                $css .= UTF8::trim($match) . "\n";
+            }
+        }
+
+        return $css;
     }
 
     /**
