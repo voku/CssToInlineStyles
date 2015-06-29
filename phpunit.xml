@@ -11,12 +11,16 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
->
+        >
     <testsuites>
         <testsuite name="CssToInlineStyles Tests">
             <directory suffix=".php">./tests/</directory>
         </testsuite>
     </testsuites>
+
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
 
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="false">
