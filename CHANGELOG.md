@@ -1,3 +1,7 @@
+# Changelog 1.6.1
+
+* Fixed security breach (execution rights)
+
 # Changelog 1.6.0
 
 * Fixed UTF8 usage 
