@@ -81,7 +81,7 @@ class CssToInlineStyles
    *
    * @var string
    */
-  private static $cssMediaQueriesRegEx = '/@media [^{]*{([^{}]|{[^{}]*})*}/';
+  private static $cssMediaQueriesRegEx = '/@media[^{]+\{([\s\S]+?})\s*}/';
 
   /**
    * regular expression: conditional inline style tags
