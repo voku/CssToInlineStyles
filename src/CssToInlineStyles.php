@@ -102,7 +102,7 @@ class CssToInlineStyles
    *
    * @var string
    */
-  private static $StyleCommentRegEx = '/\\/\\*.*\\*\\//sU';
+  private static $styleCommentRegEx = '/\\/\\*.*\\*\\//sU';
 
   /**
    * Creates an instance, you could set the HTML and CSS here, or load it
@@ -536,7 +536,7 @@ class CssToInlineStyles
     $css = str_replace('"', '\'', $css);
 
     // remove comments
-    $css = preg_replace(self::$StyleCommentRegEx, '', $css);
+    $css = preg_replace(self::$styleCommentRegEx, '', $css);
 
     // remove spaces
     $css = preg_replace('/\s\s+/', ' ', $css);
@@ -755,7 +755,7 @@ class CssToInlineStyles
       if ($this->excludeMediaQueries === true) {
 
         // remove comments previously to matching media queries
-        $node->nodeValue = preg_replace(self::$StyleCommentRegEx, '', $node->nodeValue);
+        $node->nodeValue = preg_replace(self::$styleCommentRegEx, '', $node->nodeValue);
 
         // search for Media Queries
         preg_match_all(self::$cssMediaQueriesRegEx, $node->nodeValue, $mqs);
@@ -801,7 +801,7 @@ class CssToInlineStyles
   private function stripeMediaQueries($css)
   {
     // remove comments previously to matching media queries
-    $css = preg_replace(self::$StyleCommentRegEx, '', $css);
+    $css = preg_replace(self::$styleCommentRegEx, '', $css);
 
     return (string)preg_replace(self::$cssMediaQueriesRegEx, '', $css);
   }
