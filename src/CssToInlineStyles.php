@@ -81,7 +81,7 @@ class CssToInlineStyles
    *
    * @var string
    */
-  private static $cssMediaQueriesRegEx = '/@media[^{]+\{([\s\S]+?})\s*}/';
+  private static $cssMediaQueriesRegEx = '#@media\\s+(?:only\\s)?(?:[\\s{\\(]|screen|all)\\s?[^{]+{.*}\\s*}\\s*#misU';
 
   /**
    * regular expression: conditional inline style tags
@@ -96,6 +96,13 @@ class CssToInlineStyles
    * @var string
    */
   private static $styleTagRegEx = '|<style(.*)>(.*)</style>|isU';
+
+  /**
+   * regular expression: css-comments
+   *
+   * @var string
+   */
+  private static $StyleCommentRegEx = '/\\/\\*.*\\*\\//sU';
 
   /**
    * Creates an instance, you could set the HTML and CSS here, or load it
@@ -529,7 +536,7 @@ class CssToInlineStyles
     $css = str_replace('"', '\'', $css);
 
     // remove comments
-    $css = preg_replace('|/\*.*?\*/|', '', $css);
+    $css = preg_replace(self::$StyleCommentRegEx, '', $css);
 
     // remove spaces
     $css = preg_replace('/\s\s+/', ' ', $css);
@@ -742,16 +749,22 @@ class CssToInlineStyles
    */
   private function stripOriginalStyleTags(\DOMXPath $xPath)
   {
-    // Get all style tags
+    // get all style tags
     $nodes = $xPath->query('descendant-or-self::style');
     foreach ($nodes as $node) {
       if ($this->excludeMediaQueries === true) {
-        // Search for Media Queries
+
+        // remove comments previously to matching media queries
+        $node->nodeValue = preg_replace(self::$StyleCommentRegEx, '', $node->nodeValue);
+
+        // search for Media Queries
         preg_match_all(self::$cssMediaQueriesRegEx, $node->nodeValue, $mqs);
-        // Replace the nodeValue with just the Media Queries
+
+        // replace the nodeValue with just the Media Queries
         $node->nodeValue = implode("\n", $mqs[0]);
+
       } else {
-        // Remove the entire style tag
+        // remove the entire style tag
         $node->parentNode->removeChild($node);
       }
     }
@@ -787,6 +800,9 @@ class CssToInlineStyles
    */
   private function stripeMediaQueries($css)
   {
+    // remove comments previously to matching media queries
+    $css = preg_replace(self::$StyleCommentRegEx, '', $css);
+
     return (string)preg_replace(self::$cssMediaQueriesRegEx, '', $css);
   }
 
