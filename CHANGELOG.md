@@ -8,7 +8,6 @@
     for more information see the [Pull Request](https://github.com/c960657/CssToInlineStyles/commit/52f0654d49a5887585fe33fe05f4a69fca24471f)
 * Added option to exclude conditional blocks when using inline-styles, thx to [KonstantinShkut](https://github.com/KonstantinShkut/CssToInlineStyles/commit/48ceb8ba7d182ebc1036b06bd9cefe3d6f0bf733),
     for more information see the [Pull Request](https://github.com/KonstantinShkut/CssToInlineStyles/commit/48ceb8ba7d182ebc1036b06bd9cefe3d6f0bf733)
-*     
 
 # Changelog since 1.5.3
 
