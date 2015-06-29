@@ -366,6 +366,38 @@ EOF;
         $this->assertEquals($expected, $actual);
     }
 
+    public function testExcludeConditionalInlineStylesBlock()
+    {
+        $html = '<html><body><style>div { width: 200px; width: 222px; }</style><!--[if gte mso 9]><STyle>.test { top: 1em; } </STyle><![endif]--><div class="test"><h1>foo</h1><h1>foo2</h1></div></body></html>';
+        $css = '';
+        $expected = '<style></style>
+<div class="test" style="width: 200px; width: 222px;">
+<h1>foo</h1>
+<h1>foo2</h1>
+</div>';
+        $this->cssToInlineStyles->setUseInlineStylesBlock(true);
+        $this->cssToInlineStyles->setExcludeConditionalInlineStylesBlock(true);
+        $this->cssToInlineStyles->setStripOriginalStyleTags(true);
+        $this->cssToInlineStyles->setExcludeMediaQueries(true);
+        $this->runHTMLToCSS($html, $css, $expected);
+    }
+
+  public function testExcludeConditionalInlineStylesBlockFalse()
+  {
+    $html = '<html><body><style>div { width: 200px; width: 222px; }</style><!--[if gte mso 9]><STyle>.test { top: 1em; } </STyle><![endif]--><div class="test"><h1>foo</h1><h1>foo2</h1></div></body></html>';
+    $css = '';
+    $expected = '<style></style>
+<div class="test" style="width: 222px; top: 1em;">
+<h1>foo</h1>
+<h1>foo2</h1>
+</div>';
+    $this->cssToInlineStyles->setUseInlineStylesBlock(true);
+    $this->cssToInlineStyles->setExcludeConditionalInlineStylesBlock(false);
+    $this->cssToInlineStyles->setStripOriginalStyleTags(true);
+    $this->cssToInlineStyles->setExcludeMediaQueries(true);
+    $this->runHTMLToCSS($html, $css, $expected);
+  }
+
     public function testBug83()
     {
         $html = '<html><body><style>div { width: 200px; _width: 222px; width: 222px; }</style><div class="test"><h1>foo</h1><h1>foo2</h1></div></body></html>';

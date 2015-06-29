@@ -82,11 +82,25 @@ class CssToInlineStyles
   private $excludeMediaQueries = true;
 
   /**
-   * css media queries regular expression
+   * regular expression: css media queries
    *
    * @var string
    */
-  private $cssMediaQueriesRegEx = '/@media [^{]*{([^{}]|{[^{}]*})*}/';
+  private static $cssMediaQueriesRegEx = '/@media [^{]*{([^{}]|{[^{}]*})*}/';
+
+  /**
+   * regular expression: conditional inline style tags
+   *
+   * @var string
+   */
+  private static $excludeConditionalInlineStylesBlockRegEx = '/<!--(\n\ |.)*<style(.|\s)*?-->/i';
+
+  /**
+   * regular expression: inline style tags
+   *
+   * @var string
+   */
+  private static $styleTagRegEx = '|<style(.*)>(.*)</style>|isU';
 
   /**
    * Creates an instance, you could set the HTML and CSS here, or load it
@@ -415,11 +429,11 @@ class CssToInlineStyles
     $matches = array();
 
     if ($this->excludeConditionalInlineStylesBlock === true) {
-      $this->html = preg_replace('/<!--(\n\ |.)*<style(.|\s)*?-->/', '', $this->html);
+      $this->html = preg_replace(self::$excludeConditionalInlineStylesBlockRegEx, '', $this->html);
     }
 
     // match the style blocks
-    preg_match_all('|<style(.*)>(.*)</style>|isU', $this->html, $matches);
+    preg_match_all(self::$styleTagRegEx, $this->html, $matches);
 
     // any style-blocks found?
     if (!empty($matches[2])) {
@@ -738,7 +752,7 @@ class CssToInlineStyles
     foreach ($nodes as $node) {
       if ($this->excludeMediaQueries === true) {
         // Search for Media Queries
-        preg_match_all($this->cssMediaQueriesRegEx, $node->nodeValue, $mqs);
+        preg_match_all(self::$cssMediaQueriesRegEx, $node->nodeValue, $mqs);
         // Replace the nodeValue with just the Media Queries
         $node->nodeValue = implode("\n", $mqs[0]);
       } else {
@@ -778,7 +792,7 @@ class CssToInlineStyles
    */
   private function stripeMediaQueries($css)
   {
-    return (string)preg_replace($this->cssMediaQueriesRegEx, '', $css);
+    return (string)preg_replace(self::$cssMediaQueriesRegEx, '', $css);
   }
 
 }
