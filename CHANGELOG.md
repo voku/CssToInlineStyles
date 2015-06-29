@@ -1,4 +1,4 @@
-# Changelog 1.6
+# Changelog 1.6.0
 
 * Fixed UTF8 usage 
 * Fixed "DOMDocument" encoding
