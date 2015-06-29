@@ -201,6 +201,76 @@ class CssToInlineStyles
   }
 
   /**
+   * @param \DOMElement              $element
+   * @param array                    $ruleProperties
+   *
+   * @return array
+   */
+  private function createPropertyChunks(\DOMElement $element, Array $ruleProperties)
+  {
+    // init var
+    $properties = array();
+
+    // get current styles
+    $stylesAttribute = $element->attributes->getNamedItem('style');
+
+    // any styles defined before?
+    if ($stylesAttribute !== null) {
+      // get value for the styles attribute
+      $definedStyles = (string)$stylesAttribute->value;
+
+      // split into properties
+      $definedProperties = $this->splitIntoProperties($definedStyles);
+
+      // loop properties
+      foreach ($definedProperties as $property) {
+        // validate property
+        if ($property == '') {
+          continue;
+        }
+
+        // split into chunks
+        $chunks = (array)explode(':', UTF8::trim($property), 2);
+
+        // validate
+        if (!isset($chunks[1])) {
+          continue;
+        }
+
+        // loop chunks
+        $properties[$chunks[0]] = UTF8::trim($chunks[1]);
+      }
+    }
+
+    // add new properties into the list
+    foreach ($ruleProperties as $key => $value) {
+      // If one of the rules is already set and is !important, don't apply it,
+      // except if the new rule is also important.
+      if (
+          !isset($properties[$key])
+          ||
+          UTF8::stristr($properties[$key], '!important') === false
+          ||
+          (UTF8::stristr(implode('', $value), '!important') !== false)
+      ) {
+        $properties[$key] = $value;
+      }
+    }
+
+    // build string
+    $propertyChunks = array();
+
+    // build chunks
+    foreach ($properties as $key => $values) {
+      foreach ((array)$values as $value) {
+        $propertyChunks[] = $key . ': ' . $value . ';';
+      }
+    }
+
+    return implode(' ', $propertyChunks);
+  }
+
+  /**
    * create XPath
    *
    * @param \DOMDocument $document
@@ -223,10 +293,6 @@ class CssToInlineStyles
           continue;
         }
 
-        /**
-         * @var $element \DOMElement
-         */
-
         // search elements
         $elements = $xPath->query($query);
 
@@ -237,6 +303,11 @@ class CssToInlineStyles
 
         // loop found elements
         foreach ($elements as $element) {
+
+          /**
+           * @var $element \DOMElement
+           */
+
           // no styles stored?
           if ($element->attributes->getNamedItem('data-css-to-inline-styles-original-styles') == null) {
 
@@ -254,67 +325,7 @@ class CssToInlineStyles
             $element->setAttribute('style', '');
           }
 
-          // init var
-          $properties = array();
-
-          // get current styles
-          $stylesAttribute = $element->attributes->getNamedItem('style');
-
-          // any styles defined before?
-          if ($stylesAttribute !== null) {
-            // get value for the styles attribute
-            $definedStyles = (string)$stylesAttribute->value;
-
-            // split into properties
-            $definedProperties = $this->splitIntoProperties($definedStyles);
-
-            // loop properties
-            foreach ($definedProperties as $property) {
-              // validate property
-              if ($property == '') {
-                continue;
-              }
-
-              // split into chunks
-              $chunks = (array)explode(':', UTF8::trim($property), 2);
-
-              // validate
-              if (!isset($chunks[1])) {
-                continue;
-              }
-
-              // loop chunks
-              $properties[$chunks[0]] = UTF8::trim($chunks[1]);
-            }
-          }
-
-          // add new properties into the list
-          foreach ($rule['properties'] as $key => $value) {
-            // If one of the rules is already set and is !important, don't apply it,
-            // except if the new rule is also important.
-            if (
-                !isset($properties[$key])
-                ||
-                UTF8::stristr($properties[$key], '!important') === false
-                ||
-                (UTF8::stristr(implode('', $value), '!important') !== false)
-            ) {
-              $properties[$key] = $value;
-            }
-          }
-
-          // build string
-          $propertyChunks = array();
-
-          // build chunks
-          foreach ($properties as $key => $values) {
-            foreach ((array)$values as $value) {
-              $propertyChunks[] = $key . ': ' . $value . ';';
-            }
-          }
-
-          // build properties string
-          $propertiesString = implode(' ', $propertyChunks);
+          $propertiesString = $this->createPropertyChunks($element, $rule['properties']);
 
           // set attribute
           if ($propertiesString != '') {
@@ -354,55 +365,7 @@ class CssToInlineStyles
             $originalProperties[$chunks[0]] = UTF8::trim($chunks[1]);
           }
 
-          // get current styles
-          $stylesAttribute = $element->attributes->getNamedItem('style');
-          $properties = array();
-
-          // any styles defined before?
-          if ($stylesAttribute !== null) {
-            // get value for the styles attribute
-            $definedStyles = (string)$stylesAttribute->value;
-
-            // split into properties
-            $definedProperties = $this->splitIntoProperties($definedStyles);
-
-            // loop properties
-            foreach ($definedProperties as $property) {
-              // validate property
-              if ($property == '') {
-                continue;
-              }
-
-              // split into chunks
-              $chunks = (array)explode(':', UTF8::trim($property), 2);
-
-              // validate
-              if (!isset($chunks[1])) {
-                continue;
-              }
-
-              // loop chunks
-              $properties[$chunks[0]] = UTF8::trim($chunks[1]);
-            }
-          }
-
-          // add new properties into the list
-          foreach ($originalProperties as $key => $value) {
-            $properties[$key] = $value;
-          }
-
-          // build string
-          $propertyChunks = array();
-
-          // build chunks
-          foreach ($properties as $key => $values) {
-            foreach ((array)$values as $value) {
-              $propertyChunks[] = $key . ': ' . $value . ';';
-            }
-          }
-
-          // build properties string
-          $propertiesString = implode(' ', $propertyChunks);
+          $propertiesString = $this->createPropertyChunks($element, $originalProperties);
 
           // set attribute
           if ($propertiesString != '') {
