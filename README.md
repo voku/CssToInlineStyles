@@ -5,7 +5,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/voku/CssToInlineStyles/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/voku/CssToInlineStyles/?branch=master)
 [![Codacy Badge](https://www.codacy.com/project/badge/47caa384f390472cbff1f1d46c86fd8e)](https://www.codacy.com/app/voku/CssToInlineStyles)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/2468e72e-dc91-4c16-9259-20c5e2c0d2a9/mini.png)](https://insight.sensiolabs.com/projects/2468e72e-dc91-4c16-9259-20c5e2c0d2a9)
-[![Dependency Status](https://www.versioneye.com/php/voku:CssToInlineStyles/dev-master/badge.svg)](https://www.versioneye.com/php/voku:CssToInlineStyles/dev-master)
+[![Dependency Status](https://www.versioneye.com/user/projects/5591063a3965610020000001/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5591063a3965610020000001)
 [![Reference Status](https://www.versioneye.com/php/voku:CssToInlineStyles/reference_badge.svg?style=flat)](https://www.versioneye.com/php/voku:CssToInlineStyles/references)
 [![Total Downloads](https://poser.pugx.org/voku/css-to-inline-styles/downloads)](https://packagist.org/packages/voku/css-to-inline-styles)
 [![License](https://poser.pugx.org/voku/css-to-inline-styles/license.svg)](https://packagist.org/packages/voku/css-to-inline-styles)
