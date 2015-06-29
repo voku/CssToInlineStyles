@@ -1,5 +1,5 @@
 <?php
-namespace TijsVerkoyen\CssToInlineStyles;
+namespace voku\CssToInlineStyles;
 
 /**
  * CssToInlineStyles Exception class

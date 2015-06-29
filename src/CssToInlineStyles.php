@@ -1,5 +1,5 @@
 <?php
-namespace TijsVerkoyen\CssToInlineStyles;
+namespace voku\CssToInlineStyles;
 
 use voku\helper\UTF8;
 use Symfony\Component\CssSelector\CssSelector;
@@ -9,11 +9,6 @@ use Symfony\Component\CssSelector\Exception\ExceptionInterface;
  * CSS to Inline Styles class
  *
  * @author     Tijs Verkoyen <php-css-to-inline-styles@verkoyen.eu>
- * @author     Lars Moellelen <lars@moelleken.org>
- *
- * @version    1.5.4
- * @license    BSD License
- * @since      1.0.0
  */
 class CssToInlineStyles
 {

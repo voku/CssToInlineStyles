@@ -1,5 +1,5 @@
 <?php
-namespace TijsVerkoyen\CssToInlineStyles;
+namespace voku\CssToInlineStyles;
 
 /**
  * CSS to Inline Styles Specificity class.
@@ -7,7 +7,6 @@ namespace TijsVerkoyen\CssToInlineStyles;
  * Compare specificity based on the CSS3 spec.
  *
  * @see http://www.w3.org/TR/selectors/#specificity
- *
  */
 class Specificity
 {

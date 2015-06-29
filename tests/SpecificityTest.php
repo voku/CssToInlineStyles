@@ -1,8 +1,8 @@
 <?php
 
-namespace TijsVerkoyen\CssToInlineStyles\Tests;
+namespace voku\CssToInlineStyles\Tests;
 
-use \TijsVerkoyen\CssToInlineStyles\Specificity;
+use \voku\CssToInlineStyles\Specificity;
 
 class SpecificityTest extends \PHPUnit_Framework_TestCase
 {

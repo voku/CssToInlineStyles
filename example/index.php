@@ -3,7 +3,7 @@
 require_once 'config.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
+use voku\CssToInlineStyles\CssToInlineStyles;
 
 // create instance
 $cssToInlineStyles = new CssToInlineStyles();

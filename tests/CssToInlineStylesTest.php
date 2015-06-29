@@ -1,8 +1,8 @@
 <?php
 
-namespace TijsVerkoyen\CssToInlineStyles\tests;
+namespace voku\CssToInlineStyles\tests;
 
-use \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
+use \voku\CssToInlineStyles\CssToInlineStyles;
 use voku\helper\UTF8;
 
 class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
@@ -450,7 +450,7 @@ background-image: url(\'data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAA//Z\'); }
    * @param bool   $asXHTML
    *
    * @return string
-   * @throws \TijsVerkoyen\CssToInlineStyles\Exception
+   * @throws \voku\CssToInlineStyles\Exception
    */
   private function runHTMLToCSS($html, $css, $expected, $asXHTML = false)
   {

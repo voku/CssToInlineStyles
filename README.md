@@ -1,6 +1,8 @@
 # CssToInlineStyles class
 
-[![Build Status](https://travis-ci.org/tijsverkoyen/CssToInlineStyles.svg?branch=master)](https://travis-ci.org/tijsverkoyen/CssToInlineStyles)
+[![Build Status](https://travis-ci.org/voku/CssToInlineStyles.svg?branch=master)](https://travis-ci.org/voku/CssToInlineStyles)
+
+WARNING: this is only a Extended-Fork of "https://github.com/tijsverkoyen/CssToInlineStyles"
 
 > CssToInlineStyles is a class that enables you to convert HTML-pages/files into
 > HTML-pages/files with inline styles. This is very usefull when you're sending
@@ -15,12 +17,12 @@ PHP CssToInlineStyles is a class to convert HTML into HTML with inline styles.
 The recommended installation way is through [Composer](https://getcomposer.org).
 
 ```bash
-$ composer require tijsverkoyen/css-to-inline-styles
+$ composer require voku/css-to-inline-styles
 ```
 
 ## Example
 
-    use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
+    use voku\CssToInlineStyles\CssToInlineStyles;
 
     // Convert HTML + CSS to HTML with inlined CSS
     $cssToInlineStyles= new CssToInlineStyles();
