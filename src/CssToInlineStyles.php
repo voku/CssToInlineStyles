@@ -152,7 +152,7 @@ class CssToInlineStyles
     $outputXHTML = (bool)$outputXHTML;
 
     // validate
-    if ($this->html == null) {
+    if (!$this->html) {
       throw new Exception('No HTML provided.');
     }
 
@@ -225,7 +225,7 @@ class CssToInlineStyles
       // loop properties
       foreach ($definedProperties as $property) {
         // validate property
-        if ($property == '') {
+        if (!$property) {
           continue;
         }
 
@@ -309,7 +309,7 @@ class CssToInlineStyles
            */
 
           // no styles stored?
-          if ($element->attributes->getNamedItem('data-css-to-inline-styles-original-styles') == null) {
+          if ($element->attributes->getNamedItem('data-css-to-inline-styles-original-styles') === null) {
 
             // init var
             $originalStyle = '';
