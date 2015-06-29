@@ -7,8 +7,8 @@
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/be5bf087-366c-463e-ac9f-c184db6347ba/mini.png)](https://insight.sensiolabs.com/projects/be5bf087-366c-463e-ac9f-c184db6347ba)
 [![Dependency Status](https://www.versioneye.com/php/voku:CssToInlineStyles/dev-master/badge.svg)](https://www.versioneye.com/php/voku:CssToInlineStyles/dev-master)
 [![Reference Status](https://www.versioneye.com/php/voku:CssToInlineStyles/reference_badge.svg?style=flat)](https://www.versioneye.com/php/voku:CssToInlineStyles/references)
-[![Total Downloads](https://poser.pugx.org/voku/CssToInlineStyles/downloads)](https://packagist.org/packages/voku/CssToInlineStyles)
-[![License](https://poser.pugx.org/voku/CssToInlineStyles/license.svg)](https://packagist.org/packages/voku/CssToInlineStyles)
+[![Total Downloads](https://poser.pugx.org/voku/css-to-inline-styles/downloads)](https://packagist.org/packages/voku/css-to-inline-styles)
+[![License](https://poser.pugx.org/voku/css-to-inline-styles/license.svg)](https://packagist.org/packages/voku/css-to-inline-styles)
 
 WARNING: this is only a Extended-Fork of "https://github.com/tijsverkoyen/CssToInlineStyles"
 
