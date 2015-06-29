@@ -1,6 +1,14 @@
 # CssToInlineStyles class
 
 [![Build Status](https://travis-ci.org/voku/CssToInlineStyles.svg?branch=master)](https://travis-ci.org/voku/CssToInlineStyles)
+[![Coverage Status](https://coveralls.io/repos/voku/CssToInlineStyles/badge.svg)](https://coveralls.io/r/voku/CssToInlineStyles)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/voku/CssToInlineStyles/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/voku/CssToInlineStyles/?branch=master)
+[![Codacy Badge](https://www.codacy.com/project/badge/997c9bb10d1c4791967bdf2e42013e8e)](https://www.codacy.com/app/voku/CssToInlineStyles)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/be5bf087-366c-463e-ac9f-c184db6347ba/mini.png)](https://insight.sensiolabs.com/projects/be5bf087-366c-463e-ac9f-c184db6347ba)
+[![Dependency Status](https://www.versioneye.com/php/voku:CssToInlineStyles/dev-master/badge.svg)](https://www.versioneye.com/php/voku:CssToInlineStyles/dev-master)
+[![Reference Status](https://www.versioneye.com/php/voku:CssToInlineStyles/reference_badge.svg?style=flat)](https://www.versioneye.com/php/voku:CssToInlineStyles/references)
+[![Total Downloads](https://poser.pugx.org/voku/CssToInlineStyles/downloads)](https://packagist.org/packages/voku/CssToInlineStyles)
+[![License](https://poser.pugx.org/voku/CssToInlineStyles/license.svg)](https://packagist.org/packages/voku/CssToInlineStyles)
 
 WARNING: this is only a Extended-Fork of "https://github.com/tijsverkoyen/CssToInlineStyles"
 
