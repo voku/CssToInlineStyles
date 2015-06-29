@@ -461,7 +461,9 @@ class CssToInlineStyles
   private function splitIntoProperties($styles)
   {
     $properties = (array)explode(';', $styles);
-    for ($i = 0; $i < count($properties); $i++) {
+    $propertiesCount = count($properties);
+
+    for ($i = 0; $i < $propertiesCount; $i++) {
       // If next property begins with base64,
       // Then the ';' was part of this property (and we should not have split on it).
       if (isset($properties[$i + 1]) && UTF8::strpos($properties[$i + 1], 'base64,') === 0) {
