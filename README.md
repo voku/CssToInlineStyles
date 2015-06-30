@@ -1,7 +1,4 @@
-# CssToInlineStyles class
-
 [![Build Status](https://travis-ci.org/voku/CssToInlineStyles.svg?branch=master)](https://travis-ci.org/voku/CssToInlineStyles)
-<!--[![Coverage Status](https://coveralls.io/repos/voku/CssToInlineStyles/badge.svg)](https://coveralls.io/r/voku/CssToInlineStyles)-->
 [![codecov.io](http://codecov.io/github/voku/CssToInlineStyles/coverage.svg?branch=master)](http://codecov.io/github/voku/CssToInlineStyles?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/voku/CssToInlineStyles/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/voku/CssToInlineStyles/?branch=master)
 [![Codacy Badge](https://www.codacy.com/project/badge/47caa384f390472cbff1f1d46c86fd8e)](https://www.codacy.com/app/voku/CssToInlineStyles)
@@ -10,6 +7,9 @@
 [![Reference Status](https://www.versioneye.com/php/voku:CssToInlineStyles/reference_badge.svg?style=flat)](https://www.versioneye.com/php/voku:CssToInlineStyles/references)
 [![Total Downloads](https://poser.pugx.org/voku/css-to-inline-styles/downloads)](https://packagist.org/packages/voku/css-to-inline-styles)
 [![License](https://poser.pugx.org/voku/css-to-inline-styles/license.svg)](https://packagist.org/packages/voku/css-to-inline-styles)
+<!--[![Coverage Status](https://coveralls.io/repos/voku/CssToInlineStyles/badge.svg)](https://coveralls.io/r/voku/CssToInlineStyles)-->
+
+# CssToInlineStyles class
 
 WARNING: this is only a Extended-Fork of "https://github.com/tijsverkoyen/CssToInlineStyles"
 
