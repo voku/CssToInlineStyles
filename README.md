@@ -1,7 +1,8 @@
 # CssToInlineStyles class
 
 [![Build Status](https://travis-ci.org/voku/CssToInlineStyles.svg?branch=master)](https://travis-ci.org/voku/CssToInlineStyles)
-[![Coverage Status](https://coveralls.io/repos/voku/CssToInlineStyles/badge.svg)](https://coveralls.io/r/voku/CssToInlineStyles)
+<!--[![Coverage Status](https://coveralls.io/repos/voku/CssToInlineStyles/badge.svg)](https://coveralls.io/r/voku/CssToInlineStyles)-->
+[![codecov.io](http://codecov.io/github/voku/CssToInlineStyles/coverage.svg?branch=master)](http://codecov.io/github/voku/CssToInlineStyles?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/voku/CssToInlineStyles/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/voku/CssToInlineStyles/?branch=master)
 [![Codacy Badge](https://www.codacy.com/project/badge/47caa384f390472cbff1f1d46c86fd8e)](https://www.codacy.com/app/voku/CssToInlineStyles)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/2468e72e-dc91-4c16-9259-20c5e2c0d2a9/mini.png)](https://insight.sensiolabs.com/projects/2468e72e-dc91-4c16-9259-20c5e2c0d2a9)
