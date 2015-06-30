@@ -88,7 +88,7 @@ class CssToInlineStyles
    *
    * @var string
    */
-  private static $excludeConditionalInlineStylesBlockRegEx = '/<!--(\n\ |.)*<style(.|\s)*?-->/i';
+  private static $excludeConditionalInlineStylesBlockRegEx = '/<!--.*<style.*?-->/is';
 
   /**
    * regular expression: inline style tags
