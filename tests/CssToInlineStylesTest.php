@@ -3,6 +3,7 @@
 namespace voku\CssToInlineStyles\tests;
 
 use \voku\CssToInlineStyles\CssToInlineStyles;
+use voku\CssToInlineStyles\Exception;
 use voku\helper\UTF8;
 
 class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
@@ -357,6 +358,18 @@ EOF;
     $this->assertContains('Iñtërnâtiônàlizætiøn', $result);
   }
 
+  /**
+   * @expectedException Exception
+   * @expectedExceptionMessage No HTML provided.
+   */
+  public function testNoHtml()
+  {
+    $this->cssToInlineStyles->setHTML('');
+    $this->cssToInlineStyles->setCSS('');
+
+    $this->cssToInlineStyles->convert(true);
+  }
+
   public function testXMLHeaderIsRemoved()
   {
     $html = '<html><body><p>Foo</p></body>';
@@ -456,6 +469,31 @@ background-image: url(\'data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAA//Z\'); }
     $this->cssToInlineStyles->setStripOriginalStyleTags(true);
     $this->cssToInlineStyles->setExcludeMediaQueries(true);
     $this->runHTMLToCSS($html, $css, $expected);
+  }
+
+  public function testConstructor()
+  {
+    $html = '<html><body><style>@media (max-width: 600px) { .test { display: none; } } h1 { color : "red" }</style><div class="test"><h1>foo</h1><h1>foo2</h1></div></body></html>';
+    $css = '.test { color: "red" };';
+    $expected = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+  <body>
+    <style>@media (max-width: 600px) { .test { display: none; } }</style>
+    <div class="test" style="color: \'red\';">
+      <h1>foo</h1>
+      <h1>foo2</h1>
+    </div>
+  </body>
+</html>
+';
+
+    $cssToInlineStyles = new CssToInlineStyles($html, $css);
+
+    $cssToInlineStyles->setUseInlineStylesBlock(true);
+    $cssToInlineStyles->setStripOriginalStyleTags(true);
+    $cssToInlineStyles->setExcludeMediaQueries(true);
+    $actual = $cssToInlineStyles->convert(true);
+    $this->assertEquals($expected, $actual);
   }
 
   /**
