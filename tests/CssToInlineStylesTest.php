@@ -3,8 +3,8 @@
 namespace voku\CssToInlineStyles\tests;
 
 use \voku\CssToInlineStyles\CssToInlineStyles;
-use voku\CssToInlineStyles\Exception;
-use voku\helper\UTF8;
+use \voku\CssToInlineStyles\Exception;
+use \voku\helper\UTF8;
 
 class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,6 +29,63 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $css = 'div { display: none; }';
     $expected = '<div style="display: none;"></div>';
     $this->runHTMLToCSS($html, $css, $expected);
+  }
+
+  /**
+   * run html-to-css (and test it, if we set the "expected"-variable)
+   *
+   * @param string $html
+   * @param string $css
+   * @param string $expected
+   * @param bool   $asXHTML
+   *
+   * @return string
+   * @throws \voku\CssToInlineStyles\Exception
+   */
+  private function runHTMLToCSS($html, $css, $expected, $asXHTML = false)
+  {
+    $cssToInlineStyles = $this->cssToInlineStyles;
+    $cssToInlineStyles->setHTML($html);
+    $cssToInlineStyles->setCSS($css);
+    $output = $cssToInlineStyles->convert($asXHTML);
+    $actual = $this->stripBody($output, $asXHTML);
+
+    if ($expected) {
+      $this->assertEquals($expected, $actual);
+    }
+
+    return $actual;
+  }
+
+  /**
+   * stripe html-body
+   *
+   * @param string $html
+   * @param bool   $asXHTML
+   *
+   * @return string
+   */
+  private function stripBody($html, $asXHTML = false)
+  {
+    $dom = new \DOMDocument();
+    /*if ($asXHTML) {
+      $dom->loadXML($html);
+    } else {*/
+    $dom->loadHTML($html);
+    /*}*/
+    $xpath = new \DOMXPath($dom);
+    $nodelist = $xpath->query('//body/*');
+    $result = '';
+    for ($i = 0; $i < $nodelist->length; $i++) {
+      $node = $nodelist->item($i);
+      if ($asXHTML) {
+        $result .= $dom->saveXML($node);
+      } else {
+        $result .= $dom->saveHTML($node);
+      }
+    }
+
+    return $result;
   }
 
   public function testSimpleCssSelector()
@@ -170,6 +227,29 @@ EOF;
     $this->cssToInlineStyles->setHTML($html);
     $actual = $this->findAndSaveNode($this->cssToInlineStyles->convert(), '//a');
     $this->assertEquals($expected, $actual);
+  }
+
+  /**
+   * find and save node
+   *
+   * @param string $html
+   * @param string $query
+   *
+   * @return null|string
+   */
+  private function findAndSaveNode($html, $query)
+  {
+    $dom = new \DOMDocument();
+    $dom->loadHTML($html);
+    $xpath = new \DOMXPath($dom);
+    $nodelist = $xpath->query($query);
+    if ($nodelist->length > 0) {
+      $node = $nodelist->item(0);
+
+      return $dom->saveHTML($node);
+    } else {
+      return null;
+    }
   }
 
   public function testStripOriginalStyleTags()
@@ -494,85 +574,5 @@ background-image: url(\'data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAA//Z\'); }
     $cssToInlineStyles->setExcludeMediaQueries(true);
     $actual = $cssToInlineStyles->convert(true);
     $this->assertEquals($expected, $actual);
-  }
-
-  /**
-   * run html-to-css (and test it, if we set the "expected"-variable)
-   *
-   * @param string $html
-   * @param string $css
-   * @param string $expected
-   * @param bool   $asXHTML
-   *
-   * @return string
-   * @throws \voku\CssToInlineStyles\Exception
-   */
-  private function runHTMLToCSS($html, $css, $expected, $asXHTML = false)
-  {
-    $cssToInlineStyles = $this->cssToInlineStyles;
-    $cssToInlineStyles->setHTML($html);
-    $cssToInlineStyles->setCSS($css);
-    $output = $cssToInlineStyles->convert($asXHTML);
-    $actual = $this->stripBody($output, $asXHTML);
-
-    if ($expected) {
-      $this->assertEquals($expected, $actual);
-    }
-
-    return $actual;
-  }
-
-  /**
-   * stripe html-body
-   *
-   * @param string $html
-   * @param bool   $asXHTML
-   *
-   * @return string
-   */
-  private function stripBody($html, $asXHTML = false)
-  {
-    $dom = new \DOMDocument();
-    /*if ($asXHTML) {
-      $dom->loadXML($html);
-    } else {*/
-    $dom->loadHTML($html);
-    /*}*/
-    $xpath = new \DOMXPath($dom);
-    $nodelist = $xpath->query('//body/*');
-    $result = '';
-    for ($i = 0; $i < $nodelist->length; $i++) {
-      $node = $nodelist->item($i);
-      if ($asXHTML) {
-        $result .= $dom->saveXML($node);
-      } else {
-        $result .= $dom->saveHTML($node);
-      }
-    }
-
-    return $result;
-  }
-
-  /**
-   * find and save node
-   *
-   * @param string $html
-   * @param string $query
-   *
-   * @return null|string
-   */
-  private function findAndSaveNode($html, $query)
-  {
-    $dom = new \DOMDocument();
-    $dom->loadHTML($html);
-    $xpath = new \DOMXPath($dom);
-    $nodelist = $xpath->query($query);
-    if ($nodelist->length > 0) {
-      $node = $nodelist->item(0);
-
-      return $dom->saveHTML($node);
-    } else {
-      return null;
-    }
   }
 }

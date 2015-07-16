@@ -1,6 +1,6 @@
 <?php
 
-namespace voku\CssToInlineStyles\Tests;
+namespace voku\CssToInlineStyles\tests;
 
 use \voku\CssToInlineStyles\Specificity;
 
