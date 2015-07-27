@@ -493,11 +493,12 @@ class CssToInlineStyles
     // init vars
     $css = (string) $this->css;
 
-    // remove newlines
-    $css = str_replace(array("\r", "\n"), '', $css);
-
-    // replace double quotes by single quotes
-    $css = str_replace('"', '\'', $css);
+    // remove newlines & replace double quotes by single quotes
+    $css = str_replace(
+        array("\r", "\n", '"'),
+        array('', '', '\''),
+        $css
+    );
 
     // remove comments
     $css = preg_replace(self::$styleCommentRegEx, '', $css);
