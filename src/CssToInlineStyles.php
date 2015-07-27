@@ -1,9 +1,9 @@
 <?php
 namespace voku\CssToInlineStyles;
 
-use voku\helper\UTF8;
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ExceptionInterface;
+use voku\helper\UTF8;
 
 /**
  * CSS to Inline Styles class
@@ -149,7 +149,7 @@ class CssToInlineStyles
   public function convert($outputXHTML = false)
   {
     // redefine
-    $outputXHTML = (bool) $outputXHTML;
+    $outputXHTML = (bool)$outputXHTML;
 
     // validate
     if (!$this->html) {
@@ -201,8 +201,8 @@ class CssToInlineStyles
   }
 
   /**
-   * @param \DOMElement              $element
-   * @param array                    $ruleProperties
+   * @param \DOMElement $element
+   * @param array       $ruleProperties
    *
    * @return array
    */
@@ -217,7 +217,7 @@ class CssToInlineStyles
     // any styles defined before?
     if ($stylesAttribute !== null) {
       // get value for the styles attribute
-      $definedStyles = (string) $stylesAttribute->value;
+      $definedStyles = (string)$stylesAttribute->value;
 
       // split into properties
       $definedProperties = $this->splitIntoProperties($definedStyles);
@@ -230,7 +230,7 @@ class CssToInlineStyles
         }
 
         // split into chunks
-        $chunks = (array) explode(':', UTF8::trim($property), 2);
+        $chunks = (array)explode(':', UTF8::trim($property), 2);
 
         // validate
         if (!isset($chunks[1])) {
@@ -262,7 +262,7 @@ class CssToInlineStyles
 
     // build chunks
     foreach ($properties as $key => $values) {
-      foreach ((array) $values as $value) {
+      foreach ((array)$values as $value) {
         $propertyChunks[] = $key . ': ' . $value . ';';
       }
     }
@@ -353,7 +353,7 @@ class CssToInlineStyles
             }
 
             // split into chunks
-            $chunks = (array) explode(':', UTF8::trim($property), 2);
+            $chunks = (array)explode(':', UTF8::trim($property), 2);
 
             // validate
             if (!isset($chunks[1])) {
@@ -459,7 +459,7 @@ class CssToInlineStyles
    */
   private function splitIntoProperties($styles)
   {
-    $properties = (array) explode(';', $styles);
+    $properties = (array)explode(';', $styles);
     $propertiesCount = count($properties);
 
     for ($i = 0; $i < $propertiesCount; $i++) {
@@ -491,7 +491,7 @@ class CssToInlineStyles
   private function processCSS()
   {
     // init vars
-    $css = (string) $this->css;
+    $css = (string)$this->css;
 
     // remove newlines & replace double quotes by single quotes
     $css = str_replace(
@@ -512,7 +512,7 @@ class CssToInlineStyles
     }
 
     // rules are splitted by }
-    $rules = (array) explode('}', $css);
+    $rules = (array)explode('}', $css);
 
     // init var
     $i = 1;
@@ -534,7 +534,7 @@ class CssToInlineStyles
       $cssProperties = UTF8::trim($chunks[1]);
 
       // split multiple selectors
-      $selectors = (array) explode(',', $selectors);
+      $selectors = (array)explode(',', $selectors);
 
       // loop selectors
       foreach ($selectors as $selector) {
@@ -589,7 +589,7 @@ class CssToInlineStyles
     // loop properties
     foreach ($properties as $property) {
       // split into chunks
-      $chunks = (array) explode(':', $property, 2);
+      $chunks = (array)explode(':', $property, 2);
 
       // validate
       if (!isset($chunks[1])) {
@@ -623,7 +623,7 @@ class CssToInlineStyles
    */
   public function setCleanup($on = true)
   {
-    $this->cleanup = (bool) $on;
+    $this->cleanup = (bool)$on;
   }
 
   /**
@@ -633,7 +633,7 @@ class CssToInlineStyles
    */
   public function setCSS($css)
   {
-    $this->css = (string) $css;
+    $this->css = (string)$css;
   }
 
   /**
@@ -645,7 +645,7 @@ class CssToInlineStyles
    */
   public function setEncoding($encoding)
   {
-    $this->encoding = (string) $encoding;
+    $this->encoding = (string)$encoding;
   }
 
   /**
@@ -656,7 +656,7 @@ class CssToInlineStyles
   public function setHTML($html)
   {
     // strip style definitions, if we use css-class "cleanup" on a style-element
-    $this->html = (string) preg_replace('/<style[^>]+class="cleanup"[^>]*>.*<\/style>/Usi', ' ', $html);
+    $this->html = (string)preg_replace('/<style[^>]+class="cleanup"[^>]*>.*<\/style>/Usi', ' ', $html);
   }
 
   /**
@@ -667,7 +667,7 @@ class CssToInlineStyles
    */
   public function setUseInlineStylesBlock($on = true)
   {
-    $this->useInlineStylesBlock = (bool) $on;
+    $this->useInlineStylesBlock = (bool)$on;
   }
 
   /**
@@ -678,7 +678,7 @@ class CssToInlineStyles
    */
   public function setStripOriginalStyleTags($on = true)
   {
-    $this->stripOriginalStyleTags = (bool) $on;
+    $this->stripOriginalStyleTags = (bool)$on;
   }
 
   /**
@@ -692,7 +692,7 @@ class CssToInlineStyles
    */
   public function setExcludeMediaQueries($on = true)
   {
-    $this->excludeMediaQueries = (bool) $on;
+    $this->excludeMediaQueries = (bool)$on;
   }
 
   /**
@@ -702,7 +702,7 @@ class CssToInlineStyles
    */
   public function setExcludeConditionalInlineStylesBlock($on = true)
   {
-    $this->excludeConditionalInlineStylesBlock = (bool) $on;
+    $this->excludeConditionalInlineStylesBlock = (bool)$on;
   }
 
   /**
@@ -768,7 +768,7 @@ class CssToInlineStyles
     // remove comments previously to matching media queries
     $css = preg_replace(self::$styleCommentRegEx, '', $css);
 
-    return (string) preg_replace(self::$cssMediaQueriesRegEx, '', $css);
+    return (string)preg_replace(self::$cssMediaQueriesRegEx, '', $css);
   }
 
 }
