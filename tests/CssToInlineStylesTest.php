@@ -2,9 +2,9 @@
 
 namespace voku\CssToInlineStyles\tests;
 
-use \voku\CssToInlineStyles\CssToInlineStyles;
-use \voku\CssToInlineStyles\Exception;
-use \voku\helper\UTF8;
+use voku\CssToInlineStyles\CssToInlineStyles;
+use voku\CssToInlineStyles\Exception;
+use voku\helper\UTF8;
 
 class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,7 +51,7 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $actual = $this->stripBody($output, $asXHTML);
 
     if ($expected) {
-      $this->assertEquals($expected, $actual);
+      self::assertEquals($expected, $actual);
     }
 
     return $actual;
@@ -81,6 +81,7 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
       if ($asXHTML) {
         $result .= $dom->saveXML($node);
       } else {
+        /** @noinspection PhpMethodParametersCountMismatchInspection */
         $result .= $dom->saveHTML($node);
       }
     }
@@ -99,6 +100,8 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
   /**
    * Parsing html with different media queries
    *
+   * @param $html
+   *
    * @dataProvider getMediaQueries
    */
   public function testMediaQueries($html)
@@ -108,31 +111,32 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $this->cssToInlineStyles->setHTML($html);
     $this->runHTMLToCSS($html, '', $expected);
   }
+
   /**
    * @return array
    */
   public function getMediaQueries()
   {
-    return [
-        [
+    return array(
+        array(
             '<html><head><style>@media (max-width: 600px) {.foo {margin: 0;}}</style></head><body><div class="foo"></div></body></html>',
-        ],
-        [
-            '<html><head><style>@media tv and (min-width: 700px) and (orientation: landscape) {.foo {display: none;}}</style></head><body><div class="foo"></div></body></html>'
-        ],
-        [
-            '<html><head><style>@media (min-width: 700px), handheld and (orientation: landscape) {.foo {display: none;}}</style></head><body><div class="foo"></div></body></html>'
-        ],
-        [
-            '<html><head><style>@media not screen and (color), print and (color)</style></head><body><div class="foo"></div></body></html>'
-        ],
-        [
-            '<html><head><style>@media screen and (min-aspect-ratio: 1/1) {.foo {display: none;}}</style></head><body><div class="foo"></div></body></html>'
-        ],
-        [
-            '<html><head><style>@media screen and (device-aspect-ratio: 16/9), screen and (device-aspect-ratio: 16/10) {.foo {display: none;}}</style></head><body><div class="foo"></div></body></html>'
-        ]
-    ];
+        ),
+        array(
+            '<html><head><style>@media tv and (min-width: 700px) and (orientation: landscape) {.foo {display: none;}}</style></head><body><div class="foo"></div></body></html>',
+        ),
+        array(
+            '<html><head><style>@media (min-width: 700px), handheld and (orientation: landscape) {.foo {display: none;}}</style></head><body><div class="foo"></div></body></html>',
+        ),
+        array(
+            '<html><head><style>@media not screen and (color), print and (color)</style></head><body><div class="foo"></div></body></html>',
+        ),
+        array(
+            '<html><head><style>@media screen and (min-aspect-ratio: 1/1) {.foo {display: none;}}</style></head><body><div class="foo"></div></body></html>',
+        ),
+        array(
+            '<html><head><style>@media screen and (device-aspect-ratio: 16/9), screen and (device-aspect-ratio: 16/10) {.foo {display: none;}}</style></head><body><div class="foo"></div></body></html>',
+        ),
+    );
   }
 
   public function testMediaQueryDisabledByDefault()
@@ -177,7 +181,7 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $cssToInlineStyles->setHTML($html);
     $cssToInlineStyles->setCSS($css);
     $actual = $cssToInlineStyles->convert();
-    $this->assertEquals($expected, $actual);
+    self::assertEquals($expected, $actual);
   }
 
   public function testKeepMediaQueryV2()
@@ -194,7 +198,7 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $cssToInlineStyles->setHTML($html);
     $cssToInlineStyles->setCSS($css);
     $actual = $cssToInlineStyles->convert();
-    $this->assertEquals($expected, $actual);
+    self::assertEquals($expected, $actual);
   }
 
   public function testMediaQuery()
@@ -265,7 +269,7 @@ EOF;
     $this->cssToInlineStyles->setUseInlineStylesBlock(true);
     $this->cssToInlineStyles->setHTML($html);
     $actual = $this->findAndSaveNode($this->cssToInlineStyles->convert(), '//a');
-    $this->assertEquals($expected, $actual);
+    self::assertEquals($expected, $actual);
   }
 
   /**
@@ -285,6 +289,7 @@ EOF;
     if ($nodelist->length > 0) {
       $node = $nodelist->item(0);
 
+      /** @noinspection PhpMethodParametersCountMismatchInspection */
       return $dom->saveHTML($node);
     } else {
       return null;
@@ -306,9 +311,9 @@ EOF;
     $this->cssToInlineStyles->setStripOriginalStyleTags();
     $this->cssToInlineStyles->setHTML($html);
     $actual = $this->findAndSaveNode($this->cssToInlineStyles->convert(), '//a');
-    $this->assertEquals($expected, $actual);
+    self::assertEquals($expected, $actual);
 
-    $this->assertNull($this->findAndSaveNode($actual, '//style'));
+    self::assertNull($this->findAndSaveNode($actual, '//style'));
   }
 
   public function testSpecificity()
@@ -362,7 +367,7 @@ EOF;
     $this->cssToInlineStyles->setCSS($css);
     $actual = $this->cssToInlineStyles->convert(true);
 
-    $this->assertContains('<img></img>', $actual);
+    self::assertContains('<img></img>', $actual);
   }
 
   public function testCleanup()
@@ -393,7 +398,7 @@ EOF;
     $this->cssToInlineStyles->setHTML($html);
     $this->cssToInlineStyles->setCSS($css);
     $actual = $this->cssToInlineStyles->convert();
-    $this->assertEquals($expected, $actual);
+    self::assertEquals($expected, $actual);
   }
 
   public function testCleanupWithStyleTagCleanup()
@@ -412,7 +417,7 @@ EOF;
     $this->cssToInlineStyles->setHTML($html);
     $this->cssToInlineStyles->setCSS($css);
     $actual = $this->cssToInlineStyles->convert();
-    $this->assertEquals($expected, $actual);
+    self::assertEquals($expected, $actual);
   }
 
   public function testEqualSpecificity()
@@ -442,13 +447,13 @@ EOF;
     $cssToInlineStyles->setHTML($html);
     $cssToInlineStyles->setCSS($css);
     $actual = $cssToInlineStyles->convert();
-    $this->assertEquals($expected, $actual);
+    self::assertEquals($expected, $actual);
   }
 
   public function testEncodingIso()
   {
     $testString = UTF8::file_get_contents(__DIR__ . '/test1Latin.txt');
-    $this->assertContains('Iñtërnâtiônàlizætiøn', $testString);
+    self::assertContains('Iñtërnâtiônàlizætiøn', $testString);
 
     $html = '<p>' . $testString . '</p>';
     $css = '';
@@ -457,14 +462,14 @@ EOF;
     $this->cssToInlineStyles->setEncoding('ISO-8859-1');
     $result = $this->runHTMLToCSS($html, $css, $expected);
 
-    $this->assertContains('<p>Hírek', $result);
-    $this->assertContains('Iñtërnâtiônàlizætiøn', $result);
+    self::assertContains('<p>Hírek', $result);
+    self::assertContains('Iñtërnâtiônàlizætiøn', $result);
   }
 
   public function testEncodingUtf8()
   {
     $testString = UTF8::file_get_contents(__DIR__ . '/test1Utf8.txt');
-    $this->assertContains('Iñtërnâtiônàlizætiøn', $testString);
+    self::assertContains('Iñtërnâtiônàlizætiøn', $testString);
 
     $html = '<p>' . $testString . '</p>';
     $css = '';
@@ -473,8 +478,8 @@ EOF;
     $this->cssToInlineStyles->setEncoding('UTF-8');
     $result = $this->runHTMLToCSS($html, $css, $expected);
 
-    $this->assertContains('<p>Hírek', $result);
-    $this->assertContains('Iñtërnâtiônàlizætiøn', $result);
+    self::assertContains('<p>Hírek', $result);
+    self::assertContains('Iñtërnâtiônàlizætiøn', $result);
   }
 
   /**
@@ -496,7 +501,7 @@ EOF;
     $this->cssToInlineStyles->setHTML($html);
     $this->cssToInlineStyles->setCSS('');
 
-    $this->assertNotContains('<?xml', $this->cssToInlineStyles->convert(true));
+    self::assertNotContains('<?xml', $this->cssToInlineStyles->convert(true));
   }
 
   public function testXMLHeaderIsRemovedv2()
@@ -512,7 +517,7 @@ EOF;
     $this->cssToInlineStyles->setHTML($html);
     $this->cssToInlineStyles->setCSS('');
     $actual = $this->cssToInlineStyles->convert(true);
-    $this->assertEquals($expected, $actual);
+    self::assertEquals($expected, $actual);
   }
 
   public function testExcludeConditionalInlineStylesBlock()
@@ -612,6 +617,6 @@ background-image: url(\'data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAA//Z\'); }
     $cssToInlineStyles->setStripOriginalStyleTags(true);
     $cssToInlineStyles->setExcludeMediaQueries(true);
     $actual = $cssToInlineStyles->convert(true);
-    $this->assertEquals($expected, $actual);
+    self::assertEquals($expected, $actual);
   }
 }

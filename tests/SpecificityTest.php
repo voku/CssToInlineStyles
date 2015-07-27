@@ -9,21 +9,26 @@ class SpecificityTest extends \PHPUnit_Framework_TestCase
   public function testGetValues()
   {
     $specificity = new Specificity(1, 2, 3);
-    $this->assertEquals(array(1, 2, 3), $specificity->getValues());
+    self::assertEquals(array(1, 2, 3), $specificity->getValues());
   }
 
   public function testIncreaseValue()
   {
     $specificity = new Specificity(1, 2, 3);
     $specificity->increase(1, 2, 3);
-    $this->assertEquals(array(2, 4, 6), $specificity->getValues());
+    self::assertEquals(array(2, 4, 6), $specificity->getValues());
   }
 
-
-  /** @dataProvider getCompareTestData */
+  /**
+   * @param Specificity $a
+   * @param Specificity $b
+   * @param             $result
+   *
+   * @dataProvider getCompareTestData
+   */
   public function testCompare(Specificity $a, Specificity $b, $result)
   {
-    $this->assertEquals($result, $a->compareTo($b));
+    self::assertEquals($result, $a->compareTo($b));
   }
 
   public function getCompareTestData()
@@ -42,11 +47,16 @@ class SpecificityTest extends \PHPUnit_Framework_TestCase
     );
   }
 
-  /** @dataProvider getSelectorData */
+  /**
+   * @param $selector
+   * @param $result
+   *
+   * @dataProvider getSelectorData
+   */
   public function testFromSelector($selector, $result)
   {
     $specificity = Specificity::fromSelector($selector);
-    $this->assertEquals($result, $specificity->getValues());
+    self::assertEquals($result, $specificity->getValues());
   }
 
   public function getSelectorData()
@@ -63,15 +73,20 @@ class SpecificityTest extends \PHPUnit_Framework_TestCase
     );
   }
 
-  /** @dataProvider getSkippedSelectorData */
+  /**
+   * @param $selector
+   * @param $result
+   *
+   * @dataProvider getSkippedSelectorData
+   */
   public function testSkippedFromSelector($selector, $result)
   {
-    $this->markTestSkipped(
+    self::markTestSkipped(
         'Skipping edge cases in CSS'
     );
 
     $specificity = Specificity::fromSelector($selector);
-    $this->assertEquals($result, $specificity->getValues());
+    self::assertEquals($result, $specificity->getValues());
   }
 
   public function getSkippedSelectorData()
