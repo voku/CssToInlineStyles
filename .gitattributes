@@ -10,5 +10,3 @@
 /.travis.yml export-ignore
 /Gemfile export-ignore
 /phpunit.xml export-ignore
-/CHANGELOG.md export-ignore
-/README.md export-ignore
