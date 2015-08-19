@@ -593,7 +593,7 @@ class CssToInlineStyles
    *
    * @return array
    */
-  private function createPropertyChunks(\DOMElement $element, Array $ruleProperties)
+  private function createPropertyChunks(\DOMElement $element, array $ruleProperties)
   {
     // init var
     $properties = array();

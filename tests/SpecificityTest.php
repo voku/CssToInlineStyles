@@ -62,14 +62,14 @@ class SpecificityTest extends \PHPUnit_Framework_TestCase
   public function getSelectorData()
   {
     return array(
-        array("*", array(0, 0, 0)),
-        array("li", array(0, 0, 1)),
-        array("ul li", array(0, 0, 2)),
-        array("ul ol+li", array(0, 0, 3)),
-        array("h1 + *[rel=up]", array(0, 1, 1)),
-        array("ul ol li.red", array(0, 1, 3)),
-        array("li.red.level", array(0, 2, 1)),
-        array("#x34y", array(1, 0, 0)),
+        array('*', array(0, 0, 0)),
+        array('li', array(0, 0, 1)),
+        array('ul li', array(0, 0, 2)),
+        array('ul ol+li', array(0, 0, 3)),
+        array('h1 + *[rel=up]', array(0, 1, 1)),
+        array('ul ol li.red', array(0, 1, 3)),
+        array('li.red.level', array(0, 2, 1)),
+        array('#x34y', array(1, 0, 0)),
     );
   }
 
@@ -92,7 +92,7 @@ class SpecificityTest extends \PHPUnit_Framework_TestCase
   public function getSkippedSelectorData()
   {
     return array(
-        array("#s12:not(FOO)", array(1, 0, 1)),
+        array('#s12:not(FOO)', array(1, 0, 1)),
     );
   }
 }

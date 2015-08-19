@@ -430,7 +430,7 @@ EOF;
 
   public function testInvalidSelector()
   {
-    $html = "<p></p>";
+    $html = '<p></p>';
     $css = ' p&@*$%& { display: inline; }';
     $expected = $html;
     $this->runHTMLToCSS($html, $css, $expected);
