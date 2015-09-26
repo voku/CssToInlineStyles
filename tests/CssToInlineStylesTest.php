@@ -595,6 +595,25 @@ background-image: url(\'data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAA//Z\'); }
     $this->runHTMLToCSS($html, $css, $expected);
   }
 
+  public function testCssRulesResetDuringSecondLoad()
+  {
+    $html = "<p></p>";
+    $css = 'p { margin: 10px; }';
+    $expected = '<p style="margin: 10px;"></p>';
+    $this->runHTMLToCSS($html, $css, $expected);
+
+    $html = "<p></p>";
+    $css = 'p { padding: 10px; margin: 10px; }';
+    $expected = '<p style="margin: 10px; padding: 10px;"></p>';
+    $this->runHTMLToCSS($html, $css, $expected);
+
+    $html = "<p></p>";
+    $css = 'p { padding: 10px; }';
+    $expected = '<p style="padding: 10px;"></p>';
+    $this->runHTMLToCSS($html, $css, $expected);
+
+  }
+
   public function testConstructor()
   {
     $html = '<html><body><style>@media (max-width: 600px) { .test { display: none; } } h1 { color : "red" }</style><div class="test"><h1>foo</h1><h1>foo2</h1></div></body></html>';
@@ -616,6 +635,12 @@ background-image: url(\'data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAA//Z\'); }
     $cssToInlineStyles->setUseInlineStylesBlock(true);
     $cssToInlineStyles->setStripOriginalStyleTags(true);
     $cssToInlineStyles->setExcludeMediaQueries(true);
+
+    // first convert
+    $actual = $cssToInlineStyles->convert(true);
+    self::assertEquals($expected, $actual);
+
+    // second convert
     $actual = $cssToInlineStyles->convert(true);
     self::assertEquals($expected, $actual);
   }
