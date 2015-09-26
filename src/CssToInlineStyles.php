@@ -98,12 +98,6 @@ class CssToInlineStyles
   private $excludeConditionalInlineStylesBlock = true;
 
   /**
-   * Whether css was already processed and there's no need to do it again
-   * @var bool
-   */
-  private $isCssProcessed = false;
-
-  /**
    * Exclude media queries from "$this->css" and keep media queries for inline-styles blocks
    *
    * @var bool
@@ -147,8 +141,6 @@ class CssToInlineStyles
   public function setCSS($css)
   {
     $this->css = (string)$css;
-
-    $this->isCssProcessed = false;
   }
 
   /**
@@ -197,9 +189,7 @@ class CssToInlineStyles
     }
 
     // process css
-    if (!$this->isCssProcessed) {
-      $this->processCSS();
-    }
+    $this->processCSS();
 
     // create new DOMDocument
     $document = $this->createDOMDocument();
@@ -353,8 +343,6 @@ class CssToInlineStyles
     if (0 !== count($this->cssRules)) {
       usort($this->cssRules, array(__CLASS__, 'sortOnSpecificity'));
     }
-
-    $this->isCssProcessed = true;
   }
 
   /**

@@ -644,4 +644,24 @@ background-image: url(\'data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAA//Z\'); }
     $actual = $cssToInlineStyles->convert(true);
     self::assertEquals($expected, $actual);
   }
+
+  public function testCssRulesInlineResetDuringSecondLoad()
+  {
+    $html = "<p></p>";
+    $css = 'p { margin: 10px; }';
+    $expected = '<p style="margin: 10px;"></p>';
+    $this->runHTMLToCSS($html, $css, $expected);
+    $html = <<<HTML
+<style>
+    p {
+        padding: 10px;
+    }
+</style>
+<p></p>
+HTML;
+    $css = 'p { margin: 10px; }';
+    $this->runHTMLToCSS($html, $css, '<p style="margin: 10px;"></p>');
+    $this->cssToInlineStyles->setUseInlineStylesBlock(true);
+    $this->runHTMLToCSS($html, $css, '<p style="margin: 10px; padding: 10px;"></p>');
+  }
 }
