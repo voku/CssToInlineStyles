@@ -597,17 +597,17 @@ background-image: url(\'data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAA//Z\'); }
 
   public function testCssRulesResetDuringSecondLoad()
   {
-    $html = "<p></p>";
+    $html = '<p></p>';
     $css = 'p { margin: 10px; }';
     $expected = '<p style="margin: 10px;"></p>';
     $this->runHTMLToCSS($html, $css, $expected);
 
-    $html = "<p></p>";
+    $html = '<p></p>';
     $css = 'p { padding: 10px; margin: 10px; }';
     $expected = '<p style="margin: 10px; padding: 10px;"></p>';
     $this->runHTMLToCSS($html, $css, $expected);
 
-    $html = "<p></p>";
+    $html = '<p></p>';
     $css = 'p { padding: 10px; }';
     $expected = '<p style="padding: 10px;"></p>';
     $this->runHTMLToCSS($html, $css, $expected);
@@ -647,7 +647,7 @@ background-image: url(\'data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAA//Z\'); }
 
   public function testCssRulesInlineResetDuringSecondLoad()
   {
-    $html = "<p></p>";
+    $html = '<p></p>';
     $css = 'p { margin: 10px; }';
     $expected = '<p style="margin: 10px;"></p>';
     $this->runHTMLToCSS($html, $css, $expected);
