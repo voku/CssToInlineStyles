@@ -562,26 +562,9 @@ class CssToInlineStyles
         $originalStyle = $element->attributes->getNamedItem('data-css-to-inline-styles-original-styles')->value;
 
         if ($originalStyle != '') {
-          $originalProperties = array();
           $originalStyles = $this->splitIntoProperties($originalStyle);
 
-          foreach ($originalStyles as $property) {
-            // validate property
-            if ($property == '') {
-              continue;
-            }
-
-            // split into chunks
-            $chunks = (array)explode(':', UTF8::trim($property), 2);
-
-            // validate
-            if (!isset($chunks[1])) {
-              continue;
-            }
-
-            // loop chunks
-            $originalProperties[$chunks[0]] = UTF8::trim($chunks[1]);
-          }
+          $originalProperties = $this->splitStyleIntoChunks($originalStyles);
 
           $propertiesString = $this->createPropertyChunks($element, $originalProperties);
 
@@ -597,6 +580,38 @@ class CssToInlineStyles
     }
 
     return $xPath;
+  }
+
+  /**
+   * @param array $definedProperties
+   *
+   * @return array
+   */
+  private function splitStyleIntoChunks(array $definedProperties)
+  {
+    // init var
+    $properties = array();
+
+    // loop properties
+    foreach ($definedProperties as $property) {
+      // validate property
+      if (!$property) {
+        continue;
+      }
+
+      // split into chunks
+      $chunks = (array)explode(':', UTF8::trim($property), 2);
+
+      // validate
+      if (!isset($chunks[1])) {
+        continue;
+      }
+
+      // loop chunks
+      $properties[$chunks[0]] = UTF8::trim($chunks[1]);
+    }
+
+    return $properties;
   }
 
   /**
@@ -621,24 +636,7 @@ class CssToInlineStyles
       // split into properties
       $definedProperties = $this->splitIntoProperties($definedStyles);
 
-      // loop properties
-      foreach ($definedProperties as $property) {
-        // validate property
-        if (!$property) {
-          continue;
-        }
-
-        // split into chunks
-        $chunks = (array)explode(':', UTF8::trim($property), 2);
-
-        // validate
-        if (!isset($chunks[1])) {
-          continue;
-        }
-
-        // loop chunks
-        $properties[$chunks[0]] = UTF8::trim($chunks[1]);
-      }
+      $properties = $this->splitStyleIntoChunks($definedProperties);
     }
 
     // add new properties into the list
