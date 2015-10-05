@@ -126,10 +126,12 @@ class Specificity
   {
     if ($this->a !== $specificity->a) {
       return $this->a - $specificity->a;
-    } elseif ($this->b !== $specificity->b) {
-      return $this->b - $specificity->b;
-    } else {
-      return $this->c - $specificity->c;
     }
+
+    if ($this->b !== $specificity->b) {
+      return $this->b - $specificity->b;
+    }
+
+    return $this->c - $specificity->c;
   }
 }
