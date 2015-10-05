@@ -500,7 +500,7 @@ class CssToInlineStyles
    *
    * @return \DOMXPath
    */
-  private function createXPath(\DOMDocument $document, Array $cssRules)
+  private function createXPath(\DOMDocument $document, array $cssRules)
   {
     $xPath = new \DOMXPath($document);
 
