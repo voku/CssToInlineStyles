@@ -176,16 +176,24 @@ class CssToInlineStyles
       throw new Exception('No HTML provided.');
     }
 
+    // use local variables
+    $css = $this->css;
+
     // should we use inline style-block
     if ($this->useInlineStylesBlock) {
-      $this->css .= $this->getCssFromInlineHtmlStyleBlock();
+
+      if ($this->excludeConditionalInlineStylesBlock === true) {
+        $this->html = preg_replace(self::$excludeConditionalInlineStylesBlockRegEx, '', $this->html);
+      }
+
+      $css .= $this->getCssFromInlineHtmlStyleBlock($this->html);
     }
 
     // process css
-    $cssRules = $this->processCSS();
+    $cssRules = $this->processCSS($css);
 
     // create new DOMDocument
-    $document = $this->createDOMDocument();
+    $document = $this->createDOMDocument($this->html);
 
     // create new XPath
     $xPath = $this->createXPath($document, $cssRules);
@@ -223,20 +231,18 @@ class CssToInlineStyles
   /**
    * get css from inline-html style-block
    *
+   * @param string $html
+   *
    * @return string
    */
-  public function getCssFromInlineHtmlStyleBlock()
+  public function getCssFromInlineHtmlStyleBlock($html)
   {
     // init var
     $css = '';
     $matches = array();
 
-    if ($this->excludeConditionalInlineStylesBlock === true) {
-      $this->html = preg_replace(self::$excludeConditionalInlineStylesBlockRegEx, '', $this->html);
-    }
-
     // match the style blocks
-    preg_match_all(self::$styleTagRegEx, $this->html, $matches);
+    preg_match_all(self::$styleTagRegEx, $html, $matches);
 
     // any style-blocks found?
     if (!empty($matches[2])) {
@@ -251,14 +257,18 @@ class CssToInlineStyles
 
   /**
    * Process the loaded CSS
+   *
+   * @param $css
+   *
+   * @return array
    */
-  private function processCSS()
+  private function processCSS($css)
   {
     //reset current set of rules
     $cssRules = array();
 
     // init vars
-    $css = (string)$this->css;
+    $css = (string)$css;
 
     // remove newlines & replace double quotes by single quotes
     $css = str_replace(
@@ -386,7 +396,8 @@ class CssToInlineStyles
 
       // add to pairs array
       if (
-          !isset($pairs[$chunks[0]]) ||
+          !isset($pairs[$chunks[0]])
+          ||
           !in_array($chunks[1], $pairs[$chunks[0]], true)
       ) {
         $pairs[$chunks[0]][] = $chunks[1];
@@ -416,7 +427,11 @@ class CssToInlineStyles
     for ($i = 0; $i < $propertiesCount; $i++) {
       // If next property begins with base64,
       // Then the ';' was part of this property (and we should not have split on it).
-      if (isset($properties[$i + 1]) && UTF8::strpos($properties[$i + 1], 'base64,') === 0) {
+      if (
+          isset($properties[$i + 1])
+          &&
+          UTF8::strpos($properties[$i + 1], 'base64,') !== false
+      ) {
         $properties[$i] .= ';' . $properties[$i + 1];
         $properties[$i + 1] = '';
         ++$i;
@@ -429,9 +444,11 @@ class CssToInlineStyles
   /**
    * create DOMDocument from HTML
    *
+   * @param $html
+   *
    * @return \DOMDocument
    */
-  private function createDOMDocument()
+  private function createDOMDocument($html)
   {
     // create new DOMDocument
     $document = new \DOMDocument('1.0', $this->getEncoding());
@@ -447,7 +464,7 @@ class CssToInlineStyles
     //
     // with UTF-8 hack: http://php.net/manual/en/domdocument.loadhtml.php#95251
     //
-    $document->loadHTML('<?xml encoding="' . $this->getEncoding() . '">' . $this->html);
+    $document->loadHTML('<?xml encoding="' . $this->getEncoding() . '">' . $html);
 
     // remove the "xml-encoding" hack
     foreach ($document->childNodes as $child) {
@@ -637,7 +654,7 @@ class CssToInlineStyles
           ||
           UTF8::stristr($properties[$key], '!important') === false
           ||
-          (UTF8::stristr(implode('', $value), '!important') !== false)
+          UTF8::stristr(implode('', $value), '!important') !== false
       ) {
         $properties[$key] = $value;
       }
