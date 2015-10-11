@@ -1,8 +1,6 @@
 <?php
 namespace voku\CssToInlineStyles;
 
-use Symfony\Component\CssSelector\CssSelector;
-use Symfony\Component\CssSelector\Exception\ExceptionInterface;
 use voku\helper\UTF8;
 
 /**
@@ -505,9 +503,11 @@ class CssToInlineStyles
       // loop rules
       foreach ($cssRules as $rule) {
 
-        try {
-          $query = CssSelector::toXPath($rule['selector']);
-        } catch (ExceptionInterface $e) {
+        $selector = new Selector($rule['selector']);
+        $query = $selector->toXPath();
+
+        // validate query
+        if (null === $query) {
           continue;
         }
 
