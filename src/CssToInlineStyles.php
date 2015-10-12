@@ -1,9 +1,9 @@
 <?php
 namespace voku\CssToInlineStyles;
 
-use voku\helper\UTF8;
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ExceptionInterface;
+use voku\helper\UTF8;
 
 /**
  * CSS to Inline Styles class
