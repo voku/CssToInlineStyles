@@ -28,7 +28,7 @@
   ],
   "require": {
     "php": ">=5.3.0",
-    "symfony/css-selector": "~2.7|~3.0",
+    "symfony/css-selector": "~2.7",
     "voku/portable-utf8": "~1.6"
   },
   "require-dev": {
@@ -40,7 +40,6 @@
       "voku\\CssToInlineStyles\\": "src"
     }
   },
-  "minimum-stability": "dev",
   "extra": {
     "branch-alias": {
       "dev-master": "1.6.x-dev"

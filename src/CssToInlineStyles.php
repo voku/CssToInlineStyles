@@ -2,6 +2,8 @@
 namespace voku\CssToInlineStyles;
 
 use voku\helper\UTF8;
+use Symfony\Component\CssSelector\CssSelector;
+use Symfony\Component\CssSelector\Exception\ExceptionInterface;
 
 /**
  * CSS to Inline Styles class
@@ -104,11 +106,11 @@ class CssToInlineStyles
    */
   public function __construct($html = null, $css = null)
   {
-    if ($html !== null) {
+    if (null !== $html) {
       $this->setHTML($html);
     }
 
-    if ($css !== null) {
+    if (null !== $css) {
       $this->setCSS($css);
     }
   }
@@ -148,7 +150,7 @@ class CssToInlineStyles
     $value = $e1['specificity']->compareTo($e2['specificity']);
 
     // if the specificity is the same, use the order in which the element appeared
-    if ($value === 0) {
+    if (0 === $value) {
       $value = $e1['order'] - $e2['order'];
     }
 
@@ -180,7 +182,7 @@ class CssToInlineStyles
     // should we use inline style-block
     if ($this->useInlineStylesBlock) {
 
-      if ($this->excludeConditionalInlineStylesBlock === true) {
+      if (true === $this->excludeConditionalInlineStylesBlock) {
         $this->html = preg_replace(self::$excludeConditionalInlineStylesBlockRegEx, '', $this->html);
       }
 
@@ -202,12 +204,12 @@ class CssToInlineStyles
     }
 
     // cleanup the HTML if we need to
-    if ($this->cleanup === true) {
+    if (true === $this->cleanup) {
       $this->cleanupHTML($xPath);
     }
 
     // should we output XHTML?
-    if ($outputXHTML === true) {
+    if (true === $outputXHTML) {
       // set formatting
       $document->formatOutput = true;
 
@@ -278,7 +280,7 @@ class CssToInlineStyles
     $css = preg_replace('/\s\s+/', ' ', $css);
 
     // remove css media queries
-    if ($this->excludeMediaQueries === true) {
+    if (true === $this->excludeMediaQueries) {
       $css = $this->stripeMediaQueries($css);
     }
 
@@ -503,8 +505,11 @@ class CssToInlineStyles
       // loop rules
       foreach ($cssRules as $rule) {
 
-        $selector = new Selector($rule['selector']);
-        $query = $selector->toXPath();
+        try {
+          $query = CssSelector::toXPath($rule['selector']);
+        } catch (ExceptionInterface $e) {
+          $query = null;
+        }
 
         // validate query
         if (null === $query) {
@@ -515,7 +520,7 @@ class CssToInlineStyles
         $elements = $xPath->query($query);
 
         // validate elements
-        if ($elements === false) {
+        if (false === $elements) {
           continue;
         }
 
@@ -527,12 +532,12 @@ class CssToInlineStyles
            */
 
           // no styles stored?
-          if ($element->attributes->getNamedItem('data-css-to-inline-styles-original-styles') === null) {
+          if (null === $element->attributes->getNamedItem('data-css-to-inline-styles-original-styles')) {
 
             // init var
             $originalStyle = '';
 
-            if ($element->attributes->getNamedItem('style') !== null) {
+            if (null !== $element->attributes->getNamedItem('style')) {
               $originalStyle = $element->attributes->getNamedItem('style')->value;
             }
 
@@ -546,7 +551,7 @@ class CssToInlineStyles
           $propertiesString = $this->createPropertyChunks($element, $rule['properties']);
 
           // set attribute
-          if ($propertiesString != '') {
+          if ('' != $propertiesString) {
             $element->setAttribute('style', $propertiesString);
           }
         }
@@ -561,7 +566,7 @@ class CssToInlineStyles
         // get the original styles
         $originalStyle = $element->attributes->getNamedItem('data-css-to-inline-styles-original-styles')->value;
 
-        if ($originalStyle != '') {
+        if ('' != $originalStyle) {
           $originalStyles = $this->splitIntoProperties($originalStyle);
 
           $originalProperties = $this->splitStyleIntoChunks($originalStyles);
@@ -569,7 +574,7 @@ class CssToInlineStyles
           $propertiesString = $this->createPropertyChunks($element, $originalProperties);
 
           // set attribute
-          if ($propertiesString != '') {
+          if ('' != $propertiesString) {
             $element->setAttribute('style', $propertiesString);
           }
         }
@@ -629,7 +634,7 @@ class CssToInlineStyles
     $stylesAttribute = $element->attributes->getNamedItem('style');
 
     // any styles defined before?
-    if ($stylesAttribute !== null) {
+    if (null !== $stylesAttribute) {
       // get value for the styles attribute
       $definedStyles = (string)$stylesAttribute->value;
 
@@ -646,9 +651,9 @@ class CssToInlineStyles
       if (
           !isset($properties[$key])
           ||
-          UTF8::stristr($properties[$key], '!important') === false
+          false === UTF8::stristr($properties[$key], '!important')
           ||
-          UTF8::stristr(implode('', $value), '!important') !== false
+          false !== UTF8::stristr(implode('', $value), '!important')
       ) {
         $properties[$key] = $value;
       }
