@@ -244,7 +244,7 @@ class CssToInlineStyles
     if (!empty($matches[2])) {
       // add
       foreach ($matches[2] as $match) {
-        $css .= UTF8::trim($match) . "\n";
+        $css .= trim($match) . "\n";
       }
     }
 
@@ -252,20 +252,12 @@ class CssToInlineStyles
   }
 
   /**
-   * Process the loaded CSS
+   * @param string $css
    *
-   * @param $css
-   *
-   * @return array
+   * @return string
    */
-  private function processCSS($css)
+  private function doCleanup($css)
   {
-    //reset current set of rules
-    $cssRules = array();
-
-    // init vars
-    $css = (string)$css;
-
     // remove newlines & replace double quotes by single quotes
     $css = str_replace(
         array("\r", "\n", '"'),
@@ -284,6 +276,26 @@ class CssToInlineStyles
       $css = $this->stripeMediaQueries($css);
     }
 
+    return (string)$css;
+  }
+
+  /**
+   * Process the loaded CSS
+   *
+   * @param $css
+   *
+   * @return array
+   */
+  private function processCSS($css)
+  {
+    //reset current set of rules
+    $cssRules = array();
+
+    // init vars
+    $css = (string)$css;
+
+    $css = $this->doCleanup($css);
+
     // rules are splitted by }
     $rules = (array)explode('}', $css);
 
@@ -301,10 +313,10 @@ class CssToInlineStyles
       }
 
       // set the selectors
-      $selectors = UTF8::trim($chunks[0]);
+      $selectors = trim($chunks[0]);
 
       // get cssProperties
-      $cssProperties = UTF8::trim($chunks[1]);
+      $cssProperties = trim($chunks[1]);
 
       // split multiple selectors
       $selectors = (array)explode(',', $selectors);
@@ -312,7 +324,7 @@ class CssToInlineStyles
       // loop selectors
       foreach ($selectors as $selector) {
         // cleanup
-        $selector = UTF8::trim($selector);
+        $selector = trim($selector);
 
         // build an array for each selector
         $ruleSet = array();
@@ -387,8 +399,8 @@ class CssToInlineStyles
       }
 
       // cleanup
-      $chunks[0] = UTF8::trim($chunks[0]);
-      $chunks[1] = UTF8::trim($chunks[1]);
+      $chunks[0] = trim($chunks[0]);
+      $chunks[1] = trim($chunks[1]);
 
       // add to pairs array
       if (
@@ -605,7 +617,7 @@ class CssToInlineStyles
       }
 
       // split into chunks
-      $chunks = (array)explode(':', UTF8::trim($property), 2);
+      $chunks = (array)explode(':', trim($property), 2);
 
       // validate
       if (!isset($chunks[1])) {
@@ -613,7 +625,7 @@ class CssToInlineStyles
       }
 
       // loop chunks
-      $properties[$chunks[0]] = UTF8::trim($chunks[1]);
+      $properties[$chunks[0]] = trim($chunks[1]);
     }
 
     return $properties;
