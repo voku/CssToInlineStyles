@@ -3,7 +3,6 @@ namespace voku\CssToInlineStyles;
 
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ExceptionInterface;
-use voku\helper\UTF8;
 
 /**
  * CSS to Inline Styles class
@@ -217,7 +216,7 @@ class CssToInlineStyles
       $html = $document->saveXML(null, LIBXML_NOEMPTYTAG);
 
       // remove the XML-header
-      return UTF8::ltrim(preg_replace('/<\?xml.*\?>/', '', $html));
+      return ltrim(preg_replace('/<\?xml.*\?>/', '', $html));
     }
 
     // just regular HTML 4.01 as it should be used in newsletters
@@ -249,34 +248,6 @@ class CssToInlineStyles
     }
 
     return $css;
-  }
-
-  /**
-   * @param string $css
-   *
-   * @return string
-   */
-  private function doCleanup($css)
-  {
-    // remove newlines & replace double quotes by single quotes
-    $css = str_replace(
-        array("\r", "\n", '"'),
-        array('', '', '\''),
-        $css
-    );
-
-    // remove comments
-    $css = preg_replace(self::$styleCommentRegEx, '', $css);
-
-    // remove spaces
-    $css = preg_replace('/\s\s+/', ' ', $css);
-
-    // remove css media queries
-    if (true === $this->excludeMediaQueries) {
-      $css = $this->stripeMediaQueries($css);
-    }
-
-    return (string)$css;
   }
 
   /**
@@ -359,6 +330,34 @@ class CssToInlineStyles
   }
 
   /**
+   * @param string $css
+   *
+   * @return string
+   */
+  private function doCleanup($css)
+  {
+    // remove newlines & replace double quotes by single quotes
+    $css = str_replace(
+        array("\r", "\n", '"'),
+        array('', '', '\''),
+        $css
+    );
+
+    // remove comments
+    $css = preg_replace(self::$styleCommentRegEx, '', $css);
+
+    // remove spaces
+    $css = preg_replace('/\s\s+/', ' ', $css);
+
+    // remove css media queries
+    if (true === $this->excludeMediaQueries) {
+      $css = $this->stripeMediaQueries($css);
+    }
+
+    return (string)$css;
+  }
+
+  /**
    * remove css media queries from the string
    *
    * @param string $css
@@ -438,7 +437,7 @@ class CssToInlineStyles
       if (
           isset($properties[$i + 1])
           &&
-          UTF8::strpos($properties[$i + 1], 'base64,') !== false
+          strpos($properties[$i + 1], 'base64,') !== false
       ) {
         $properties[$i] .= ';' . $properties[$i + 1];
         $properties[$i + 1] = '';
@@ -600,38 +599,6 @@ class CssToInlineStyles
   }
 
   /**
-   * @param array $definedProperties
-   *
-   * @return array
-   */
-  private function splitStyleIntoChunks(array $definedProperties)
-  {
-    // init var
-    $properties = array();
-
-    // loop properties
-    foreach ($definedProperties as $property) {
-      // validate property
-      if (!$property) {
-        continue;
-      }
-
-      // split into chunks
-      $chunks = (array)explode(':', trim($property), 2);
-
-      // validate
-      if (!isset($chunks[1])) {
-        continue;
-      }
-
-      // loop chunks
-      $properties[$chunks[0]] = trim($chunks[1]);
-    }
-
-    return $properties;
-  }
-
-  /**
    * @param \DOMElement $element
    * @param array       $ruleProperties
    *
@@ -663,9 +630,9 @@ class CssToInlineStyles
       if (
           !isset($properties[$key])
           ||
-          false === UTF8::stristr($properties[$key], '!important')
+          false === stripos($properties[$key], '!important')
           ||
-          false !== UTF8::stristr(implode('', $value), '!important')
+          false !== stripos(implode('', (array)$value), '!important')
       ) {
         $properties[$key] = $value;
       }
@@ -682,6 +649,42 @@ class CssToInlineStyles
     }
 
     return implode(' ', $propertyChunks);
+  }
+
+  /**
+   * @param array $definedProperties
+   *
+   * @return array
+   */
+  private function splitStyleIntoChunks(array $definedProperties)
+  {
+    // init var
+    $properties = array();
+
+    // loop properties
+    foreach ($definedProperties as $property) {
+      // validate property
+      if (
+          !$property
+          ||
+          strpos($property, ':') === false
+      ) {
+        continue;
+      }
+
+      // split into chunks
+      $chunks = (array)explode(':', trim($property), 2);
+
+      // validate
+      if (!isset($chunks[1])) {
+        continue;
+      }
+
+      // loop chunks
+      $properties[$chunks[0]] = trim($chunks[1]);
+    }
+
+    return $properties;
   }
 
   /**
