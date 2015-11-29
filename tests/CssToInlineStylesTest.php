@@ -674,4 +674,51 @@ HTML;
     $this->cssToInlineStyles->setUseInlineStylesBlock(true);
     $this->runHTMLToCSS($html, $css, '<p style="margin: 10px; padding: 10px;"></p>');
   }
+
+  public function testSimpleStyleTagsInHtml()
+  {
+    $expected = 'p { color: #F00; }' . "\n";
+    self::assertEquals(
+        $expected,
+        $this->cssToInlineStyles->getCssFromInlineHtmlStyleBlock(
+            <<<EOF
+                    <html>
+    <head>
+        <style>
+            p { color: #F00; }
+        </style>
+    </head>
+    <body>
+        <p>foo</p>
+    </body>
+    </html>
+EOF
+        )
+    );
+  }
+
+  public function testMultipleStyleTagsInHtml()
+  {
+    $expected = 'p { color: #F00; }' . "\n" . 'p { color: #0F0; }' . "\n";
+    self::assertEquals(
+        $expected,
+        $this->cssToInlineStyles->getCssFromInlineHtmlStyleBlock(
+            <<<EOF
+                    <html>
+    <head>
+        <style>
+            p { color: #F00; }
+        </style>
+    </head>
+    <body>
+        <style>
+            p { color: #0F0; }
+        </style>
+        <p>foo</p>
+    </body>
+    </html>
+EOF
+        )
+    );
+  }
 }
