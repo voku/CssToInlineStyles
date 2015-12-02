@@ -1,7 +1,6 @@
 <?php
 namespace voku\CssToInlineStyles;
 
-use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\CssSelector\Exception\ExceptionInterface;
 
