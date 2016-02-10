@@ -71,9 +71,16 @@ class CssToInlineStyles
   /**
    * Use inline-styles block as CSS
    *
-   * @var  bool
+   * @var bool
    */
   private $useInlineStylesBlock = false;
+
+  /**
+   * Use link block reference as CSS
+   *
+   * @var bool
+   */
+  private $loadCSSFromHTML = false;
 
   /**
    * Strip original style tags
@@ -161,14 +168,16 @@ class CssToInlineStyles
    *
    * @return string
    *
-   * @param  bool $outputXHTML Should we output valid XHTML?
-   * @param  integer [optional] $libXMLOptions Since PHP 5.4.0 and Libxml 2.6.0, you may also use the
-   *                                           options parameter to specify additional Libxml parameters.
-   *                                           Recommend these options: LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+   * @param  bool $outputXHTML                 [optional] Should we output valid XHTML?
+   * @param  int  $libXMLOptions               [optional] $libXMLOptions Since PHP 5.4.0 and Libxml 2.6.0, you may also
+   *                                                      use the options parameter to specify additional Libxml
+   *                                                      parameters. Recommend these options: LIBXML_HTML_NOIMPLIED |
+   *                                                      LIBXML_HTML_NODEFDTD
+   * @param false|string                       [optional] Set the path to your external css-files.
    *
    * @throws Exception
    */
-  public function convert($outputXHTML = false, $libXMLOptions = 0)
+  public function convert($outputXHTML = false, $libXMLOptions = 0, $path = false)
   {
     // redefine
     $outputXHTML = (bool)$outputXHTML;
@@ -180,6 +189,23 @@ class CssToInlineStyles
 
     // use local variables
     $css = $this->css;
+
+    // create new DOMDocument
+    $document = $this->createDOMDocument($this->html, $libXMLOptions);
+
+    // check if there is some link css reference
+    if ($this->loadCSSFromHTML) {
+      foreach ($document->getElementsByTagName('link') as $node) {
+        $file = ($path ? $path : __DIR__) . '/' .  $node->getAttribute('href');
+
+        if (file_exists($file)) {
+          $css .= file_get_contents($file);
+
+          // converting to inline css because we don't need/want to load css files, so remove the link
+          $node->parentNode->removeChild($node);
+        }
+      }
+    }
 
     // should we use inline style-block
     if ($this->useInlineStylesBlock) {
@@ -193,9 +219,6 @@ class CssToInlineStyles
 
     // process css
     $cssRules = $this->processCSS($css);
-
-    // create new DOMDocument
-    $document = $this->createDOMDocument($this->html, $libXMLOptions);
 
     // create new XPath
     $xPath = $this->createXPath($document, $cssRules);
@@ -769,6 +792,18 @@ class CssToInlineStyles
   {
     $this->useInlineStylesBlock = (bool)$on;
   }
+
+  /**
+       * Set use of inline link block
+       * If this is enabled the class will use the links reference in the HTML.
+       *
+       * @return void
+       * @param  bool [optional] $on Should we process link styles?
+       */
+    public function setLoadCSSFromHTML($on = true)
+     {
+         $this->loadCSSFromHTML = (bool) $on;
+     }
 
   /**
    * Set strip original style tags

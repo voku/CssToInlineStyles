@@ -47,6 +47,11 @@ $ composer require voku/css-to-inline-styles
     $cssToInlineStyles->setUseInlineStylesBlock(true);
     $html = $cssToInlineStyles->convert();
     
+    // Or use linked files from the HTML as CSS
+    $cssToInlineStyles = new CssToInlineStyles($html);
+    $cssToInlineStyles->setLoadCSSFromHTML(true);
+    $html = $cssToInlineStyles->convert(false, 0, __DIR__ . '/../tests/');
+
     
 ## Documentation
 
