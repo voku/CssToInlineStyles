@@ -497,7 +497,12 @@ class CssToInlineStyles
     //
     // with UTF-8 hack: http://php.net/manual/en/domdocument.loadhtml.php#95251
     //
-    $document->loadHTML('<?xml encoding="' . $this->getEncoding() . '">' . $html, $libXMLOptions);
+    if ($libXMLOptions !== 0) {
+      $document->loadHTML('<?xml encoding="' . $this->getEncoding() . '">' . $html, $libXMLOptions);
+    } else {
+      $document->loadHTML('<?xml encoding="' . $this->getEncoding() . '">' . $html);
+    }
+
 
     // remove the "xml-encoding" hack
     foreach ($document->childNodes as $child) {
