@@ -162,10 +162,13 @@ class CssToInlineStyles
    * @return string
    *
    * @param  bool $outputXHTML Should we output valid XHTML?
+   * @param  integer [optional] $libXMLOptions Since PHP 5.4.0 and Libxml 2.6.0, you may also use the
+   *                                           options parameter to specify additional Libxml parameters.
+   *                                           Recommend these options: LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
    *
    * @throws Exception
    */
-  public function convert($outputXHTML = false)
+  public function convert($outputXHTML = false, $libXMLOptions = 0)
   {
     // redefine
     $outputXHTML = (bool)$outputXHTML;
@@ -192,7 +195,7 @@ class CssToInlineStyles
     $cssRules = $this->processCSS($css);
 
     // create new DOMDocument
-    $document = $this->createDOMDocument($this->html);
+    $document = $this->createDOMDocument($this->html, $libXMLOptions);
 
     // create new XPath
     $xPath = $this->createXPath($document, $cssRules);
@@ -455,7 +458,7 @@ class CssToInlineStyles
    *
    * @return \DOMDocument
    */
-  private function createDOMDocument($html)
+  private function createDOMDocument($html, $libXMLOptions)
   {
     // create new DOMDocument
     $document = new \DOMDocument('1.0', $this->getEncoding());
@@ -471,7 +474,7 @@ class CssToInlineStyles
     //
     // with UTF-8 hack: http://php.net/manual/en/domdocument.loadhtml.php#95251
     //
-    $document->loadHTML('<?xml encoding="' . $this->getEncoding() . '">' . $html);
+    $document->loadHTML('<?xml encoding="' . $this->getEncoding() . '">' . $html, $libXMLOptions);
 
     // remove the "xml-encoding" hack
     foreach ($document->childNodes as $child) {
