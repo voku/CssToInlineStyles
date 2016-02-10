@@ -477,11 +477,12 @@ class CssToInlineStyles
   /**
    * create DOMDocument from HTML
    *
-   * @param $html
+   * @param string $html
+   * @param int    $libXMLOptions
    *
    * @return \DOMDocument
    */
-  private function createDOMDocument($html, $libXMLOptions)
+  private function createDOMDocument($html, $libXMLOptions = 0)
   {
     // create new DOMDocument
     $document = new \DOMDocument('1.0', $this->getEncoding());
