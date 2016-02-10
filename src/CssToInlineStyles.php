@@ -173,7 +173,7 @@ class CssToInlineStyles
    *                                                      use the options parameter to specify additional Libxml
    *                                                      parameters. Recommend these options: LIBXML_HTML_NOIMPLIED |
    *                                                      LIBXML_HTML_NODEFDTD
-   * @param false|string                       [optional] Set the path to your external css-files.
+   * @param $path false|string                 [optional] Set the path to your external css-files.
    *
    * @throws Exception
    */
