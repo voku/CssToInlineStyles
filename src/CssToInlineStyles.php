@@ -20,6 +20,14 @@ class CssToInlineStyles
   private static $cssMediaQueriesRegEx = '#@media\\s+(?:only\\s)?(?:[\\s{\\(]|screen|all)\\s?[^{]+{.*}\\s*}\\s*#misU';
 
   /**
+   * regular expression: css charset
+   *
+   * @var string
+   */
+  private static $cssCharsetRegEx = '/@charset [\'"][^\'"]+[\'"];/i';
+
+
+  /**
    * regular expression: conditional inline style tags
    *
    * @var string
@@ -102,6 +110,13 @@ class CssToInlineStyles
    * @var bool
    */
   private $excludeMediaQueries = true;
+
+  /**
+   * Exclude media queries from "$this->css" and keep media queries for inline-styles blocks
+   *
+   * @var bool
+   */
+  private $excludeCssCharset = true;
 
   /**
    * Creates an instance, you could set the HTML and CSS here, or load it
@@ -375,6 +390,11 @@ class CssToInlineStyles
     // remove spaces
     $css = preg_replace('/\s\s+/', ' ', $css);
 
+    // remove css charset
+    if (true === $this->excludeCssCharset) {
+      $css = $this->stripeCharsetInCss($css);
+    }
+
     // remove css media queries
     if (true === $this->excludeMediaQueries) {
       $css = $this->stripeMediaQueries($css);
@@ -396,6 +416,18 @@ class CssToInlineStyles
     $css = preg_replace(self::$styleCommentRegEx, '', $css);
 
     return (string)preg_replace(self::$cssMediaQueriesRegEx, '', $css);
+  }
+
+  /**
+   * remove charset from the string
+   *
+   * @param $css
+   *
+   * @return string
+   */
+  private function stripeCharsetInCss($css)
+  {
+    return (string)preg_replace(self::$cssCharsetRegEx, '', $css);
   }
 
   /**
@@ -834,6 +866,16 @@ class CssToInlineStyles
   public function setExcludeMediaQueries($on = true)
   {
     $this->excludeMediaQueries = (bool)$on;
+  }
+
+  /**
+   * Set exclude charset
+   *
+   * @param bool $on
+   */
+  public function setExcludeCssCharset($on = true)
+  {
+    $this->excludeCssCharset = (bool)$on;
   }
 
   /**

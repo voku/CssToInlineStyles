@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 @media only screen and (max-width: 599px) {
   table.body {
     position: relative;

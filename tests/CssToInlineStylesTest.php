@@ -188,6 +188,7 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $cssToInlineStyles->setUseInlineStylesBlock(true);
     $cssToInlineStyles->setStripOriginalStyleTags(true);
     $cssToInlineStyles->setExcludeMediaQueries(true);
+    $cssToInlineStyles->setExcludeCssCharset(true);
     $cssToInlineStyles->setHTML($html);
     $cssToInlineStyles->setCSS($css);
     $actual = $cssToInlineStyles->convert();
