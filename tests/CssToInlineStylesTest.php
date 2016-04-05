@@ -192,9 +192,9 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
 
   public function testKeepMediaQuery()
   {
-    $html = file_get_contents(__DIR__ . '/test2Html.html');
-    $css = file_get_contents(__DIR__ . '/test2Css.css');
-    $expected = file_get_contents(__DIR__ . '/test2Html_result.html');
+    $html = file_get_contents(__DIR__ . '/fixtures/test2Html.html');
+    $css = file_get_contents(__DIR__ . '/fixtures/test2Css.css');
+    $expected = file_get_contents(__DIR__ . '/fixtures/test2Html_result.html');
 
     $cssToInlineStyles = $this->cssToInlineStyles;
     $cssToInlineStyles->setExcludeConditionalInlineStylesBlock(false);
@@ -210,9 +210,9 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
 
   public function testKeepMediaQueryV2()
   {
-    $html = file_get_contents(__DIR__ . '/test3Html.html');
+    $html = file_get_contents(__DIR__ . '/fixtures/test3Html.html');
     $css = '';
-    $expected = file_get_contents(__DIR__ . '/test3Html_result.html');
+    $expected = file_get_contents(__DIR__ . '/fixtures/test3Html_result.html');
 
     $cssToInlineStyles = $this->cssToInlineStyles;
     $cssToInlineStyles->setExcludeConditionalInlineStylesBlock(false);
@@ -227,9 +227,9 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
 
   public function testLoadCssFile()
   {
-    $html = file_get_contents(__DIR__ . '/test4Html.html');
+    $html = file_get_contents(__DIR__ . '/fixtures/test4Html.html');
     $css = '';
-    $expected = file_get_contents(__DIR__ . '/test4Html_result.html');
+    $expected = file_get_contents(__DIR__ . '/fixtures/test4Html_result.html');
 
     $cssToInlineStyles = $this->cssToInlineStyles;
     $cssToInlineStyles->setExcludeConditionalInlineStylesBlock(false);
@@ -239,7 +239,25 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $cssToInlineStyles->setLoadCSSFromHTML(true);
     $cssToInlineStyles->setHTML($html);
     $cssToInlineStyles->setCSS($css);
-    $actual = $cssToInlineStyles->convert(true, 0, __DIR__ . '/../tests/');
+    $actual = $cssToInlineStyles->convert(true, 0, __DIR__ . '/fixtures/');
+    self::assertEquals($expected, $actual);
+  }
+
+  public function testLoadCssFileV5()
+  {
+    $html = file_get_contents(__DIR__ . '/fixtures/test5Html.html');
+    $css = '';
+    $expected = file_get_contents(__DIR__ . '/fixtures/test5Html_result.html');
+
+    $cssToInlineStyles = $this->cssToInlineStyles;
+    $cssToInlineStyles->setExcludeConditionalInlineStylesBlock(true);
+    $cssToInlineStyles->setUseInlineStylesBlock(true);
+    $cssToInlineStyles->setStripOriginalStyleTags(false);
+    $cssToInlineStyles->setExcludeMediaQueries(true);
+    $cssToInlineStyles->setLoadCSSFromHTML(false);
+    $cssToInlineStyles->setHTML($html);
+    $cssToInlineStyles->setCSS($css);
+    $actual = $cssToInlineStyles->convert(false);
     self::assertEquals($expected, $actual);
   }
 
@@ -480,21 +498,24 @@ EOF;
 
   public function testBoilerplateEmail()
   {
-    $html = file_get_contents(__DIR__ . '/test1Html.html');
+    $html = file_get_contents(__DIR__ . '/fixtures/test1Html.html');
     $css = '';
-    $expected = file_get_contents(__DIR__ . '/test1Html_result.html');
+    $expected = file_get_contents(__DIR__ . '/fixtures/test1Html_result.html');
 
     $cssToInlineStyles = $this->cssToInlineStyles;
     $cssToInlineStyles->setUseInlineStylesBlock(true);
     $cssToInlineStyles->setHTML($html);
     $cssToInlineStyles->setCSS($css);
     $actual = $cssToInlineStyles->convert();
-    self::assertEquals($expected, $actual);
+    self::assertEquals(
+        str_replace(array("\n", "\r"), "", $expected),
+        str_replace(array("\n", "\r"), "", $actual)
+    );
   }
 
   public function testEncodingIso()
   {
-    $testString = file_get_contents(__DIR__ . '/test1Latin.txt');
+    $testString = file_get_contents(__DIR__ . '/fixtures/test1Latin.txt');
     //self::assertContains('Iñtërnâtiônàlizætiøn', $testString);
 
     $html = '<p>' . $testString . '</p>';
@@ -510,7 +531,7 @@ EOF;
 
   public function testEncodingUtf8()
   {
-    $testString = file_get_contents(__DIR__ . '/test1Utf8.txt');
+    $testString = file_get_contents(__DIR__ . '/fixtures/test1Utf8.txt');
     self::assertContains('Iñtërnâtiônàlizætiøn', $testString);
 
     $html = '<p>' . $testString . '</p>';

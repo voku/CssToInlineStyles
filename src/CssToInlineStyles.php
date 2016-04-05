@@ -32,7 +32,7 @@ class CssToInlineStyles
    *
    * @var string
    */
-  private static $excludeConditionalInlineStylesBlockRegEx = '/<!--.*<style.*?-->/is';
+  private static $excludeConditionalInlineStylesBlockRegEx = '/<!--.*<style.*?-->/isU';
 
   /**
    * regular expression: inline style tags
@@ -181,14 +181,14 @@ class CssToInlineStyles
   /**
    * Converts the loaded HTML into an HTML-string with inline styles based on the loaded CSS
    *
-   * @return string
+   * @param bool $outputXHTML                             [optional] Should we output valid XHTML?
+   * @param int  $libXMLOptions                           [optional] $libXMLOptions Since PHP 5.4.0 and Libxml 2.6.0,
+   *                                                      you may also use the options parameter to specify additional
+   *                                                      Libxml parameters. Recommend these options:
+   *                                                      LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+   * @param bool $path                                    [optional] Set the path to your external css-files.
    *
-   * @param  bool $outputXHTML                 [optional] Should we output valid XHTML?
-   * @param  int  $libXMLOptions               [optional] $libXMLOptions Since PHP 5.4.0 and Libxml 2.6.0, you may also
-   *                                                      use the options parameter to specify additional Libxml
-   *                                                      parameters. Recommend these options: LIBXML_HTML_NOIMPLIED |
-   *                                                      LIBXML_HTML_NODEFDTD
-   * @param $path false|string                 [optional] Set the path to your external css-files.
+   * @return string
    *
    * @throws Exception
    */
@@ -211,7 +211,9 @@ class CssToInlineStyles
     // check if there is some link css reference
     if ($this->loadCSSFromHTML) {
       foreach ($document->getElementsByTagName('link') as $node) {
-        $file = ($path ? $path : __DIR__) . '/' .  $node->getAttribute('href');
+        
+        /** @noinspection PhpUndefinedMethodInspection */
+        $file = ($path ?: __DIR__) . '/' . $node->getAttribute('href');
 
         if (file_exists($file)) {
           $css .= file_get_contents($file);
@@ -489,6 +491,7 @@ class CssToInlineStyles
     $properties = (array)explode(';', $styles);
     $propertiesCount = count($properties);
 
+    /** @noinspection ForeachInvariantsInspection */
     for ($i = 0; $i < $propertiesCount; $i++) {
       // If next property begins with base64,
       // Then the ';' was part of this property (and we should not have split on it).
@@ -615,6 +618,7 @@ class CssToInlineStyles
             $originalStyle = '';
 
             if (null !== $element->attributes->getNamedItem('style')) {
+              /** @noinspection PhpUndefinedFieldInspection */
               $originalStyle = $element->attributes->getNamedItem('style')->value;
             }
 
@@ -641,6 +645,7 @@ class CssToInlineStyles
       // loop found elements
       foreach ($elements as $element) {
         // get the original styles
+        /** @noinspection PhpUndefinedFieldInspection */
         $originalStyle = $element->attributes->getNamedItem('data-css-to-inline-styles-original-styles')->value;
 
         if ('' != $originalStyle) {
@@ -681,6 +686,7 @@ class CssToInlineStyles
     // any styles defined before?
     if (null !== $stylesAttribute) {
       // get value for the styles attribute
+      /** @noinspection PhpUndefinedFieldInspection */
       $definedStyles = (string)$stylesAttribute->value;
 
       // split into properties
@@ -832,16 +838,17 @@ class CssToInlineStyles
   }
 
   /**
-       * Set use of inline link block
-       * If this is enabled the class will use the links reference in the HTML.
-       *
-       * @return void
-       * @param  bool [optional] $on Should we process link styles?
-       */
-    public function setLoadCSSFromHTML($on = true)
-     {
-         $this->loadCSSFromHTML = (bool) $on;
-     }
+   * Set use of inline link block
+   * If this is enabled the class will use the links reference in the HTML.
+   *
+   * @return void
+   *
+   * @param  bool [optional] $on Should we process link styles?
+   */
+  public function setLoadCSSFromHTML($on = true)
+  {
+    $this->loadCSSFromHTML = (bool)$on;
+  }
 
   /**
    * Set strip original style tags
