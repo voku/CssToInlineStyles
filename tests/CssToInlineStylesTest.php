@@ -774,4 +774,29 @@ EOF
         )
     );
   }
+
+  public function testHtmlEncoding()
+  {
+    $text = 'Žluťoučký kůň pije pivo nebo jak to je dál';
+
+    $cssToInlineStyles = new CssToInlineStyles($text, '');
+
+    $expectedText = 'Žluťoučký kůň pije pivo nebo jak to je dál';
+    $result = trim(
+        strip_tags(
+            $cssToInlineStyles->convert(true)
+        )
+    );
+    self::assertEquals($expectedText, $result);
+
+    // ---
+
+    $expectedText = '&#381;lu&#357;ou&#269;k&yacute; k&#367;&#328; pije pivo nebo jak to je d&aacute;l';
+    $result = trim(
+        strip_tags(
+            $cssToInlineStyles->convert(false)
+        )
+    );
+    self::assertEquals($expectedText, $result);
+  }
 }
