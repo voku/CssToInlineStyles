@@ -30,6 +30,19 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $this->runHTMLToCSS($html, $css, $expected);
   }
 
+  public function testSimpleElementSelectorV2()
+  {
+    $html = '<h1></h1><div mc:edit="body_content" style="display: block;"><span>test</span></div>';
+    $css = 'div { display: none; }';
+    $expected = '<h1></h1><div mc:edit="body_content" style="display: block;"><span>test</span></div>';
+    $this->runHTMLToCSS($html, $css, $expected);
+
+    $html = '<h1></h1><div mc:edit="body_content" style=""><span>test</span></div>';
+    $css = 'div { display: none; }';
+    $expected = '<h1></h1><div mc:edit="body_content" style="display: none;"><span>test</span></div>';
+    $this->runHTMLToCSS($html, $css, $expected);
+  }
+
   public function testSimpleElementSelectorWithUtf8()
   {
     $html = '<div id="東とう京" class="ɹǝddɐɹʍ" style="color: white;"></div>';
