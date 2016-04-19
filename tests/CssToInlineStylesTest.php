@@ -508,8 +508,8 @@ EOF;
     $cssToInlineStyles->setCSS($css);
     $actual = $cssToInlineStyles->convert();
     self::assertEquals(
-        str_replace(array("\n", "\r"), "", $expected),
-        str_replace(array("\n", "\r"), "", $actual)
+        str_replace(array("\n", "\r"), '', $expected),
+        str_replace(array("\n", "\r"), '', $actual)
     );
   }
 
