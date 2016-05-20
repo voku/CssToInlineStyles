@@ -74,7 +74,7 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $actual = $this->stripBody($output, $asXHTML);
 
     if ($expected) {
-      self::assertEquals($expected, $actual);
+      self::assertEquals($this->normalizeString($expected), $actual);
     }
 
     return $actual;
@@ -192,9 +192,9 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
 
   public function testKeepMediaQuery()
   {
-    $html = file_get_contents(__DIR__ . '/fixtures/test2Html.html');
-    $css = file_get_contents(__DIR__ . '/fixtures/test2Css.css');
-    $expected = file_get_contents(__DIR__ . '/fixtures/test2Html_result.html');
+    $html = $this->file_get_contents(__DIR__ . '/fixtures/test2Html.html');
+    $css = $this->file_get_contents(__DIR__ . '/fixtures/test2Css.css');
+    $expected = $this->file_get_contents(__DIR__ . '/fixtures/test2Html_result.html');
 
     $cssToInlineStyles = $this->cssToInlineStyles;
     $cssToInlineStyles->setExcludeConditionalInlineStylesBlock(false);
@@ -210,9 +210,9 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
 
   public function testKeepMediaQueryV2()
   {
-    $html = file_get_contents(__DIR__ . '/fixtures/test3Html.html');
+    $html = $this->file_get_contents(__DIR__ . '/fixtures/test3Html.html');
     $css = '';
-    $expected = file_get_contents(__DIR__ . '/fixtures/test3Html_result.html');
+    $expected = $this->file_get_contents(__DIR__ . '/fixtures/test3Html_result.html');
 
     $cssToInlineStyles = $this->cssToInlineStyles;
     $cssToInlineStyles->setExcludeConditionalInlineStylesBlock(false);
@@ -240,14 +240,14 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $cssToInlineStyles->setHTML($html);
     $cssToInlineStyles->setCSS($css);
     $actual = $cssToInlineStyles->convert(true, 0, __DIR__ . '/fixtures/');
-    self::assertEquals($expected, $actual);
+    self::assertEquals($this->normalizeString($expected), $actual);
   }
 
   public function testLoadCssFileV5()
   {
-    $html = file_get_contents(__DIR__ . '/fixtures/test5Html.html');
+    $html = $this->file_get_contents(__DIR__ . '/fixtures/test5Html.html');
     $css = '';
-    $expected = file_get_contents(__DIR__ . '/fixtures/test5Html_result.html');
+    $expected = $this->file_get_contents(__DIR__ . '/fixtures/test5Html_result.html');
 
     $cssToInlineStyles = $this->cssToInlineStyles;
     $cssToInlineStyles->setExcludeConditionalInlineStylesBlock(true);
@@ -458,7 +458,7 @@ EOF;
     $this->cssToInlineStyles->setHTML($html);
     $this->cssToInlineStyles->setCSS($css);
     $actual = $this->cssToInlineStyles->convert();
-    self::assertEquals($expected, $actual);
+    self::assertEquals($this->normalizeString($expected), $actual);
   }
 
   public function testCleanupWithStyleTagCleanup()
@@ -477,7 +477,7 @@ EOF;
     $this->cssToInlineStyles->setHTML($html);
     $this->cssToInlineStyles->setCSS($css);
     $actual = $this->cssToInlineStyles->convert();
-    self::assertEquals($expected, $actual);
+    self::assertEquals($this->normalizeString($expected), $actual);
   }
 
   public function testEqualSpecificity()
@@ -580,7 +580,7 @@ EOF;
     $this->cssToInlineStyles->setHTML($html);
     $this->cssToInlineStyles->setCSS('');
     $actual = $this->cssToInlineStyles->convert(true);
-    self::assertEquals($expected, $actual);
+    self::assertEquals($this->normalizeString($expected), $actual);
   }
 
   public function testExcludeConditionalInlineStylesBlock()
@@ -701,11 +701,11 @@ background-image: url(\'data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAA//Z\'); }
 
     // first convert
     $actual = $cssToInlineStyles->convert(true);
-    self::assertEquals($expected, $actual);
+    self::assertEquals($this->normalizeString($expected), $actual);
 
     // second convert
     $actual = $cssToInlineStyles->convert(true);
-    self::assertEquals($expected, $actual);
+    self::assertEquals($this->normalizeString($expected), $actual);
   }
 
   public function testCssRulesInlineResetDuringSecondLoad()
@@ -798,5 +798,16 @@ EOF
         )
     );
     self::assertEquals($expectedText, $result);
+  }
+
+  protected function file_get_contents($filename) {
+    $string = file_get_contents($filename);
+
+    return $this->normalizeString($string);
+  }
+
+  protected function normalizeString($string)
+  {
+    return str_replace(array("\r\n", "\r"), "\n", $string);
   }
 }

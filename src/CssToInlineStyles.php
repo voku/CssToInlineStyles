@@ -123,7 +123,7 @@ class CssToInlineStyles
    * later.
    *
    * @param  null|string $html The HTML to process.
-   * @param  null|string $css  The CSS to use.
+   * @param  null|string $css The CSS to use.
    */
   public function __construct($html = null, $css = null)
   {
@@ -181,12 +181,12 @@ class CssToInlineStyles
   /**
    * Converts the loaded HTML into an HTML-string with inline styles based on the loaded CSS
    *
-   * @param bool $outputXHTML                             [optional] Should we output valid XHTML?
-   * @param int  $libXMLOptions                           [optional] $libXMLOptions Since PHP 5.4.0 and Libxml 2.6.0,
+   * @param bool $outputXHTML [optional] Should we output valid XHTML?
+   * @param int $libXMLOptions [optional] $libXMLOptions Since PHP 5.4.0 and Libxml 2.6.0,
    *                                                      you may also use the options parameter to specify additional
    *                                                      Libxml parameters. Recommend these options:
    *                                                      LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
-   * @param bool $path                                    [optional] Set the path to your external css-files.
+   * @param bool $path [optional] Set the path to your external css-files.
    *
    * @return string
    *
@@ -211,7 +211,7 @@ class CssToInlineStyles
     // check if there is some link css reference
     if ($this->loadCSSFromHTML) {
       foreach ($document->getElementsByTagName('link') as $node) {
-        
+
         /** @noinspection PhpUndefinedMethodInspection */
         $file = ($path ?: __DIR__) . '/' . $node->getAttribute('href');
 
@@ -256,14 +256,18 @@ class CssToInlineStyles
       $document->formatOutput = true;
 
       // get the HTML as XML
-      $html = $document->saveXML(null, LIBXML_NOEMPTYTAG);
+      $xml = $document->saveXML(null, LIBXML_NOEMPTYTAG);
+      $xml = $this->putReplacedAmperstampBackToPreserveHtmlEntities($xml);
 
       // remove the XML-header
-      return ltrim(preg_replace('/<\?xml.*\?>/', '', $html));
+      return ltrim(preg_replace('/<\?xml.*\?>/', '', $xml));
     }
 
     // just regular HTML 4.01 as it should be used in newsletters
-    return $document->saveHTML();
+    $html =  $document->saveHTML();
+    $html = $this->putReplacedAmperstampBackToPreserveHtmlEntities($html);
+
+    return $html;
   }
 
   /**
@@ -513,7 +517,7 @@ class CssToInlineStyles
    * create DOMDocument from HTML
    *
    * @param string $html
-   * @param int    $libXMLOptions
+   * @param int $libXMLOptions
    *
    * @return \DOMDocument
    */
@@ -529,21 +533,29 @@ class CssToInlineStyles
     // set error level
     $internalErrors = libxml_use_internal_errors(true);
 
-    // load HTML
-    //
-    // with UTF-8 hack: http://php.net/manual/en/domdocument.loadhtml.php#95251
-    //
-    if ($libXMLOptions !== 0) {
-      $document->loadHTML('<?xml encoding="' . $this->getEncoding() . '">' . $html, $libXMLOptions);
-    } else {
-      $document->loadHTML('<?xml encoding="' . $this->getEncoding() . '">' . $html);
+    $html = $this->replaceAmperstampToPreserveHtmlEntities($html);
+
+    // UTF-8 hack: http://php.net/manual/en/domdocument.loadhtml.php#95251
+    $html = trim($html);
+    $xmlHackUsed = false;
+    if (stripos('<?xml', $html) !== 0) {
+      $xmlHackUsed = true;
+      $html = '<?xml encoding="' . $this->getEncoding() . '" ?>' . $html;
     }
 
+    // load HTML
+    if ($libXMLOptions !== 0) {
+      $document->loadHTML($html, $libXMLOptions);
+    } else {
+      $document->loadHTML($html);
+    }
 
     // remove the "xml-encoding" hack
-    foreach ($document->childNodes as $child) {
-      if ($child->nodeType == XML_PI_NODE) {
-        $document->removeChild($child);
+    if ($xmlHackUsed === true) {
+      foreach ($document->childNodes as $child) {
+        if ($child->nodeType == XML_PI_NODE) {
+          $document->removeChild($child);
+        }
       }
     }
 
@@ -570,7 +582,7 @@ class CssToInlineStyles
    * create XPath
    *
    * @param \DOMDocument $document
-   * @param array        $cssRules
+   * @param array $cssRules
    *
    * @return \DOMXPath
    */
@@ -671,7 +683,7 @@ class CssToInlineStyles
 
   /**
    * @param \DOMElement $element
-   * @param array       $ruleProperties
+   * @param array $ruleProperties
    *
    * @return array
    */
@@ -895,4 +907,21 @@ class CssToInlineStyles
     $this->excludeConditionalInlineStylesBlock = (bool)$on;
   }
 
+  /**
+   * @param string $html
+   * @return string
+   */
+  private function replaceAmperstampToPreserveHtmlEntities($html)
+  {
+    return str_replace(array('&',), array('!!!!AMP!!!!'), $html);
+  }
+
+  /**
+   * @param string $html
+   * @return string
+   */
+  private function putReplacedAmperstampBackToPreserveHtmlEntities($html)
+  {
+    return str_replace(array('!!!!AMP!!!!', '&#13;'), array('&', ''), $html);
+  }
 }
