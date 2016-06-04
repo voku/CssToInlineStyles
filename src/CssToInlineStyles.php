@@ -26,7 +26,6 @@ class CssToInlineStyles
    */
   private static $cssCharsetRegEx = '/@charset [\'"][^\'"]+[\'"];/i';
 
-
   /**
    * regular expression: conditional inline style tags
    *
@@ -40,6 +39,27 @@ class CssToInlineStyles
    * @var string
    */
   private static $styleTagRegEx = '|<style(.*)>(.*)</style>|isU';
+
+  /**
+   * @var array
+   */
+  private static $domLinkReplaceHelper = array(
+      'orig' => array('[', ']', '{', '}',),
+      'tmp'  => array(
+          '!!!!SQUARE_BRACKET_LEFT!!!!',
+          '!!!!SQUARE_BRACKET_RIGHT!!!!',
+          '!!!!BRACKET_LEFT!!!!',
+          '!!!!BRACKET_RIGHT!!!!',
+      ),
+  );
+
+  /**
+   * @var array
+   */
+  protected static $domReplaceHelper = array(
+      'orig' => array('&'),
+      'tmp'  => array('!!!!AMP!!!!'),
+  );
 
   /**
    * regular expression: css-comments
@@ -123,7 +143,7 @@ class CssToInlineStyles
    * later.
    *
    * @param  null|string $html The HTML to process.
-   * @param  null|string $css The CSS to use.
+   * @param  null|string $css  The CSS to use.
    */
   public function __construct($html = null, $css = null)
   {
@@ -181,12 +201,12 @@ class CssToInlineStyles
   /**
    * Converts the loaded HTML into an HTML-string with inline styles based on the loaded CSS
    *
-   * @param bool $outputXHTML [optional] Should we output valid XHTML?
-   * @param int $libXMLOptions [optional] $libXMLOptions Since PHP 5.4.0 and Libxml 2.6.0,
+   * @param bool $outputXHTML                             [optional] Should we output valid XHTML?
+   * @param int  $libXMLOptions                           [optional] $libXMLOptions Since PHP 5.4.0 and Libxml 2.6.0,
    *                                                      you may also use the options parameter to specify additional
    *                                                      Libxml parameters. Recommend these options:
    *                                                      LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
-   * @param bool $path [optional] Set the path to your external css-files.
+   * @param bool $path                                    [optional] Set the path to your external css-files.
    *
    * @return string
    *
@@ -257,15 +277,15 @@ class CssToInlineStyles
 
       // get the HTML as XML
       $xml = $document->saveXML(null, LIBXML_NOEMPTYTAG);
-      $xml = $this->putReplacedAmperstampBackToPreserveHtmlEntities($xml);
+      $xml = $this->putReplacedBackToPreserveHtmlEntities($xml);
 
       // remove the XML-header
       return ltrim(preg_replace('/<\?xml.*\?>/', '', $xml));
     }
 
     // just regular HTML 4.01 as it should be used in newsletters
-    $html =  $document->saveHTML();
-    $html = $this->putReplacedAmperstampBackToPreserveHtmlEntities($html);
+    $html = $document->saveHTML();
+    $html = $this->putReplacedBackToPreserveHtmlEntities($html);
 
     return $html;
   }
@@ -517,7 +537,7 @@ class CssToInlineStyles
    * create DOMDocument from HTML
    *
    * @param string $html
-   * @param int $libXMLOptions
+   * @param int    $libXMLOptions
    *
    * @return \DOMDocument
    */
@@ -533,7 +553,7 @@ class CssToInlineStyles
     // set error level
     $internalErrors = libxml_use_internal_errors(true);
 
-    $html = $this->replaceAmperstampToPreserveHtmlEntities($html);
+    $html = $this->replaceToPreserveHtmlEntities($html);
 
     // UTF-8 hack: http://php.net/manual/en/domdocument.loadhtml.php#95251
     $html = trim($html);
@@ -582,7 +602,7 @@ class CssToInlineStyles
    * create XPath
    *
    * @param \DOMDocument $document
-   * @param array $cssRules
+   * @param array        $cssRules
    *
    * @return \DOMXPath
    */
@@ -683,7 +703,7 @@ class CssToInlineStyles
 
   /**
    * @param \DOMElement $element
-   * @param array $ruleProperties
+   * @param array       $ruleProperties
    *
    * @return array
    */
@@ -909,19 +929,48 @@ class CssToInlineStyles
 
   /**
    * @param string $html
+   *
    * @return string
    */
-  private function replaceAmperstampToPreserveHtmlEntities($html)
+  private function replaceToPreserveHtmlEntities($html)
   {
-    return str_replace(array('&',), array('!!!!AMP!!!!'), $html);
+    preg_match_all("/(\bhttps?:\/\/[^\s()<>]+(?:\([\w\d]+\)|[^[:punct:]\s]|\/|\}|\]))/i", $html, $linksOld);
+
+    $linksNew = array();
+    if (!empty($linksOld[1])) {
+      $linksOld = $linksOld[1];
+      foreach ($linksOld as $linkKey => $linkOld) {
+        $linksNew[$linkKey] = str_replace(
+            self::$domLinkReplaceHelper['orig'],
+            self::$domLinkReplaceHelper['tmp'],
+            $linkOld
+        );
+      }
+    }
+
+    $linksNewCount = count($linksNew);
+    if ($linksNewCount > 0 && count($linksOld) === $linksNewCount) {
+      $search = array_merge($linksOld, self::$domReplaceHelper['orig']);
+      $replace = array_merge($linksNew, self::$domReplaceHelper['tmp']);
+    } else {
+      $search = self::$domReplaceHelper['orig'];
+      $replace = self::$domReplaceHelper['tmp'];
+    }
+
+    return str_replace($search, $replace, $html);
   }
 
   /**
    * @param string $html
+   *
    * @return string
    */
-  private function putReplacedAmperstampBackToPreserveHtmlEntities($html)
+  private function putReplacedBackToPreserveHtmlEntities($html)
   {
-    return str_replace(array('!!!!AMP!!!!', '&#13;'), array('&', ''), $html);
+    return str_replace(
+        array_merge(self::$domLinkReplaceHelper['tmp'], self::$domReplaceHelper['tmp'], array('&#13;')),
+        array_merge(self::$domLinkReplaceHelper['orig'], self::$domReplaceHelper['orig'], array('')),
+        $html
+    );
   }
 }
