@@ -1,3 +1,8 @@
+
+* {
+  color: blue;
+}
+
 .preheaderContent {
   color: pink !important;
 }
@@ -17,4 +22,5 @@ td.body-cell  {
 td {
   margin: 0;
 }
+
 

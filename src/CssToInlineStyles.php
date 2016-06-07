@@ -615,9 +615,16 @@ class CssToInlineStyles
       // loop rules
       foreach ($cssRules as $rule) {
 
+        $ruleSelector = $rule['selector'];
+        $ruleProperties = $rule['properties'];
+
+        if (!$ruleSelector || !$ruleProperties) {
+          continue;
+        }
+
         try {
           $converter = new CssSelectorConverter();
-          $query = $converter->toXPath($rule['selector']);
+          $query = $converter->toXPath($ruleSelector);
         } catch (ExceptionInterface $e) {
           $query = null;
         }
@@ -643,6 +650,22 @@ class CssToInlineStyles
            * @var $element \DOMElement
            */
 
+          if (
+              $ruleSelector == '*'
+              &&
+              (
+                $element->tagName == 'html'
+                || $element->tagName === 'title'
+                || $element->tagName == 'meta'
+                || $element->tagName == 'head'
+                || $element->tagName == 'style'
+                || $element->tagName == 'script'
+                || $element->tagName == 'link'
+              )
+          ) {
+            continue;
+          }
+
           // no styles stored?
           if (null === $element->attributes->getNamedItem('data-css-to-inline-styles-original-styles')) {
 
@@ -661,7 +684,7 @@ class CssToInlineStyles
             $element->setAttribute('style', '');
           }
 
-          $propertiesString = $this->createPropertyChunks($element, $rule['properties']);
+          $propertiesString = $this->createPropertyChunks($element, $ruleProperties);
 
           // set attribute
           if ('' != $propertiesString) {
