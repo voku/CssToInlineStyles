@@ -4,6 +4,11 @@ namespace voku\CssToInlineStyles\tests;
 
 use \voku\CssToInlineStyles\Specificity;
 
+/**
+ * Class SpecificityTest
+ *
+ * @package voku\CssToInlineStyles\tests
+ */
 class SpecificityTest extends \PHPUnit_Framework_TestCase
 {
   public function testGetValues()
@@ -31,6 +36,9 @@ class SpecificityTest extends \PHPUnit_Framework_TestCase
     self::assertEquals($result, $a->compareTo($b));
   }
 
+  /**
+   * @return array
+   */
   public function getCompareTestData()
   {
     return array(
@@ -59,6 +67,9 @@ class SpecificityTest extends \PHPUnit_Framework_TestCase
     self::assertEquals($result, $specificity->getValues());
   }
 
+  /**
+   * @return array
+   */
   public function getSelectorData()
   {
     return array(
@@ -89,6 +100,9 @@ class SpecificityTest extends \PHPUnit_Framework_TestCase
     self::assertEquals($result, $specificity->getValues());
   }
 
+  /**
+   * @return array
+   */
   public function getSkippedSelectorData()
   {
     return array(

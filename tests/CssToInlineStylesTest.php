@@ -189,7 +189,21 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $this->cssToInlineStyles->setExcludeMediaQueries(true);
     $this->runHTMLToCSS($html, $css, $expected);
   }
+  
+  public function testCssShorthandProperties()
+  {
+    $html = $this->file_get_contents(__DIR__ . '/fixtures/test6Html.html');
+    $css = $this->file_get_contents(__DIR__ . '/fixtures/test6Style.css');
+    $expected = $this->file_get_contents(__DIR__ . '/fixtures/test6Html_result.html');
 
+    $cssToInlineStyles = $this->cssToInlineStyles;
+    $cssToInlineStyles->setUseInlineStylesBlock(true);
+    $cssToInlineStyles->setHTML($html);
+    $cssToInlineStyles->setCSS($css);
+    $actual = $cssToInlineStyles->convert();
+    self::assertEquals($expected, $actual);
+  }
+  
   public function testKeepMediaQuery()
   {
     $html = $this->file_get_contents(__DIR__ . '/fixtures/test2Html.html');
