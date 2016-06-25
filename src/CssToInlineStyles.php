@@ -290,7 +290,7 @@ class CssToInlineStyles
   /**
    * Process the loaded CSS
    *
-   * @param $css
+   * @param string $css
    *
    * @return array
    */
@@ -417,7 +417,7 @@ class CssToInlineStyles
   /**
    * remove charset from the string
    *
-   * @param $css
+   * @param string $css
    *
    * @return string
    */
@@ -633,7 +633,7 @@ class CssToInlineStyles
    * @param \DOMElement $element
    * @param array       $ruleProperties
    *
-   * @return array
+   * @return string
    */
   private function createPropertyChunks(\DOMElement $element, array $ruleProperties)
   {
