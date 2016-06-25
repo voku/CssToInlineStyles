@@ -1,8 +1,10 @@
 <?php
+
 namespace voku\CssToInlineStyles;
 
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\CssSelector\Exception\ExceptionInterface;
+use voku\helper\HtmlDomParser;
 
 /**
  * CSS to Inline Styles class
@@ -39,27 +41,6 @@ class CssToInlineStyles
    * @var string
    */
   private static $styleTagRegEx = '|<style(.*)>(.*)</style>|isU';
-
-  /**
-   * @var array
-   */
-  private static $domLinkReplaceHelper = array(
-      'orig' => array('[', ']', '{', '}',),
-      'tmp'  => array(
-          '!!!!SQUARE_BRACKET_LEFT!!!!',
-          '!!!!SQUARE_BRACKET_RIGHT!!!!',
-          '!!!!BRACKET_LEFT!!!!',
-          '!!!!BRACKET_RIGHT!!!!',
-      ),
-  );
-
-  /**
-   * @var array
-   */
-  protected static $domReplaceHelper = array(
-      'orig' => array('&'),
-      'tmp'  => array('!!!!AMP!!!!'),
-  );
 
   /**
    * regular expression: css-comments
@@ -225,12 +206,12 @@ class CssToInlineStyles
     // use local variables
     $css = $this->css;
 
-    // create new DOMDocument
-    $document = $this->createDOMDocument($this->html, $libXMLOptions);
+    // create new HtmlDomParser
+    $dom = HtmlDomParser::str_get_html($this->html);
 
     // check if there is some link css reference
     if ($this->loadCSSFromHTML) {
-      foreach ($document->getElementsByTagName('link') as $node) {
+      foreach ($dom->find('link') as $node) {
 
         /** @noinspection PhpUndefinedMethodInspection */
         $file = ($path ?: __DIR__) . '/' . $node->getAttribute('href');
@@ -239,7 +220,7 @@ class CssToInlineStyles
           $css .= file_get_contents($file);
 
           // converting to inline css because we don't need/want to load css files, so remove the link
-          $node->parentNode->removeChild($node);
+          $node->outertext = '';
         }
       }
     }
@@ -258,7 +239,7 @@ class CssToInlineStyles
     $cssRules = $this->processCSS($css);
 
     // create new XPath
-    $xPath = $this->createXPath($document, $cssRules);
+    $xPath = $this->createXPath($dom->getDocument(), $cssRules);
 
     // strip original style tags if we need to
     if ($this->stripOriginalStyleTags === true) {
@@ -272,22 +253,11 @@ class CssToInlineStyles
 
     // should we output XHTML?
     if (true === $outputXHTML) {
-      // set formatting
-      $document->formatOutput = true;
-
-      // get the HTML as XML
-      $xml = $document->saveXML(null, LIBXML_NOEMPTYTAG);
-      $xml = $this->putReplacedBackToPreserveHtmlEntities($xml);
-
-      // remove the XML-header
-      return ltrim(preg_replace('/<\?xml.*\?>/', '', $xml));
+      return $dom->xml();
     }
 
     // just regular HTML 4.01 as it should be used in newsletters
-    $html = $document->saveHTML();
-    $html = $this->putReplacedBackToPreserveHtmlEntities($html);
-
-    return $html;
+    return $dom->html();
   }
 
   /**
@@ -534,71 +504,6 @@ class CssToInlineStyles
   }
 
   /**
-   * create DOMDocument from HTML
-   *
-   * @param string $html
-   * @param int    $libXMLOptions
-   *
-   * @return \DOMDocument
-   */
-  private function createDOMDocument($html, $libXMLOptions = 0)
-  {
-    // create new DOMDocument
-    $document = new \DOMDocument('1.0', $this->getEncoding());
-
-    // DOMDocument settings
-    $document->preserveWhiteSpace = false;
-    $document->formatOutput = true;
-
-    // set error level
-    $internalErrors = libxml_use_internal_errors(true);
-
-    $html = $this->replaceToPreserveHtmlEntities($html);
-
-    // UTF-8 hack: http://php.net/manual/en/domdocument.loadhtml.php#95251
-    $html = trim($html);
-    $xmlHackUsed = false;
-    if (stripos('<?xml', $html) !== 0) {
-      $xmlHackUsed = true;
-      $html = '<?xml encoding="' . $this->getEncoding() . '" ?>' . $html;
-    }
-
-    // load HTML
-    if ($libXMLOptions !== 0) {
-      $document->loadHTML($html, $libXMLOptions);
-    } else {
-      $document->loadHTML($html);
-    }
-
-    // remove the "xml-encoding" hack
-    if ($xmlHackUsed === true) {
-      foreach ($document->childNodes as $child) {
-        if ($child->nodeType == XML_PI_NODE) {
-          $document->removeChild($child);
-        }
-      }
-    }
-
-    // set encoding
-    $document->encoding = $this->getEncoding();
-
-    // restore error level
-    libxml_use_internal_errors($internalErrors);
-
-    return $document;
-  }
-
-  /**
-   * Get the encoding to use
-   *
-   * @return string
-   */
-  private function getEncoding()
-  {
-    return $this->encoding;
-  }
-
-  /**
    * create XPath
    *
    * @param \DOMDocument $document
@@ -654,13 +559,13 @@ class CssToInlineStyles
               $ruleSelector == '*'
               &&
               (
-                $element->tagName == 'html'
-                || $element->tagName === 'title'
-                || $element->tagName == 'meta'
-                || $element->tagName == 'head'
-                || $element->tagName == 'style'
-                || $element->tagName == 'script'
-                || $element->tagName == 'link'
+                  $element->tagName == 'html'
+                  || $element->tagName === 'title'
+                  || $element->tagName == 'meta'
+                  || $element->tagName == 'head'
+                  || $element->tagName == 'style'
+                  || $element->tagName == 'script'
+                  || $element->tagName == 'link'
               )
           ) {
             continue;
@@ -948,52 +853,5 @@ class CssToInlineStyles
   public function setExcludeConditionalInlineStylesBlock($on = true)
   {
     $this->excludeConditionalInlineStylesBlock = (bool)$on;
-  }
-
-  /**
-   * @param string $html
-   *
-   * @return string
-   */
-  private function replaceToPreserveHtmlEntities($html)
-  {
-    preg_match_all("/(\bhttps?:\/\/[^\s()<>]+(?:\([\w\d]+\)|[^[:punct:]\s]|\/|\}|\]))/i", $html, $linksOld);
-
-    $linksNew = array();
-    if (!empty($linksOld[1])) {
-      $linksOld = $linksOld[1];
-      foreach ($linksOld as $linkKey => $linkOld) {
-        $linksNew[$linkKey] = str_replace(
-            self::$domLinkReplaceHelper['orig'],
-            self::$domLinkReplaceHelper['tmp'],
-            $linkOld
-        );
-      }
-    }
-
-    $linksNewCount = count($linksNew);
-    if ($linksNewCount > 0 && count($linksOld) === $linksNewCount) {
-      $search = array_merge($linksOld, self::$domReplaceHelper['orig']);
-      $replace = array_merge($linksNew, self::$domReplaceHelper['tmp']);
-    } else {
-      $search = self::$domReplaceHelper['orig'];
-      $replace = self::$domReplaceHelper['tmp'];
-    }
-
-    return str_replace($search, $replace, $html);
-  }
-
-  /**
-   * @param string $html
-   *
-   * @return string
-   */
-  private function putReplacedBackToPreserveHtmlEntities($html)
-  {
-    return str_replace(
-        array_merge(self::$domLinkReplaceHelper['tmp'], self::$domReplaceHelper['tmp'], array('&#13;')),
-        array_merge(self::$domLinkReplaceHelper['orig'], self::$domReplaceHelper['orig'], array('')),
-        $html
-    );
   }
 }
