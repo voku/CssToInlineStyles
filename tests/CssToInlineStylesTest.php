@@ -714,21 +714,13 @@ EOF
     $cssToInlineStyles = new CssToInlineStyles($text, '');
 
     $expectedText = 'Žluťoučký kůň pije pivo nebo jak to je dál';
-    $result = trim(
-        strip_tags(
-            $cssToInlineStyles->convert(true)
-        )
-    );
+    $result = $cssToInlineStyles->convert(true);
     self::assertEquals($expectedText, $result);
 
     // ---
 
     $expectedText = 'Žluťoučký kůň pije pivo nebo jak to je dál';
-    $result = trim(
-        strip_tags(
-            $cssToInlineStyles->convert(false)
-        )
-    );
+    $result = $cssToInlineStyles->convert(false);
     self::assertEquals($expectedText, $result);
   }
 
