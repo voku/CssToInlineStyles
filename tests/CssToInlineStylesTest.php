@@ -168,9 +168,10 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $expected = $this->file_get_contents(__DIR__ . '/fixtures/test6Html_result.html');
 
     $cssToInlineStyles = $this->cssToInlineStyles;
-    $cssToInlineStyles->setUseInlineStylesBlock(true);
-    $cssToInlineStyles->setHTML($html);
-    $cssToInlineStyles->setCSS($css);
+    $cssToInlineStyles
+        ->setUseInlineStylesBlock(true)
+        ->setHTML($html)
+        ->setCSS($css);
     $actual = $cssToInlineStyles->convert();
     self::assertEquals($expected, $actual);
   }
@@ -182,13 +183,14 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $expected = $this->file_get_contents(__DIR__ . '/fixtures/test2Html_result.html');
 
     $cssToInlineStyles = $this->cssToInlineStyles;
-    $cssToInlineStyles->setExcludeConditionalInlineStylesBlock(false);
-    $cssToInlineStyles->setUseInlineStylesBlock(true);
-    $cssToInlineStyles->setStripOriginalStyleTags(true);
-    $cssToInlineStyles->setExcludeMediaQueries(true);
-    $cssToInlineStyles->setExcludeCssCharset(true);
-    $cssToInlineStyles->setHTML($html);
-    $cssToInlineStyles->setCSS($css);
+    $cssToInlineStyles
+        ->setExcludeConditionalInlineStylesBlock(false)
+        ->setUseInlineStylesBlock(true)
+        ->setStripOriginalStyleTags(true)
+        ->setExcludeMediaQueries(true)
+        ->setExcludeCssCharset(true)
+        ->setHTML($html)
+        ->setCSS($css);
     $actual = $cssToInlineStyles->convert();
     self::assertEquals($expected, $actual);
   }

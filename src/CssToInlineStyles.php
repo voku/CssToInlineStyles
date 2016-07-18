@@ -141,21 +141,29 @@ class CssToInlineStyles
    * Set HTML to process
    *
    * @param  string $html The HTML to process.
+   *
+   * @return $this
    */
   public function setHTML($html)
   {
     // strip style definitions, if we use css-class "cleanup" on a style-element
     $this->html = (string)preg_replace('/<style[^>]+class="cleanup"[^>]*>.*<\/style>/Usi', ' ', $html);
+
+    return $this;
   }
 
   /**
    * Set CSS to use
    *
    * @param  string $css The CSS to use.
+   *
+   * @return $this
    */
   public function setCSS($css)
   {
     $this->css = (string)$css;
+
+    return $this;
   }
 
   /**
@@ -720,7 +728,7 @@ class CssToInlineStyles
   }
 
   /**
-   * Strip style tags into the generated HTML
+   * Strip style tags into the generated HTML.
    *
    * @param  \DOMXPath $xPath The DOMXPath for the entire document.
    *
@@ -768,10 +776,14 @@ class CssToInlineStyles
    * Should the IDs and classes be removed?
    *
    * @param  bool $on Should we enable cleanup?
+   *
+   * @return $this
    */
   public function setCleanup($on = true)
   {
     $this->cleanup = (bool)$on;
+
+    return $this;
   }
 
   /**
@@ -779,79 +791,110 @@ class CssToInlineStyles
    *
    * @param  string $encoding The encoding to use.
    *
+   * @return $this
+   *
    * @deprecated Doesn't have any effect
    */
   public function setEncoding($encoding)
   {
     $this->encoding = (string)$encoding;
+
+    return $this;
   }
 
   /**
-   * Set use of inline styles block
-   * If this is enabled the class will use the style-block in the HTML.
+   * Set use of inline styles block.
+   *
+   * Info: If this is enabled the class will use the style-block in the HTML.
    *
    * @param  bool $on Should we process inline styles?
+   *
+   * @return $this
    */
   public function setUseInlineStylesBlock($on = true)
   {
     $this->useInlineStylesBlock = (bool)$on;
+
+    return $this;
   }
 
   /**
-   * Set use of inline link block
-   * If this is enabled the class will use the links reference in the HTML.
+   * Set use of inline link block.
    *
-   * @return void
+   * Info: If this is enabled the class will use the links reference in the HTML.
    *
    * @param  bool [optional] $on Should we process link styles?
+   *
+   * @return $this
    */
   public function setLoadCSSFromHTML($on = true)
   {
     $this->loadCSSFromHTML = (bool)$on;
+
+    return $this;
   }
 
   /**
-   * Set strip original style tags
-   * If this is enabled the class will remove all style tags in the HTML.
+   * Set strip original style tags.
+   *
+   * Info: If this is enabled the class will remove all style tags in the HTML.
    *
    * @param  bool $on Should we process inline styles?
+   *
+   * @return $this
    */
   public function setStripOriginalStyleTags($on = true)
   {
     $this->stripOriginalStyleTags = (bool)$on;
+
+    return $this;
   }
 
   /**
-   * Set exclude media queries
+   * Set exclude media queries.
    *
-   * If this is enabled the media queries will be removed before inlining the rules.
+   * Info: If this is enabled the media queries will be removed before inlining the rules.
    *
    * WARNING: If you use inline styles block "<style>" the this option will keep the media queries.
    *
    * @param bool $on
+   *
+   * @return $this
    */
   public function setExcludeMediaQueries($on = true)
   {
     $this->excludeMediaQueries = (bool)$on;
+
+    return $this;
   }
 
   /**
-   * Set exclude charset
+   * Set exclude charset.
    *
    * @param bool $on
+   *
+   * @return $this
    */
   public function setExcludeCssCharset($on = true)
   {
     $this->excludeCssCharset = (bool)$on;
+
+    return $this;
   }
 
   /**
-   * Set exclude conditional inline-style blocks e.g.: <!--[if gte mso 9]><style>.foo { bar } </style><![endif]-->
+   * Set exclude conditional inline-style blocks.
+   *
+   * e.g.: <!--[if gte mso 9]><style>.foo { bar } </style><![endif]-->
    *
    * @param bool $on
+   *
+   * @return $this
    */
   public function setExcludeConditionalInlineStylesBlock($on = true)
   {
     $this->excludeConditionalInlineStylesBlock = (bool)$on;
+
+    return $this;
   }
 }
