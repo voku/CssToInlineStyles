@@ -79,7 +79,7 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $output = $cssToInlineStyles->convert($asXHTML);
 
     if ($expected) {
-      self::assertEquals($this->normalizeString($expected), $output);
+      self::assertSame($this->normalizeString($expected), $output);
     }
 
     return $output;
@@ -173,7 +173,7 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
         ->setHTML($html)
         ->setCSS($css);
     $actual = $cssToInlineStyles->convert();
-    self::assertEquals($expected, $actual);
+    self::assertSame($expected, $actual);
   }
   
   public function testKeepMediaQuery()
@@ -192,7 +192,7 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
         ->setHTML($html)
         ->setCSS($css);
     $actual = $cssToInlineStyles->convert();
-    self::assertEquals($expected, $actual);
+    self::assertSame($expected, $actual);
   }
 
   public function testKeepMediaQueryV2()
@@ -209,7 +209,7 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $cssToInlineStyles->setHTML($html);
     $cssToInlineStyles->setCSS($css);
     $actual = $cssToInlineStyles->convert();
-    self::assertEquals($expected, $actual);
+    self::assertSame($expected, $actual);
   }
 
   public function testLoadCssFile()
@@ -227,7 +227,7 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $cssToInlineStyles->setHTML($html);
     $cssToInlineStyles->setCSS($css);
     $actual = $cssToInlineStyles->convert(true, 0, __DIR__ . '/fixtures/');
-    self::assertEquals($this->normalizeString($expected), $this->normalizeString($actual));
+    self::assertSame($this->normalizeString($expected), $this->normalizeString($actual));
   }
 
   public function testLoadCssFileV5()
@@ -245,7 +245,7 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $cssToInlineStyles->setHTML($html);
     $cssToInlineStyles->setCSS($css);
     $actual = $cssToInlineStyles->convert(false);
-    self::assertEquals($expected, $actual);
+    self::assertSame($expected, $actual);
   }
 
   public function testMediaQuery()
@@ -305,7 +305,7 @@ EOF;
     $this->cssToInlineStyles->setUseInlineStylesBlock(true);
     $this->cssToInlineStyles->setHTML($html);
     $actual = $this->findAndSaveNode($this->cssToInlineStyles->convert(), '//a');
-    self::assertEquals($expected, $actual);
+    self::assertSame($expected, $actual);
   }
 
   /**
@@ -347,7 +347,7 @@ EOF;
     $this->cssToInlineStyles->setStripOriginalStyleTags();
     $this->cssToInlineStyles->setHTML($html);
     $actual = $this->findAndSaveNode($this->cssToInlineStyles->convert(), '//a');
-    self::assertEquals($expected, $actual);
+    self::assertSame($expected, $actual);
 
     self::assertNull($this->findAndSaveNode($actual, '//style'));
   }
@@ -426,7 +426,7 @@ EOF;
     $this->cssToInlineStyles->setHTML($html);
     $this->cssToInlineStyles->setCSS($css);
     $actual = $this->cssToInlineStyles->convert();
-    self::assertEquals($this->normalizeString($expected), $actual);
+    self::assertSame($this->normalizeString($expected), $actual);
   }
 
   public function testCleanupWithStyleTagCleanup()
@@ -440,7 +440,7 @@ EOF;
     $this->cssToInlineStyles->setHTML($html);
     $this->cssToInlineStyles->setCSS($css);
     $actual = $this->cssToInlineStyles->convert();
-    self::assertEquals($this->normalizeString($expected), $actual);
+    self::assertSame($this->normalizeString($expected), $actual);
   }
 
   public function testEqualSpecificity()
@@ -470,7 +470,7 @@ EOF;
     $cssToInlineStyles->setHTML($html);
     $cssToInlineStyles->setCSS($css);
     $actual = $cssToInlineStyles->convert();
-    self::assertEquals(
+    self::assertSame(
         str_replace(array("\r\n", "\n", "\r"), '', $expected),
         str_replace(array("\r\n", "\n", "\r"), '', $actual)
     );
@@ -541,7 +541,7 @@ EOF;
     $this->cssToInlineStyles->setHTML($html);
     $this->cssToInlineStyles->setCSS('');
     $actual = $this->cssToInlineStyles->convert(true);
-    self::assertEquals($this->normalizeString($expected), $actual);
+    self::assertSame($this->normalizeString($expected), $actual);
   }
 
   public function testExcludeConditionalInlineStylesBlock()
@@ -635,11 +635,11 @@ background-image: url(\'data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAA//Z\'); }
 
     // first convert
     $actual = $cssToInlineStyles->convert(true);
-    self::assertEquals($this->normalizeString($expected), $actual);
+    self::assertSame($this->normalizeString($expected), $actual);
 
     // second convert
     $actual = $cssToInlineStyles->convert(true);
-    self::assertEquals($this->normalizeString($expected), $actual);
+    self::assertSame($this->normalizeString($expected), $actual);
   }
 
   public function testCssRulesInlineResetDuringSecondLoad()
@@ -665,7 +665,7 @@ HTML;
   public function testSimpleStyleTagsInHtml()
   {
     $expected = 'p { color: #F00; }' . "\n";
-    self::assertEquals(
+    self::assertSame(
         $expected,
         $this->cssToInlineStyles->getCssFromInlineHtmlStyleBlock(
             <<<EOF
@@ -687,7 +687,7 @@ EOF
   public function testMultipleStyleTagsInHtml()
   {
     $expected = 'p { color: #F00; }' . "\n" . 'p { color: #0F0; }' . "\n";
-    self::assertEquals(
+    self::assertSame(
         $expected,
         $this->cssToInlineStyles->getCssFromInlineHtmlStyleBlock(
             <<<EOF
@@ -717,13 +717,13 @@ EOF
 
     $expectedText = 'Žluťoučký kůň pije pivo nebo jak to je dál';
     $result = $cssToInlineStyles->convert(true);
-    self::assertEquals($expectedText, $result);
+    self::assertSame($expectedText, $result);
 
     // ---
 
     $expectedText = 'Žluťoučký kůň pije pivo nebo jak to je dál';
     $result = $cssToInlineStyles->convert(false);
-    self::assertEquals($expectedText, $result);
+    self::assertSame($expectedText, $result);
   }
 
   /**

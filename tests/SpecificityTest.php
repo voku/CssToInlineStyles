@@ -14,14 +14,14 @@ class SpecificityTest extends \PHPUnit_Framework_TestCase
   public function testGetValues()
   {
     $specificity = new Specificity(1, 2, 3);
-    self::assertEquals(array(1, 2, 3), $specificity->getValues());
+    self::assertSame(array(1, 2, 3), $specificity->getValues());
   }
 
   public function testIncreaseValue()
   {
     $specificity = new Specificity(1, 2, 3);
     $specificity->increase(1, 2, 3);
-    self::assertEquals(array(2, 4, 6), $specificity->getValues());
+    self::assertSame(array(2, 4, 6), $specificity->getValues());
   }
 
   /**
@@ -33,7 +33,7 @@ class SpecificityTest extends \PHPUnit_Framework_TestCase
    */
   public function testCompare(Specificity $a, Specificity $b, $result)
   {
-    self::assertEquals($result, $a->compareTo($b));
+    self::assertSame($result, $a->compareTo($b));
   }
 
   /**
@@ -64,7 +64,7 @@ class SpecificityTest extends \PHPUnit_Framework_TestCase
   public function testFromSelector($selector, $result)
   {
     $specificity = Specificity::fromSelector($selector);
-    self::assertEquals($result, $specificity->getValues());
+    self::assertSame($result, $specificity->getValues());
   }
 
   /**
@@ -97,7 +97,7 @@ class SpecificityTest extends \PHPUnit_Framework_TestCase
     );
 
     $specificity = Specificity::fromSelector($selector);
-    self::assertEquals($result, $specificity->getValues());
+    self::assertSame($result, $specificity->getValues());
   }
 
   /**
