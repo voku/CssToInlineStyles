@@ -116,7 +116,7 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     return array(
         array(
             '<html><head><style>@media (max-width: 600px) {.foo {margin: 0;}}</style></head><body><div class="foo"></div></body></html>',
-            '<html><head><style>@media (max-width: 600px) {.foo {margin: 0;}}</style></head><body><div class="foo"></div></body></html>'
+            '<html><head><style>@media (max-width: 600px) {.foo {margin: 0;}}</style></head><body><div class="foo"></div></body></html>',
         ),
         array(
             '<html><head><style>@media tv and (min-width: 700px) and (orientation: landscape) {.foo {display: none;}}</style></head><body><div class="foo"></div></body></html>',
@@ -141,6 +141,39 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     );
   }
 
+  public function testCssWithComments()
+  {
+    $css = <<<CSS
+a {
+    padding: 5px;
+    display: block;
+}
+/* style the titles */
+h1 {
+    color: rebeccapurple;
+}
+/* end of title styles */
+CSS;
+    $result = $this->cssToInlineStyles->setHTML('<h1><a>foo</a></h1>')->setCSS($css)->convert();
+    self::assertSame('<h1 style="color: rebeccapurple;"><a style="display: block; padding: 5px;">foo</a></h1>', $result);
+  }
+
+  public function testCssWithMediaQueries()
+  {
+    $css = <<<EOF
+@media (max-width: 600px) {
+    a {
+        color: green;
+    }
+}
+a {
+  color: red;
+}
+EOF;
+    $result = $this->cssToInlineStyles->setHTML('<a>foo</a>')->setCSS($css)->convert();
+    self::assertSame('<a style="color: red;">foo</a>', $result);
+  }
+
   public function testMediaQueryDisabledByDefault()
   {
     $html = '<html><body><style>@media (max-width: 600px) { .test { display: none; } } h1 { color : "red" }</style><div class="test"><h1>foo</h1><h1>foo2</h1></div></body></html>';
@@ -160,7 +193,7 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $this->cssToInlineStyles->setExcludeMediaQueries(true);
     $this->runHTMLToCSS($html, $css, $expected);
   }
-  
+
   public function testCssShorthandProperties()
   {
     $html = $this->file_get_contents(__DIR__ . '/fixtures/test6Html.html');
@@ -175,7 +208,7 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     $actual = $cssToInlineStyles->convert();
     self::assertSame($expected, $actual);
   }
-  
+
   public function testKeepMediaQuery()
   {
     $html = $this->file_get_contents(__DIR__ . '/fixtures/test2Html.html');
@@ -740,7 +773,8 @@ EOF
    *
    * @return mixed
    */
-  protected function file_get_contents($filename) {
+  protected function file_get_contents($filename)
+  {
     $string = file_get_contents($filename);
 
     return $this->normalizeString($string);
