@@ -1,0 +1,755 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>foobar</title>
+  <!--[if mso]>
+  <style type="text/css">
+    body, h1, h2, h3, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+  </style>
+  <![endif]-->
+  <style type="text/css">
+    /* /\/\/\/\/\/\/\/\/ CLIENT-SPECIFIC STYLES /\/\/\/\/\/\/\/\/ */
+    #outlook a{padding:0;} /* Force Outlook to provide a "view in browser" message */
+    .ReadMsgBody{width:100%;} .ExternalClass{width:100%;} /* Force Hotmail to display emails at full width */
+    .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;} /* Force Hotmail to display normal line spacing */
+    body, table, td, p, a, li, blockquote{-webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;} /* Prevent WebKit and Windows mobile changing default text sizes */
+    table, td{mso-table-lspace:0pt; mso-table-rspace:0pt;} /* Remove spacing between tables in Outlook 2007 and up */
+    img{-ms-interpolation-mode:bicubic;} /* Allow smoother rendering of resized image in Internet Explorer */
+    /* /\/\/\/\/\/\/\/\/ RESET STYLES /\/\/\/\/\/\/\/\/ */
+    body{margin:0; padding:0;}
+    img{border:0; height:auto; line-height:100%; outline:none; text-decoration:none;}
+    table{border-collapse:collapse !important;}
+    body, #bodyTable, #bodyCell{height:100% !important; margin:0; padding:0; width:100% !important;}
+    /* /\/\/\/\/\/\/\/\/ TEMPLATE STYLES /\/\/\/\/\/\/\/\/ */
+    /* ========== Page Styles ========== */
+    #bodyCell{padding:20px;}
+    #templateContainer{width:600px;}
+    /**
+    * @tab Page
+    * @section background style
+    * @tip Set the background color and top border for your email. You may want to choose colors that match your company's branding.
+    * @theme page
+    */
+    body, #bodyTable{
+      background-color:#DEE0E2;
+    }
+    /**
+    * @tab Page
+    * @section background style
+    * @tip Set the background color and top border for your email. You may want to choose colors that match your company's branding.
+    * @theme page
+    */
+    #bodyCell{
+      border-top:4px solid #DEE0E2;
+    }
+    /**
+    * @tab Page
+    * @section email border
+    * @tip Set the border for your email.
+    */
+    #templateContainer{
+      border:1px solid #DEE0E2;
+    }
+    /**
+    * @tab Page
+    * @section heading 1
+    * @tip Set the styling for all first-level headings in your emails. These should be the largest of your headings.
+    * @style heading 1
+    */
+    h1{
+      color:#1d8ea9 !important;
+      display:block;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size:16px;
+      font-style:normal;
+      font-weight:bold;
+      line-height:100%;
+      letter-spacing:normal;
+      margin-top:0;
+      margin-right:0;
+      margin-bottom:10px;
+      margin-left:0;
+      text-align:left;
+    }
+    h1 span{
+      color:#ed1386 !important;
+    }
+    /**
+    * @tab Page
+    * @section heading 2
+    * @tip Set the styling for all second-level headings in your emails.
+    * @style heading 2
+    */
+    h2{
+      /*color:#3997b0 !important;*/
+      color:#FFF !important;
+      display:block;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size:14px;
+      font-style:normal;
+      font-weight:bold;
+      line-height:100%;
+      letter-spacing:normal;
+      margin-top:0;
+      margin-right:0;
+      margin-bottom:10px;
+      margin-left:0;
+      text-align:left;
+    }
+    /**
+    * @tab Page
+    * @section heading 3
+    * @tip Set the styling for all third-level headings in your emails.
+    * @style heading 3
+    */
+    h3{
+      color:#3997b0 !important;
+      display:block;
+      font-family: DINNextRoundedLTW01-Regular, Calibri, Helvetica, Arial, sans-serif;
+      font-size:14px;
+      font-style:normal;
+      font-weight:bold;
+      line-height:100%;
+      letter-spacing:normal;
+      margin-top:0;
+      margin-right:0;
+      margin-bottom:10px;
+      margin-left:0;
+      text-align:left;
+    }
+    /**
+    * @tab Page
+    * @section heading 4
+    * @tip Set the styling for all fourth-level headings in your emails. These should be the smallest of your headings.
+    * @style heading 4
+    */
+    h4{
+      color:#808080 !important;
+      display:block;
+      font-family: DINNextRoundedLTW01-Regular, Calibri, Helvetica, Arial, sans-serif;
+      font-size:14px;
+      font-style:italic;
+      font-weight:normal;
+      line-height:100%;
+      letter-spacing:normal;
+      margin-top:0;
+      margin-right:0;
+      margin-bottom:10px;
+      margin-left:0;
+      text-align:left;
+    }
+    /* ========== Header Styles ========== */
+    /**
+    * @tab Header
+    * @section preheader style
+    * @tip Set the background color and bottom border for your email's preheader area.
+    * @theme header
+    */
+    #templatePreheader{
+      background-color:#FFF;
+      border-bottom:1px solid #CCCCCC;
+    }
+    /**
+    * @tab Header
+    * @section preheader text
+    * @tip Set the styling for your email's preheader text. Choose a size and color that is easy to read.
+    */
+    .preheaderContent{
+      color:#808080;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size:10px;
+      line-height:125%;
+      text-align:left;
+    }
+    /**
+    * @tab Header
+    * @section preheader link
+    * @tip Set the styling for your email's preheader links. Choose a color that helps them stand out from your text.
+    */
+    .preheaderContent a:link, .preheaderContent a:visited, /* Yahoo! Mail Override */ .preheaderContent a .yshortcuts /* Yahoo! Mail Override */{
+      color:#606060;
+      font-weight:normal;
+      text-decoration:underline;
+    }
+    /**
+    * @tab Header
+    * @section header style
+    * @tip Set the background color and borders for your email's header area.
+    * @theme header
+    */
+    .templateHeader{
+      background-color:#FFF;
+    }
+    /**
+    * @tab Header
+    * @section header text
+    * @tip Set the styling for your email's header text. Choose a size and color that is easy to read.
+    */
+    .headerContent{
+      color:#505050;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size:12px;
+      font-weight:bold;
+      line-height:100%;
+      padding-top:0;
+      padding-right:0;
+      padding-bottom:0;
+      padding-left:0;
+      text-align:left;
+      vertical-align:middle;
+    }
+    /**
+    * @tab Header
+    * @section header link
+    * @tip Set the styling for your email's header links. Choose a color that helps them stand out from your text.
+    */
+    .headerContent a:link, .headerContent a:visited, /* Yahoo! Mail Override */ .headerContent a .yshortcuts /* Yahoo! Mail Override */{
+      color:#EB4102;
+      font-weight:normal;
+      text-decoration:underline;
+    }
+    .headerImage{
+      height:auto;
+      max-width:600px;
+    }
+    /* ========== Body Styles ========== */
+    /**
+    * @tab Body
+    * @section body style
+    * @tip Set the background color and borders for your email's body area.
+    */
+    .templateBody{
+      background-color:#FFF;
+    }
+    /**
+    * @tab Body
+    * @section body text
+    * @tip Set the styling for your email's main content text. Choose a size and color that is easy to read.
+    * @theme main
+    */
+    .bodyContent{
+      color:#505050;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size:12px;
+      line-height:130%;
+      padding-top:20px;
+      padding-right:20px;
+      padding-bottom:20px;
+      padding-left:20px;
+      text-align:left;
+    }
+    /**
+    * @tab Body
+    * @section body link
+    * @tip Set the styling for your email's main content links. Choose a color that helps them stand out from your text.
+    */
+    .bodyContent a:link, .bodyContent a:visited, /* Yahoo! Mail Override */ .bodyContent a .yshortcuts /* Yahoo! Mail Override */{
+      color:#EB4102;
+      font-weight:normal;
+      text-decoration:underline;
+    }
+    .bodyContent img{
+      display:inline;
+      height:auto;
+      max-width:560px;
+    }
+    /* ========== Column Styles ========== */
+    .templateColumnContainer{width:100px;}
+    /**
+    * @tab Columns
+    * @section column style
+    * @tip Set the background color and borders for your email's column area.
+    */
+    .templateColumns{
+      background-color:#FFF;
+    }
+    /**
+    * @tab Columns
+    * @section left column text
+    * @tip Set the styling for your email's left column content text. Choose a size and color that is easy to read.
+    */
+    .leftColumnContent{
+      color:#505050;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size:12px;
+      line-height:130%;
+      padding-top:0;
+      padding-right:5px;
+      padding-bottom:0px;
+      padding-left:20px;
+      text-align:left;
+    }
+    /**
+    * @tab Columns
+    * @section left column link
+    * @tip Set the styling for your email's left column content links. Choose a color that helps them stand out from your text.
+    */
+    .leftColumnContent a:link, .leftColumnContent a:visited, /* Yahoo! Mail Override */ .leftColumnContent a .yshortcuts /* Yahoo! Mail Override */{
+      color:#EB4102;
+      font-weight:normal;
+      text-decoration:underline;
+    }
+    /**
+    * @tab Columns
+    * @section center column text
+    * @tip Set the styling for your email's center column content text. Choose a size and color that is easy to read.
+    */
+    .centerColumnContent{
+      color:#505050;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size:12px;
+      line-height:130%;
+      padding-top:0;
+      padding-right:5px;
+      padding-bottom:20px;
+      padding-left:20px;
+      text-align:left;
+    }
+    /**
+    * @tab Columns
+    * @section center column link
+    * @tip Set the styling for your email's center column content links. Choose a color that helps them stand out from your text.
+    */
+    .centerColumnContent a:link, .centerColumnContent a:visited, /* Yahoo! Mail Override */ .centerColumnContent a .yshortcuts /* Yahoo! Mail Override */{
+      color:#EB4102;
+      font-weight:normal;
+      text-decoration:underline;
+    }
+    /**
+    * @tab Columns
+    * @section right column text
+    * @tip Set the styling for your email's right column content text. Choose a size and color that is easy to read.
+    */
+    .rightColumnContent{
+      color:#505050;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size:12px;
+      line-height:130%;
+      padding-top:0;
+      padding-right:5px;
+      padding-bottom:0px;
+      padding-left:20px;
+      text-align:left;
+    }
+    /**
+    * @tab Columns
+    * @section right column link
+    * @tip Set the styling for your email's right column content links. Choose a color that helps them stand out from your text.
+    */
+    .rightColumnContent a:link, .rightColumnContent a:visited, /* Yahoo! Mail Override */ .rightColumnContent a .yshortcuts /* Yahoo! Mail Override */{
+      color:#EB4102;
+      font-weight:normal;
+      text-decoration:underline;
+    }
+    .leftColumnContent img, .rightColumnContent img{
+      display:inline;
+      height:auto;
+      max-width:260px;
+    }
+    /* ========== Footer Styles ========== */
+    /**
+    * @tab Footer
+    * @section footer style
+    * @tip Set the background color and borders for your email's footer area.
+    * @theme footer
+    */
+    .footerColumns .leftColumnContent, .footerColumns .centerColumnContent, .footerColumns .rightColumnContent{
+      color: white !important;
+      font-weight:bold;
+    }
+    .footerColumns .leftColumnContent a, .footerColumns .centerColumnContent a, .footerColumns .rightColumnContent a{
+      color: white !important;
+      font-weight:bold;
+      text-decoration: none;
+    }
+    #templateFooter{
+      background-color:#F4F4F4;
+    }
+    /**
+    * @tab Footer
+    * @section footer text
+    * @tip Set the styling for your email's footer text. Choose a size and color that is easy to read.
+    * @theme footer
+    */
+    .footerContent{
+      color:#808080;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size:10px;
+      line-height:130%;
+      padding-top:20px;
+      padding-right:20px;
+      padding-bottom:20px;
+      padding-left:20px;
+      text-align:left;
+    }
+    /**
+    * @tab Footer
+    * @section footer link
+    * @tip Set the styling for your email's footer links. Choose a color that helps them stand out from your text.
+    */
+    .footerContent a:link, .footerContent a:visited, /* Yahoo! Mail Override */ .footerContent a .yshortcuts, .footerContent a span /* Yahoo! Mail Override */{
+      color:#606060;
+      font-weight:normal;
+      text-decoration:underline;
+    }
+    /* /\/\/\/\/\/\/\/\/ MOBILE STYLES /\/\/\/\/\/\/\/\/ */
+    @media only screen and (max-width: 480px){
+      /* /\/\/\/\/\/\/ CLIENT-SPECIFIC MOBILE STYLES /\/\/\/\/\/\/ */
+      body, table, td, p, a, li, blockquote{-webkit-text-size-adjust:none !important;} /* Prevent Webkit platforms from changing default text sizes */
+      body{width:100% !important; min-width:100% !important;} /* Prevent iOS Mail from adding padding to the body */
+      table, td{width: 100% !important;}
+
+      /* /\/\/\/\/\/\/ MOBILE RESET STYLES /\/\/\/\/\/\/ */
+      #bodyCell{padding:10px !important;}
+      /* /\/\/\/\/\/\/ MOBILE TEMPLATE STYLES /\/\/\/\/\/\/ */
+      /* ======== Page Styles ======== */
+      /**
+      * @tab Mobile Styles
+      * @section template width
+      * @tip Make the template fluid for portrait or landscape view adaptability. If a fluid layout doesn't work for you, set the width to 300px instead.
+      */
+      #templateContainer{
+        max-width:600px !important;
+        width:100% !important;
+      }
+      /**
+      * @tab Mobile Styles
+      * @section heading 1
+      * @tip Make the first-level headings larger in size for better readability on small screens.
+      */
+      h1{
+        font-size:24px !important;
+        line-height:100% !important;
+      }
+      /**
+      * @tab Mobile Styles
+      * @section heading 2
+      * @tip Make the second-level headings larger in size for better readability on small screens.
+      */
+      h2{
+        font-size:20px !important;
+        line-height:100% !important;
+      }
+      /**
+      * @tab Mobile Styles
+      * @section heading 3
+      * @tip Make the third-level headings larger in size for better readability on small screens.
+      */
+      h3{
+        font-size:18px !important;
+        line-height:100% !important;
+      }
+      /**
+      * @tab Mobile Styles
+      * @section heading 4
+      * @tip Make the fourth-level headings larger in size for better readability on small screens.
+      */
+      h4{
+        font-size:16px !important;
+        line-height:100% !important;
+      }
+      /* ======== Header Styles ======== */
+      #templatePreheader{display:none !important;} /* Hide the template preheader to save space */
+      /**
+      * @tab Mobile Styles
+      * @section header image
+      * @tip Make the main header image fluid for portrait or landscape view adaptability, and set the image's original width as the max-width. If a fluid setting doesn't work, set the image width to half its original size instead.
+      */
+      .headerImage{
+        height:auto !important;
+        max-width:600px !important;
+        width:100% !important;
+      }
+      /**
+      * @tab Mobile Styles
+      * @section header text
+      * @tip Make the header content text larger in size for better readability on small screens. We recommend a font size of at least 16px.
+      */
+      .headerContent{
+        font-size:20px !important;
+        line-height:125% !important;
+      }
+      .headerContent td{
+        width: 60% !important;
+      }
+      /* ======== Body Styles ======== */
+      /**
+      * @tab Mobile Styles
+      * @section body text
+      * @tip Make the body content text larger in size for better readability on small screens. We recommend a font size of at least 16px.
+      */
+      .bodyContent{
+        font-size:18px !important;
+        line-height:125% !important;
+      }
+      /* ======== Column Styles ======== */
+      .templateColumnContainer{display:block !important; width:100% !important;}
+      /**
+      * @tab Mobile Styles
+      * @section column image
+      * @tip Make the column image fluid for portrait or landscape view adaptability, and set the image's original width as the max-width. If a fluid setting doesn't work, set the image width to half its original size instead.
+      */
+      .columnImage{
+        height:auto !important;
+        max-width:300px !important;
+        width:100% !important;
+      }
+      /**
+      * @tab Mobile Styles
+      * @section left column text
+      * @tip Make the left column content text larger in size for better readability on small screens. We recommend a font size of at least 16px.
+      */
+      .leftColumnContent{
+        font-size:16px !important;
+        line-height:125% !important;
+      }
+      /**
+      * @tab Mobile Styles
+      * @section center column text
+      * @tip Make the center column content text larger in size for better readability on small screens. We recommend a font size of at least 16px.
+      */
+      .centerColumnContent{
+        font-size:16px !important;
+        line-height:125% !important;
+      }
+      /**
+      * @tab Mobile Styles
+      * @section right column text
+      * @tip Make the right column content text larger in size for better readability on small screens. We recommend a font size of at least 16px.
+      */
+      .rightColumnContent{
+        font-size:16px !important;
+        line-height:125% !important;
+      }
+      /* ======== Footer Styles ======== */
+      /**
+      * @tab Mobile Styles
+      * @section footer text
+      * @tip Make the body content text larger in size for better readability on small screens.
+      */
+      .footerContent{
+        font-size:14px !important;
+        line-height:115% !important;
+      }
+      .footerContent a{display:block !important;} /* Place footer social and utility links on their own lines, for easier access */
+    }
+  </style>
+</head>
+
+<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
+<center>
+  <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="600" id="bodyTable">
+    <tr>
+      <td align="center" class="body-cell" valign="top" id="bodyCell">
+        <!-- BEGIN TEMPLATE // -->
+        <table border="0" cellpadding="0" cellspacing="0" id="templateContainer" background="#ffffff">
+          <tr>
+            <td align="center" valign="top">
+              <!-- BEGIN PREHEADER // -->
+              <table border="0" cellpadding="0" cellspacing="0" width="600" id="templatePreheader">
+                <tr>
+                  <td valign="top" class="preheaderContent" style="padding-top:10px; padding-right:10px; padding-bottom:10px; padding-left:20px;" mc:edit="preheader_content00">
+                    FOOBAR !!!
+                  </td>
+                  <!-- *|IFNOT:ARCHIVE_PAGE|* -->
+                  <!-- *|END:IF|* -->
+                </tr>
+              </table>
+              <!-- // END PREHEADER -->
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top">
+              <!-- BEGIN HEADER // -->
+              <table border="0" cellpadding="0" cellspacing="0" width="600" class="templateHeader">
+                <tr>
+                  <td valign="top" class="headerContent" style="height: 55px; padding-top: 10px; padding-bottom: 10px;">
+                    <table>
+                      <tr>
+                        <td width="400"><img src="https://foobar" style="display: inline-block; width: 182px; max-width:182px !important;" alt="foobar - einfach gefunden" /></td>
+                        <td> <span class="preheaderContent">Email wird nicht richtig angezeigt?<br /><a href="*|ARCHIVE|*" target="_blank">Im Browser öffnen</a>.</span></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr><td>
+                  <span>lalll=###test###&bar=%5B%5Bfoobar%5D%5D&test=[[foobar]]&foo={{lall}}</span>
+                  <img src="http://foobar?lalll=###test###&bar=%5B%5Bfoobar%5D%5D&test=[[foobar]]&foo={{lall}}" style="max-width:600px;" alt="Ihr Unternehmen in den wichtigsten Online-Verzeichnissen" class="headerImage" mc:label="header_image" mc:edit="header_image" mc:allowdesigner mc:allowtext />
+                </td>
+                </tr>
+              </table>
+              <!-- // END HEADER -->
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top">
+              <!-- BEGIN BODY // -->
+              <table border="0" cellpadding="0" cellspacing="0" width="600" class="templateBody">
+                <tr>
+                  <td valign="top" class="bodyContent" mc:edit="body_content">
+                    <br />
+                    <h1 style="color:#1d8ea9 !important;">Sehr geehrter <span style="color:#ed1386 !important;">[Contact.M/M] [Contact.Last Name],</span></h1>
+                    <br />
+                  </td>
+                </tr>
+              </table>
+              <!-- // END BODY -->
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top">
+              <!-- BEGIN COLUMNS // -->
+              <table border="0" cellpadding="0" cellspacing="0" width="600" class="templateColumns">
+                <tr mc:repeatable>
+                  <td align="center" valign="top" class="templateColumnContainer" style="padding-top:0px;">
+                    <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                      <tr>
+                        <td class="leftColumnContent" style="padding-left: 0px !important;">
+                          <img src="http://foobar" style="max-width:260px;" class="columnImage" mc:label="left_column_image" mc:edit="left_column_image" alt="Für mehr Informationen: Bilder nachladen."/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td valign="top" class="leftColumnContent" mc:edit="left_column_content">
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td align="center" valign="top" class="templateColumnContainer" style="padding-top:0px;">
+                    <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                      <tr>
+                        <td class="rightColumnContent">
+                          <img src="http://foobar" style="max-width:310px;" class="columnImage" mc:label="right_column_image" mc:edit="right_column_image" alt="Für mehr Informationen: Bilder nachladen."/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td valign="top" class="rightColumnContent" mc:edit="right_column_content">
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              <!-- // END COLUMNS -->
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top">
+              <!-- BEGIN BODY // -->
+              <table border="0" cellpadding="0" cellspacing="0" width="600" class="templateBody">
+                <tr>
+                  <td valign="top" class="bodyContent body-cell" mc:edit="body_content">
+                    <h3>foobar</h3>
+                  </td>
+                </tr>
+              </table>
+              <!-- // END BODY -->
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top">
+              <!-- BEGIN HEADER // -->
+              <table border="0" cellpadding="0" cellspacing="0" width="600" class="templateHeader" style="max-width:600px;">
+                <tr>
+                  <td>
+                    <img src="http://foobar" style="max-width:600px;" alt="Für mehr Informationen: Bilder nachladen." class="headerImage" mc:label="header_image" mc:edit="header_image" mc:allowdesigner mc:allowtext />
+                  </td>
+                </tr>
+              </table>
+              <!-- // END HEADER -->
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top">
+              <!-- BEGIN BODY // -->
+              <table border="0" cellpadding="0" cellspacing="0" width="600">
+                <tr>
+                  <td valign="top" class="bodyContent" mc:edit="body_content" style="text-align: center; background-color: white;">
+                    <h3>So geht es weiter:</h3>
+                    <img src="http://foobar" style=" height:auto !important; max-width:305px !important; width:100% !important;" alt="Für mehr Informationen: Bilder nachladen."/>
+                  </td>
+                </tr>
+              </table>
+              <!-- // END BODY -->
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top">
+              <!-- BEGIN BODY // -->
+              <table border="0" cellpadding="0" cellspacing="0" width="600" class="templateBody">
+                <tr>
+                  <td valign="top" class="bodyContent" mc:edit="body_content">
+                    <h3>Wir freuen uns auf eine gute Zusammenarbeitzeiten...</h3>
+                  </td>
+                </tr>
+              </table>
+              <!-- // END BODY -->
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top">
+              <!-- BEGIN COLUMNS // -->
+              <table border="0" cellpadding="0" cellspacing="0" width="600" class="templateColumns large-button" style="background-color: #1d8ea9;">
+                <tr mc:repeatable>
+                  <td align="center" valign="top" class="templateColumnContainer" style="padding-top:20px; ">
+                    <table border="0" cellpadding="20" cellspacing="0" width="100%" heigth="100%" class="footerColumns">
+                      </tr>
+                      <tr>
+                        <td valign="top" class="centerColumnContent" mc:edit="center_column_content" style="color: #FFF !important;">
+                          <h2 style="color: #FFF !important; margin-bottom: 15px; font-weight: bold;">Informationen</h2><br />
+                          <div class="themed-content"><p>This <a class="visited" href="#">is</a> a test ... <strong>foo!</strong></p></div>
+                          <table border="0">
+                            <tr height="26">
+                              <td><a href="http://www.foobar.com/das-ist-foobar" style="color: #FFF !important; text-decoration: none; font-weight: bold;">Über uns</a></td>
+                            </tr>
+                            <tr height="26">
+                              <td><a href="http://www.foobar.com/anb" style="color: #FFF !important; text-decoration: none; font-weight: bold;">ANB</a><br /></td>
+                            </tr>
+                            <tr height="26">
+                              <td><a href="http://www.foobar.com/datenschutz" style="color: #FFF !important; text-decoration: none; font-weight: bold;">Datenschutz</a></td>
+                            </tr>
+                            <tr height="26">
+                              <td><a href="http://www.foobar.com/impressum" style="color: #FFF !important; text-decoration: none; font-weight: bold;">Impressum</a></td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td align="center" valign="top" class="templateColumnContainer" style="padding-top:20px;">
+                    <table border="0" cellpadding="20" cellspacing="0" width="100%" heigth="100%" class="footerColumns">
+                      <tr>
+                        <td valign="top" class="rightColumnContent" mc:edit="right_column_content" style="color: #FFF !important; ">
+                          <h2 style="color: #FFF !important; font-weight: bold;">Auch auf</h2><br />
+                          <table>
+                            <tr height="24">
+                              <td><a href="https://www.facebook.com/foobar" target="_blank" style="color: #FFF !important; text-decoration: none; font-weight: bold;"><img src="http://foobar" alt="">  facebook</a></td>
+                            </tr>
+                            <tr height="24">
+                              <td><a href="https://plus.google.com/foobar" target="_blank" style="color: #FFF !important; text-decoration: none; font-weight: bold;"><img src="http://foobar" alt="">  Google+</a></td>
+                            </tr>
+                            <tr height="24">
+                              <td><a href="https://twitter.com/foobar" target="_blank" style="color: #FFF !important; text-decoration: none; font-weight: bold;"><img src="http://foobar" alt="">  Twitter</a></td>
+                            </tr>
+                            <tr height="24">
+                              <td><a href="https://www.youtube.com/channel/foobar" target="_blank" style="color: #FFF !important; text-decoration: none; font-weight: bold;"><img src="http://foobar" alt="">  YouTube</a></td>
+                            </tr>
+                          </table>
+                          <br />
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              <!-- // END COLUMNS -->
+            </td>
+          </tr>
+        </table>
+        <!-- // END TEMPLATE -->
+      </td>
+    </tr>
+  </table>
+</center>
+</body>
+</html>

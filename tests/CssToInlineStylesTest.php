@@ -209,6 +209,21 @@ EOF;
     self::assertSame($expected, $actual);
   }
 
+  public function testCssBigFile()
+  {
+    $html = $this->file_get_contents(__DIR__ . '/fixtures/test_big.html');
+    $css = $this->file_get_contents(__DIR__ . '/fixtures/style_big.css');
+    $expected = $this->file_get_contents(__DIR__ . '/fixtures/test_big_result.html');
+
+    $cssToInlineStyles = $this->cssToInlineStyles;
+    $cssToInlineStyles
+        ->setUseInlineStylesBlock(true)
+        ->setHTML($html)
+        ->setCSS($css);
+    $actual = $cssToInlineStyles->convert();
+    self::assertSame($expected, $actual);
+  }
+
   public function testKeepMediaQuery()
   {
     $html = $this->file_get_contents(__DIR__ . '/fixtures/test2Html.html');
