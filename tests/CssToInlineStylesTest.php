@@ -503,10 +503,7 @@ EOF;
     $cssToInlineStyles->setHTML($html);
     $cssToInlineStyles->setCSS($css);
     $actual = $cssToInlineStyles->convert();
-    self::assertSame(
-        str_replace(array("\r\n", "\n", "\r"), '', $expected),
-        str_replace(array("\r\n", "\n", "\r"), '', $actual)
-    );
+    self::assertSame($this->normalizeString($expected), $this->normalizeString($actual));
   }
 
   public function testEncodingIso()
@@ -788,5 +785,48 @@ EOF
   protected function normalizeString($string)
   {
     return str_replace(array("\r\n", "\r"), "\n", $string);
+  }
+
+  public function testStyleTagsWithAttributeInHtml()
+  {
+    $css = 'p { color: #F00; }' . "\n";
+
+    $html = <<<HTML
+                    <html>
+    <head>
+        <!-- weird tag name starting with style -->
+        <stylesheet></stylesheet>
+        <style type="text/css">
+            body { color: #F00; }
+        </style>
+    </head>
+    <body>
+        <p>foo</p>
+    </body>
+    </html>
+HTML;
+
+    $expected = <<<EXPECTED
+<html>
+    <head>
+        <!-- weird tag name starting with style -->
+        <stylesheet></stylesheet>
+        <style type="text/css">
+            body { color: #F00; }
+        </style>
+    </head>
+    <body style="color: #F00;">
+        <p style="color: #F00;">foo</p>
+    </body>
+    </html>
+EXPECTED;
+
+    $result = $this->cssToInlineStyles
+        ->setUseInlineStylesBlock(true)
+        ->setHTML($html)
+        ->setCSS($css)
+        ->convert();
+
+    self::assertEquals($this->normalizeString($expected), $result);
   }
 }

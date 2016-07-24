@@ -45,7 +45,7 @@ class CssToInlineStyles
    *
    * @var string
    */
-  private static $styleTagRegEx = '|<style(.*)>(.*)</style>|isU';
+  private static $styleTagRegEx = '|<style(?:\s.*)?>(.*)</style>|isU';
 
   /**
    * regular expression: css-comments
@@ -294,9 +294,9 @@ class CssToInlineStyles
     preg_match_all(self::$styleTagRegEx, $html, $matches);
 
     // any style-blocks found?
-    if (!empty($matches[2])) {
+    if (!empty($matches[1])) {
       // add
-      foreach ($matches[2] as $match) {
+      foreach ($matches[1] as $match) {
         $css .= trim($match) . "\n";
       }
     }
