@@ -15,6 +15,11 @@ class CssToInlineStyles
 {
 
   /**
+   * @var CssSelectorConverter
+   */
+  private $cssConverter;
+
+  /**
    * regular expression: css media queries
    *
    * @var string
@@ -134,6 +139,10 @@ class CssToInlineStyles
 
     if (null !== $css) {
       $this->setCSS($css);
+    }
+
+    if (class_exists('Symfony\Component\CssSelector\CssSelectorConverter')) {
+      $this->cssConverter = new CssSelectorConverter();
     }
   }
 
@@ -536,12 +545,10 @@ class CssToInlineStyles
         }
 
         try {
-          $converter = new CssSelectorConverter();
-          $query = $converter->toXPath($ruleSelector);
+          $query = $this->cssConverter->toXPath($ruleSelector);
         } catch (ExceptionInterface $e) {
           $query = null;
         }
-        $converter = null;
 
         // validate query
         if (null === $query) {
@@ -731,8 +738,6 @@ class CssToInlineStyles
    * Strip style tags into the generated HTML.
    *
    * @param  \DOMXPath $xPath The DOMXPath for the entire document.
-   *
-   * @return string
    */
   private function stripOriginalStyleTags(\DOMXPath $xPath)
   {
@@ -761,8 +766,6 @@ class CssToInlineStyles
    * Remove id and class attributes.
    *
    * @param  \DOMXPath $xPath The DOMXPath for the entire document.
-   *
-   * @return string
    */
   private function cleanupHTML(\DOMXPath $xPath)
   {
