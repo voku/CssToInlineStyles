@@ -711,19 +711,28 @@ EOF
 
   public function testHtmlEncoding()
   {
-    $text = 'Žluťoučký kůň pije pivo nebo jak to je dál';
-
+    $text = 'Žluťoučký kůň pije pivo nebo jak to je dál @ €';
     $cssToInlineStyles = new CssToInlineStyles($text, '');
-
-    $expectedText = 'Žluťoučký kůň pije pivo nebo jak to je dál';
     $result = $cssToInlineStyles->convert(true);
-    self::assertSame($expectedText, $result);
+    self::assertSame($text, $result);
 
     // ---
 
-    $expectedText = 'Žluťoučký kůň pije pivo nebo jak to je dál';
+    $expectedText = 'Žluťoučký kůň pije pivo nebo jak to je dál @ €';
     $result = $cssToInlineStyles->convert(false);
     self::assertSame($expectedText, $result);
+  }
+
+  public function testSpecialCharacters()
+  {
+    $text = '1 &lt; 2';
+    self::assertEquals($text, $this->cssToInlineStyles->setHTML($text)->convert());
+  }
+
+  public function testSpecialCharactersExplicit()
+  {
+    $text = '&amp;lt;script&amp;&gt;';
+    self::assertEquals($text, $this->cssToInlineStyles->setHTML($text)->convert());
   }
 
   /**
