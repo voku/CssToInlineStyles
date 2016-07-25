@@ -620,14 +620,10 @@ class CssToInlineStyles
         }
       }
 
-      //var_dump($propertyStorage);
-
       foreach ($propertyStorage as $element) {
         $originalStyle = $propertyStorage->getInfo();
-
         if ($originalStyle) {
           $originalStyles = $this->splitIntoProperties($originalStyle);
-
           $originalProperties = $this->splitStyleIntoChunks($originalStyles);
 
           // set attribute
