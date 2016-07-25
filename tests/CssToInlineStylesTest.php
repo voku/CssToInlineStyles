@@ -56,7 +56,11 @@ class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
     #東とう京{ color: black !important}
     ';
     $expected = '<div id="東とう京" class="ɹǝddɐɹʍ" style="display: none; color: black !important;"></div>';
-    $this->runHTMLToCSS($html, $css, $expected);
+
+    for ($i = 1; $i <= 2; $i++) { // keep this loop for quick&dirty performance tests
+      $this->runHTMLToCSS($html, $css, $expected);
+    }
+
   }
 
   /**

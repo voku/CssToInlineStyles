@@ -536,6 +536,7 @@ class CssToInlineStyles
    */
   private function createXPath(\DOMDocument $document, array $cssRules)
   {
+    $propertyStorage = new \SplObjectStorage();
     $xPath = new \DOMXPath($document);
 
     // any rules?
@@ -593,7 +594,7 @@ class CssToInlineStyles
           }
 
           // no styles stored?
-          if (null === $element->attributes->getNamedItem('data-css-to-inline-styles-original-styles')) {
+          if (!isset($propertyStorage[$element])) {
 
             // init var
             $originalStyle = $element->attributes->getNamedItem('style');
@@ -605,7 +606,7 @@ class CssToInlineStyles
             }
 
             // store original styles
-            $element->setAttribute('data-css-to-inline-styles-original-styles', $originalStyle);
+            $propertyStorage->attach($element, $originalStyle);
 
             // clear the styles
             $element->setAttribute('style', '');
@@ -619,13 +620,10 @@ class CssToInlineStyles
         }
       }
 
-      // reapply original styles (search elements)
-      $elements = $xPath->query('//*[@data-css-to-inline-styles-original-styles]');
+      //var_dump($propertyStorage);
 
-      // loop found elements
-      foreach ($elements as $element) {
-        // get the original styles
-        $originalStyle = $element->attributes->getNamedItem('data-css-to-inline-styles-original-styles')->value;
+      foreach ($propertyStorage as $element) {
+        $originalStyle = $propertyStorage->getInfo();
 
         if ($originalStyle) {
           $originalStyles = $this->splitIntoProperties($originalStyle);
@@ -638,9 +636,6 @@ class CssToInlineStyles
             $element->setAttribute('style', $propertiesString);
           }
         }
-
-        // remove placeholder
-        $element->removeAttribute('data-css-to-inline-styles-original-styles');
       }
     }
 
