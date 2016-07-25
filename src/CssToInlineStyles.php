@@ -48,6 +48,13 @@ class CssToInlineStyles
   private static $styleTagRegEx = '|<style(?:\s.*)?>(.*)</style>|isU';
 
   /**
+   * regular expression: style-tag with 'cleanup'-css-class
+   *
+   * @var string
+   */
+  private static $styleTagWithCleanupClassRegEx = '|<style[^>]+class="cleanup"[^>]*>.*</style>|isU';
+
+  /**
    * regular expression: css-comments
    *
    * @var string
@@ -156,7 +163,7 @@ class CssToInlineStyles
   public function setHTML($html)
   {
     // strip style definitions, if we use css-class "cleanup" on a style-element
-    $this->html = (string)preg_replace('/<style[^>]+class="cleanup"[^>]*>.*<\/style>/Usi', ' ', $html);
+    $this->html = (string)preg_replace(self::$styleTagWithCleanupClassRegEx, ' ', $html);
 
     return $this;
   }
@@ -176,12 +183,12 @@ class CssToInlineStyles
   }
 
   /**
-   * Sort an array on the specificity element
-   *
-   * @return int
+   * Sort an array on the specificity element.
    *
    * @param Specificity[] $e1 The first element.
    * @param Specificity[] $e2 The second element.
+   *
+   * @return int
    */
   private static function sortOnSpecificity($e1, $e2)
   {
@@ -197,7 +204,7 @@ class CssToInlineStyles
   }
 
   /**
-   * Converts the loaded HTML into an HTML-string with inline styles based on the loaded CSS
+   * Converts the loaded HTML into an HTML-string with inline styles based on the loaded CSS.
    *
    * @param bool $outputXHTML                             [optional] Should we output valid XHTML?
    * @param int  $libXMLOptions                           [optional] $libXMLOptions Since PHP 5.4.0 and Libxml 2.6.0,
@@ -212,7 +219,7 @@ class CssToInlineStyles
    */
   public function convert($outputXHTML = false, $libXMLOptions = 0, $path = false)
   {
-    // redefine
+    // init
     $outputXHTML = (bool)$outputXHTML;
 
     // validate
@@ -230,7 +237,6 @@ class CssToInlineStyles
     if ($this->loadCSSFromHTML) {
       foreach ($dom->find('link') as $node) {
 
-        /** @noinspection PhpUndefinedMethodInspection */
         $file = ($path ?: __DIR__) . '/' . $node->getAttribute('href');
 
         if (file_exists($file)) {
@@ -590,11 +596,12 @@ class CssToInlineStyles
           if (null === $element->attributes->getNamedItem('data-css-to-inline-styles-original-styles')) {
 
             // init var
-            $originalStyle = '';
+            $originalStyle = $element->attributes->getNamedItem('style');
 
-            if (null !== $element->attributes->getNamedItem('style')) {
-              /** @noinspection PhpUndefinedFieldInspection */
-              $originalStyle = $element->attributes->getNamedItem('style')->value;
+            if ($originalStyle) {
+              $originalStyle = $originalStyle->value;
+            } else {
+              $originalStyle = '';
             }
 
             // store original styles
@@ -604,34 +611,30 @@ class CssToInlineStyles
             $element->setAttribute('style', '');
           }
 
-          $propertiesString = $this->createPropertyChunks($element, $ruleProperties);
-
           // set attribute
-          if ('' != $propertiesString) {
+          $propertiesString = $this->createPropertyChunks($element, $ruleProperties);
+          if ($propertiesString) {
             $element->setAttribute('style', $propertiesString);
           }
         }
       }
 
-      // reapply original styles
-      // search elements
+      // reapply original styles (search elements)
       $elements = $xPath->query('//*[@data-css-to-inline-styles-original-styles]');
 
       // loop found elements
       foreach ($elements as $element) {
         // get the original styles
-        /** @noinspection PhpUndefinedFieldInspection */
         $originalStyle = $element->attributes->getNamedItem('data-css-to-inline-styles-original-styles')->value;
 
-        if ('' != $originalStyle) {
+        if ($originalStyle) {
           $originalStyles = $this->splitIntoProperties($originalStyle);
 
           $originalProperties = $this->splitStyleIntoChunks($originalStyles);
 
-          $propertiesString = $this->createPropertyChunks($element, $originalProperties);
-
           // set attribute
-          if ('' != $propertiesString) {
+          $propertiesString = $this->createPropertyChunks($element, $originalProperties);
+          if ($propertiesString) {
             $element->setAttribute('style', $propertiesString);
           }
         }
@@ -661,7 +664,6 @@ class CssToInlineStyles
     // any styles defined before?
     if (null !== $stylesAttribute) {
       // get value for the styles attribute
-      /** @noinspection PhpUndefinedFieldInspection */
       $definedStyles = (string)$stylesAttribute->value;
 
       // split into properties
@@ -790,7 +792,7 @@ class CssToInlineStyles
   }
 
   /**
-   * Set the encoding to use with the DOMDocument
+   * Set the encoding to use with the DOMDocument.
    *
    * @param  string $encoding The encoding to use.
    *
