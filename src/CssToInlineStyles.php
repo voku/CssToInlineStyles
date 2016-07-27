@@ -672,6 +672,7 @@ class CssToInlineStyles
           ||
           false !== stripos(implode('', (array)$value), '!important')
       ) {
+        unset($properties[$key]);
         $properties[$key] = $value;
       }
     }
