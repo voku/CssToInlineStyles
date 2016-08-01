@@ -256,6 +256,21 @@ EOF;
     self::assertSame($expected, $actual);
   }
 
+  public function testDuplicateCssWithFoundation()
+  {
+    // we need some duplicate css for e.g. Outlook.com (https://www.emailonacid.com/blog/article/email-development/outlook.com-does-support-margins)
+
+    $html = $this->file_get_contents(__DIR__ . '/fixtures/test7Html.html');
+    $expected = $this->file_get_contents(__DIR__ . '/fixtures/test7Html_result.html');
+
+    $cssToInlineStyles = $this->cssToInlineStyles;
+    $cssToInlineStyles
+        ->setUseInlineStylesBlock(true)
+        ->setHTML($html);
+    $actual = $cssToInlineStyles->convert();
+    self::assertSame($expected, $actual);
+  }
+
   public function testCssBigFile()
   {
     $html = $this->file_get_contents(__DIR__ . '/fixtures/test_big.html');
