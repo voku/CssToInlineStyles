@@ -464,7 +464,14 @@ EOF;
 
   public function testSpecificity()
   {
-    $html = '<a class="one" id="ONE"><img class="two" id="TWO"></a>';
+    $html = <<<EOF
+<a class="one" id="ONE" style="padding: 100px;">
+  <img class="two" id="TWO">
+  <img class="three" id="THREE">
+  <img class="four" id="FOUR" style="margin-left: 100px;">
+  <img class="five" id="FIVE" style="padding-left: 10px; padding: 100px;">
+</a>
+EOF;
     $css = <<<EOF
 a {
   border: 1px solid red;
@@ -480,14 +487,31 @@ a {
   margin: 10px;
   width: 30px;
 }
-img {
-  border: 2px solid green;
-}
 a img {
   border: none;
 }
+img {
+  border: 2px solid green;
+}
+#THREE {
+  padding-left: 10px;
+}
+.three {
+  padding: 100px;
+}
+.four {
+  margin: 10px;
+}
+.five {
+  padding: 15px;
+}
+#FIVE {
+  padding-left: 20px;
+}
 EOF;
-    $expected = '<a class="one" id="ONE" style="border: 1px solid red; padding: 15px; width: 20px !important; margin: 10px;"><img class="two" id="TWO" style="border: none;"></a>';
+    $expected = <<<EOF
+<a class="one" id="ONE" style="border: 1px solid red; width: 20px !important; margin: 10px; padding: 100px;">  <img class="two" id="TWO" style="border: none;"><img class="three" id="THREE" style="border: none; padding: 100px; padding-left: 10px;"><img class="four" id="FOUR" style="border: none; margin: 10px; margin-left: 100px;"><img class="five" id="FIVE" style="border: none; padding-left: 10px; padding: 100px;"></a>
+EOF;
     $this->runHTMLToCSS($html, $css, $expected);
   }
 
