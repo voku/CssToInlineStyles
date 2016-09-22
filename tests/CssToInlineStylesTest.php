@@ -466,7 +466,7 @@ EOF;
   {
     $html = <<<EOF
 <a class="one" id="ONE" style="padding: 100px;">
-  <img class="two" id="TWO">
+  <img class="two" id="TWO" style="padding-top: 30px;">
   <img class="three" id="THREE">
   <img class="four" id="FOUR" style="margin-left: 100px;">
   <img class="five" id="FIVE" style="padding-left: 10px; padding: 100px;">
@@ -492,6 +492,9 @@ a {
 #ONE {
   margin: 10px;
   width: 30px;
+}
+.two {
+  padding-top: 20px;
 }
 img {
   padding: 0;
@@ -523,7 +526,7 @@ img {
 }
 EOF;
     $expected = <<<EOF
-<a class="one" id="ONE" style="border: 1px solid red; width: 20px !important; border-bottom: 2px; height: 20px; margin: 10px; padding: 100px;">  <img class="two" id="TWO" style="padding-bottom: 20px; padding: 0; border: none;"><img class="three" id="THREE" style="padding-bottom: 20px; border: none; padding: 100px; padding-left: 10px;"><img class="four" id="FOUR" style="padding-bottom: 20px; padding: 0; border: none; margin: 10px; margin-left: 100px;"><img class="five" id="FIVE" style="padding-bottom: 20px; border: none; padding-left: 10px; padding: 100px;"></a>
+<a class="one" id="ONE" style="border: 1px solid red; width: 20px !important; border-bottom: 2px; height: 20px; margin: 10px; padding: 100px;">  <img class="two" id="TWO" style="padding-bottom: 20px; padding: 0; border: none; padding-top: 30px;"><img class="three" id="THREE" style="padding-bottom: 20px; border: none; padding: 100px; padding-left: 10px;"><img class="four" id="FOUR" style="padding-bottom: 20px; padding: 0; border: none; margin: 10px; margin-left: 100px;"><img class="five" id="FIVE" style="padding-bottom: 20px; border: none; padding-left: 10px; padding: 100px;"></a>
 EOF;
     $this->runHTMLToCSS($html, $css, $expected);
   }
