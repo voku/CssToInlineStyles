@@ -183,7 +183,8 @@ class CssToInlineStyles
   }
 
   /**
-   * Sort an array on the specificity element.
+   * Sort an array on the specificity element in an ascending way
+   * Lower specificity will be sorted to the beginning of the array
    *
    * @param Specificity[] $e1 The first element.
    * @param Specificity[] $e2 The second element.
@@ -345,7 +346,7 @@ class CssToInlineStyles
       // set the selectors
       $selectors = trim($chunks[0]);
 
-      // get cssProperties
+      // get css-properties
       $cssProperties = trim($chunks[1]);
 
       // split multiple selectors
