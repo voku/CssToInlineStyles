@@ -701,6 +701,17 @@ EOF;
     $this->cssToInlineStyles->setStripOriginalStyleTags(true);
     $this->cssToInlineStyles->setExcludeMediaQueries(true);
     $this->runHTMLToCSS($html, $css, $expected);
+
+    // ---
+
+    $html = '<html><body><style>div { width: 200px; width: 222px; }</style><!--[if gte mso 9]><STyle>.test { top: 1em; } </STyle><![endif]--><!-- <style> .test { width: 0 !important; } </style> --><div class="test"><h1>foo</h1><h1>foo2</h1></div></body></html>';
+    $css = '';
+    $expected = '<html><body><style></style><!--[if gte mso 9]><STyle>.test { top: 1em; } </STyle><![endif]--><!-- <style> .test { width: 0 !important; } </style> --><div class="test" style="width: 200px; width: 222px;"><h1>foo</h1><h1>foo2</h1></div></body></html>';
+    $this->cssToInlineStyles->setUseInlineStylesBlock(true);
+    $this->cssToInlineStyles->setExcludeConditionalInlineStylesBlock(true);
+    $this->cssToInlineStyles->setStripOriginalStyleTags(true);
+    $this->cssToInlineStyles->setExcludeMediaQueries(true);
+    $this->runHTMLToCSS($html, $css, $expected);
   }
 
   public function testExcludeConditionalInlineStylesBlockFalse()
@@ -708,6 +719,17 @@ EOF;
     $html = '<html><body><style>div { width: 200px; width: 222px; }</style><!--[if gte mso 9]><STyle>.test { top: 1em; } </STyle><![endif]--><div class="test"><h1>foo</h1><h1>foo2</h1></div></body></html>';
     $css = '';
     $expected = '<html><body><style></style><!--[if gte mso 9]><STyle>.test { top: 1em; } </STyle><![endif]--><div class="test" style="width: 222px; top: 1em;"><h1>foo</h1><h1>foo2</h1></div></body></html>';
+    $this->cssToInlineStyles->setUseInlineStylesBlock(true);
+    $this->cssToInlineStyles->setExcludeConditionalInlineStylesBlock(false);
+    $this->cssToInlineStyles->setStripOriginalStyleTags(true);
+    $this->cssToInlineStyles->setExcludeMediaQueries(true);
+    $this->runHTMLToCSS($html, $css, $expected);
+
+    // ---
+
+    $html = '<html><body><style>div { width: 200px; width: 222px; }</style><!--[if gte mso 9]><STyle>.test { top: 1em; } </STyle><![endif]--><!-- <style> .test { width: 0 !important; } </style> --><div class="test"><h1>foo</h1><h1>foo2</h1></div></body></html>';
+    $css = '';
+    $expected = '<html><body><style></style><!--[if gte mso 9]><STyle>.test { top: 1em; } </STyle><![endif]--><!-- <style> .test { width: 0 !important; } </style> --><div class="test" style="width: 222px; top: 1em;"><h1>foo</h1><h1>foo2</h1></div></body></html>';
     $this->cssToInlineStyles->setUseInlineStylesBlock(true);
     $this->cssToInlineStyles->setExcludeConditionalInlineStylesBlock(false);
     $this->cssToInlineStyles->setStripOriginalStyleTags(true);

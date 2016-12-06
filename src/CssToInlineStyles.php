@@ -38,7 +38,7 @@ class CssToInlineStyles
    *
    * @var string
    */
-  private static $excludeConditionalInlineStylesBlockRegEx = '/<!--.*<style.*-->/isU';
+  private static $excludeConditionalInlineStylesBlockRegEx = '/<!--(?:\[if).*<style.*-->/isU';
 
   /**
    * regular expression: inline style tags
@@ -46,6 +46,13 @@ class CssToInlineStyles
    * @var string
    */
   private static $styleTagRegEx = '|<style(?:\s.*)?>(.*)</style>|isU';
+
+  /**
+   * regular expression: html-comments without conditional comments
+   *
+   * @var string
+   */
+  private static $htmlCommentWithoutConditionalCommentRegEx = '|<!--(?!\[if).*?-->|isU';
 
   /**
    * regular expression: style-tag with 'cleanup'-css-class
@@ -296,8 +303,10 @@ class CssToInlineStyles
     $css = '';
     $matches = array();
 
+    $htmlNoComments = preg_replace(self::$htmlCommentWithoutConditionalCommentRegEx, '', $html);
+
     // match the style blocks
-    preg_match_all(self::$styleTagRegEx, $html, $matches);
+    preg_match_all(self::$styleTagRegEx, $htmlNoComments, $matches);
 
     // any style-blocks found?
     if (!empty($matches[1])) {
