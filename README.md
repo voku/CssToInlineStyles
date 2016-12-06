@@ -65,13 +65,15 @@ stripOriginalStyleTags |false|Strip original style tags.
 excludeMediaQueries |true|Exclude media queries from extra "css" and keep media queries for inline-styles blocks.
 excludeConditionalInlineStylesBlock |true|Exclude conditional inline-style blocks.
 
+## Warning
+
+Also if the default is ```cleanup === false```, you maybe need to use this feature, because Outlook has some special features where the inline-CSS will be ignored and it will fallback to use only the CSS-Class- or ID-properties.
+
+```php
+$cssToInlineStyles->setCleanup(true);
+```
 
 ## Known issues
 
 * no support for pseudo selectors
 
-## Sites using this class
-
-* [Each site based on Fork CMS](http://www.fork-cms.com)
-* [Print en Bind](http://www.printenbind.nl)
-* [Tiki Wiki CMS Groupware](http://sourceforge.net/p/tikiwiki/code/49505) (starting in Tiki 13)
