@@ -38,7 +38,7 @@ class CssToInlineStyles
    *
    * @var string
    */
-  private static $excludeConditionalInlineStylesBlockRegEx = '/<!--(?:\[if).*<style.*-->/isU';
+  private static $excludeConditionalInlineStylesBlockRegEx = '/<!--\[if.*<style.*-->/isU';
 
   /**
    * regular expression: inline style tags
