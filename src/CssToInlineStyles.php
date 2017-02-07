@@ -69,78 +69,84 @@ class CssToInlineStyles
   private static $styleCommentRegEx = '/\\/\\*.*\\*\\//sU';
 
   /**
-   * The CSS to use
+   * The CSS to use.
    *
-   * @var  string
+   * @var string
    */
   private $css;
 
   /**
-   * Should the generated HTML be cleaned
+   * The CSS-Media-Queries to use.
    *
-   * @var  bool
+   * @var string
+   */
+  private $css_media_queries;
+
+  /**
+   * Should the generated HTML be cleaned.
+   *
+   * @var bool
    */
   private $cleanup = false;
 
   /**
    * The encoding to use.
    *
-   * @var  string
+   * @var string
    */
   private $encoding = 'UTF-8';
 
   /**
-   * The HTML to process
+   * The HTML to process.
    *
-   * @var  string
+   * @var string
    */
   private $html;
 
   /**
-   * Use inline-styles block as CSS
+   * Use inline-styles block as CSS.
    *
    * @var bool
    */
   private $useInlineStylesBlock = false;
 
   /**
-   * Use link block reference as CSS
+   * Use link block reference as CSS.
    *
    * @var bool
    */
   private $loadCSSFromHTML = false;
 
   /**
-   * Strip original style tags
+   * Strip original style tags.
    *
    * @var bool
    */
   private $stripOriginalStyleTags = false;
 
   /**
-   * Exclude conditional inline-style blocks
+   * Exclude conditional inline-style blocks.
    *
    * @var bool
    */
   private $excludeConditionalInlineStylesBlock = true;
 
   /**
-   * Exclude media queries from "$this->css" and keep media queries for inline-styles blocks
+   * Exclude media queries from "$this->css" and keep media queries for inline-styles blocks.
    *
    * @var bool
    */
   private $excludeMediaQueries = true;
 
   /**
-   * Exclude media queries from "$this->css" and keep media queries for inline-styles blocks
+   * Exclude media queries from "$this->css" and keep media queries for inline-styles blocks.
    *
    * @var bool
    */
   private $excludeCssCharset = true;
 
   /**
-   * Creates an instance, you could set the HTML and CSS here, or load it
-   * later.
+   * Creates an instance, you could set the HTML and CSS here, or load it later.
    *
    * @param  null|string $html The HTML to process.
    * @param  null|string $css  The CSS to use.
@@ -161,7 +167,7 @@ class CssToInlineStyles
   }
 
   /**
-   * Set HTML to process
+   * Set HTML to process.
    *
    * @param  string $html The HTML to process.
    *
@@ -176,7 +182,7 @@ class CssToInlineStyles
   }
 
   /**
-   * Set CSS to use
+   * Set CSS to use.
    *
    * @param  string $css The CSS to use.
    *
@@ -186,12 +192,15 @@ class CssToInlineStyles
   {
     $this->css = (string)$css;
 
+    $this->css_media_queries = $this->getMediaQueries($css);
+
     return $this;
   }
 
   /**
-   * Sort an array on the specificity element in an ascending way
-   * Lower specificity will be sorted to the beginning of the array
+   * Sort an array on the specificity element in an ascending way.
+   *
+   * INFO: Lower specificity will be sorted to the beginning of the array.
    *
    * @param Specificity[] $e1 The first element.
    * @param Specificity[] $e2 The second element.
@@ -287,7 +296,18 @@ class CssToInlineStyles
     }
 
     // just regular HTML 4.01 as it should be used in newsletters
-    return $dom->html();
+    $html = $dom->html();
+
+    // add css media queries from "$this->setCSS()"
+    if (
+        $this->stripOriginalStyleTags === false
+        &&
+        $this->css_media_queries
+    ) {
+      $html = str_ireplace('</head>', '<style type="text/css">' . "\n" . $this->css_media_queries . "\n" . '</styles>', $html);
+    }
+
+    return $html;
   }
 
   /**
@@ -443,6 +463,23 @@ class CssToInlineStyles
     $css = preg_replace(self::$styleCommentRegEx, '', $css);
 
     return (string)preg_replace(self::$cssMediaQueriesRegEx, '', $css);
+  }
+
+  /**
+   * get css media queries from the string
+   *
+   * @param string $css
+   *
+   * @return string
+   */
+  private function getMediaQueries($css)
+  {
+    // remove comments previously to matching media queries
+    $css = preg_replace(self::$styleCommentRegEx, '', $css);
+
+    preg_match_all(self::$cssMediaQueriesRegEx, $css, $matches);
+
+    return implode("\n", $matches[0]);
   }
 
   /**
@@ -608,7 +645,7 @@ class CssToInlineStyles
             $originalStyle = $element->attributes->getNamedItem('style');
 
             if ($originalStyle) {
-              $originalStyle = $originalStyle->value;
+              $originalStyle = (string)$originalStyle->value;
             } else {
               $originalStyle = '';
             }

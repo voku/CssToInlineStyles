@@ -4,6 +4,7 @@ namespace voku\CssToInlineStyles\tests;
 
 use voku\CssToInlineStyles\CssToInlineStyles;
 use voku\CssToInlineStyles\Exception;
+use voku\helper\UTF8;
 
 /**
  * Class CssToInlineStylesTest
@@ -253,6 +254,7 @@ EOF;
         ->setHTML($html)
         ->setCSS($css);
     $actual = $cssToInlineStyles->convert();
+
     self::assertSame($expected, $actual);
   }
 
@@ -268,6 +270,7 @@ EOF;
         ->setUseInlineStylesBlock(true)
         ->setHTML($html);
     $actual = $cssToInlineStyles->convert();
+
     self::assertSame($expected, $actual);
   }
 
@@ -283,6 +286,7 @@ EOF;
         ->setHTML($html)
         ->setCSS($css);
     $actual = $cssToInlineStyles->convert();
+
     self::assertSame($expected, $actual);
   }
 
@@ -302,6 +306,7 @@ EOF;
         ->setHTML($html)
         ->setCSS($css);
     $actual = $cssToInlineStyles->convert();
+
     self::assertSame($expected, $actual);
   }
 
@@ -911,7 +916,7 @@ EOF
    */
   protected function file_get_contents($filename)
   {
-    $string = file_get_contents($filename);
+    $string = UTF8::file_get_contents($filename);
 
     return $this->normalizeString($string);
   }
@@ -967,5 +972,98 @@ EXPECTED;
         ->convert();
 
     self::assertEquals($this->normalizeString($expected), $result);
+  }
+
+  public function testIssue25()
+  {
+    $css = '
+    *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+
+    body, html {margin: 0;padding: 0;width: 100%;}
+    div.row {width: 100%;display: block;clear: both;}
+    div.col-25 { width: 25%;float: left; display: block;padding: 10px;}
+    div.content {width:100%; background: #eee;padding: 10px;}
+    
+    @media only screen and (min-width: 360px) {
+      div.col-25 { width: 100%; float: left; display: block;padding: 10px;}
+    }
+    
+    @media only screen and (min-width: 120px) {
+      div.col-25 { width: 100%; display: block; padding: 15px;}
+    }
+    ';
+
+    $html = <<<HTML
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Testing</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </head>
+    <body>
+    
+    <div class="row">
+      <div class="col-25">
+        <div class="content">Hello World!</div>
+      </div>
+      <div class="col-25">
+        <div class="content">Hello World!</div>
+      </div>
+      <div class="col-25">
+        <div class="content">Hello World!</div>
+      </div>
+      <div class="col-25">
+        <div class="content">Hello World!</div>
+      </div>
+    </div>
+    
+    </body>
+    </html>
+HTML;
+
+    $expected = <<<EXPECTED
+<!DOCTYPE html>
+<html style="margin: 0; padding: 0; width: 100%;">
+    <head>
+      <title>Testing</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style type="text/css">
+@media only screen and (min-width: 360px) {
+      div.col-25 { width: 100%; float: left; display: block;padding: 10px;}
+    }
+@media only screen and (min-width: 120px) {
+      div.col-25 { width: 100%; display: block; padding: 15px;}
+    }
+</styles>
+    <body style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; width: 100%;">
+    
+    <div class="row" style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; clear: both; display: block; width: 100%;">
+      <div class="col-25" style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; display: block; float: left; padding: 10px; width: 25%;">
+        <div class="content" style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; background: #eee; padding: 10px; width: 100%;">Hello World!</div>
+      </div>
+      <div class="col-25" style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; display: block; float: left; padding: 10px; width: 25%;">
+        <div class="content" style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; background: #eee; padding: 10px; width: 100%;">Hello World!</div>
+      </div>
+      <div class="col-25" style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; display: block; float: left; padding: 10px; width: 25%;">
+        <div class="content" style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; background: #eee; padding: 10px; width: 100%;">Hello World!</div>
+      </div>
+      <div class="col-25" style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; display: block; float: left; padding: 10px; width: 25%;">
+        <div class="content" style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; background: #eee; padding: 10px; width: 100%;">Hello World!</div>
+      </div>
+    </div>
+    
+    </body>
+    </html>
+EXPECTED;
+
+    $cssToInlineStyles = new CssToInlineStyles();
+
+    $result = $cssToInlineStyles
+        ->setExcludeMediaQueries(false)
+        ->setHTML($html)
+        ->setCSS($css)
+        ->convert();
+
+    self::assertEquals($this->normalizeString($expected), $this->normalizeString($result));
   }
 }
