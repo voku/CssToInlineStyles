@@ -304,7 +304,7 @@ class CssToInlineStyles
         &&
         $this->css_media_queries
     ) {
-      $html = str_ireplace('</head>', '<style type="text/css">' . "\n" . $this->css_media_queries . "\n" . '</styles>', $html);
+      $html = str_ireplace('</head>', '<style type="text/css">' . "\n" . $this->css_media_queries . "\n" . '</styles></head>', $html);
     }
 
     return $html;
