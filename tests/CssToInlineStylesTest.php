@@ -1027,7 +1027,8 @@ HTML;
     <head>
       <title>Testing</title>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <style type="text/css">
+    
+<style type="text/css">
 @media only screen and (min-width: 360px) {
       div.col-25 { width: 100%; float: left; display: block;padding: 10px;}
     }
@@ -1035,6 +1036,7 @@ HTML;
       div.col-25 { width: 100%; display: block; padding: 15px;}
     }
 </styles>
+</head>
     <body style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; width: 100%;">
     
     <div class="row" style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; clear: both; display: block; width: 100%;">
