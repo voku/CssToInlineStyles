@@ -223,11 +223,11 @@ class CssToInlineStyles
   /**
    * Converts the loaded HTML into an HTML-string with inline styles based on the loaded CSS.
    *
-   * @param bool $outputXHTML            [optional] Should we output valid XHTML?
+   * @param bool     $outputXHTML        [optional] Should we output valid XHTML?
    * @param int|null $libXMLExtraOptions [optional] $libXMLExtraOptions Since PHP 5.4.0 and Libxml 2.6.0,
    *                                     you may also use the options parameter to specify additional
    *                                     Libxml parameters.
-   * @param bool $path                   [optional] Set the path to your external css-files.
+   * @param bool     $path               [optional] Set the path to your external css-files.
    *
    * @return string
    *
@@ -304,7 +304,7 @@ class CssToInlineStyles
         &&
         $this->css_media_queries
     ) {
-      $html = str_ireplace('</head>', "\n" . '<style type="text/css">' . "\n" . $this->css_media_queries . "\n" . '</styles>'. "\n" . '</head>', $html);
+      $html = str_ireplace('</head>', "\n" . '<style type="text/css">' . "\n" . $this->css_media_queries . "\n" . '</style>' . "\n" . '</head>', $html);
     }
 
     return $html;

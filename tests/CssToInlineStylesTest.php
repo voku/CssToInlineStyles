@@ -1035,7 +1035,7 @@ HTML;
 @media only screen and (min-width: 120px) {
       div.col-25 { width: 100%; display: block; padding: 15px;}
     }
-</styles>
+</style>
 </head>
     <body style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; width: 100%;">
     
