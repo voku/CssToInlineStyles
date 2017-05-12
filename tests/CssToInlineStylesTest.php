@@ -341,7 +341,7 @@ EOF;
     $cssToInlineStyles->setLoadCSSFromHTML(true);
     $cssToInlineStyles->setHTML($html);
     $cssToInlineStyles->setCSS($css);
-    $actual = $cssToInlineStyles->convert(true, 0, __DIR__ . '/fixtures/');
+    $actual = $cssToInlineStyles->convert(false, 0, __DIR__ . '/fixtures/');
     self::assertSame($this->normalizeString($expected), $this->normalizeString($actual));
   }
 
