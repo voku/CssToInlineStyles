@@ -52,7 +52,7 @@ class CssToInlineStyles
    *
    * @var string
    */
-  private static $htmlCommentWithoutConditionalCommentRegEx = '|<!--(?!\[if).*?-->|isU';
+  private static $htmlCommentWithoutConditionalCommentRegEx = '|<!--(?!\[if).*-->|isU';
 
   /**
    * regular expression: style-tag with 'cleanup'-css-class

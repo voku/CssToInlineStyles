@@ -206,6 +206,15 @@ CSS;
     self::assertSame('<h1 style="color: rebeccapurple;"><a style="display: block; padding: 5px;">foo</a></h1>', $result);
   }
 
+  public function testCssWithCommentsInOneLine()
+  {
+    $css = <<<CSS
+a { padding: 5px; display: block; } /* style the titles */ h1 { color: rebeccapurple; } /* end of title styles */
+CSS;
+    $result = $this->cssToInlineStyles->setHTML('<h1><a>foo</a></h1>')->setCSS($css)->convert();
+    self::assertSame('<h1 style="color: rebeccapurple;"><a style="display: block; padding: 5px;">foo</a></h1>', $result);
+  }
+
   public function testCssWithMediaQueries()
   {
     $css = <<<EOF
@@ -717,6 +726,17 @@ EOF;
     $this->cssToInlineStyles->setStripOriginalStyleTags(true);
     $this->cssToInlineStyles->setExcludeMediaQueries(true);
     $this->runHTMLToCSS($html, $css, $expected);
+
+    // ---
+
+    $html = '<html><body><!--[if gte mso 9]><style>.test { top: 1em; } </style><![endif]--><style>div { width: 200px; width: 222px; }</style><!-- <style> .test { width: 0 !important; } </style> --><div class="test"><h1>foo</h1><h1>foo2</h1></div></body></html>';
+    $css = '';
+    $expected = '<html><body><!--[if gte mso 9]><style>.test { top: 1em; } </style><![endif]--><style></style><!-- <style> .test { width: 0 !important; } </style> --><div class="test" style="width: 200px; width: 222px;"><h1>foo</h1><h1>foo2</h1></div></body></html>';
+    $this->cssToInlineStyles->setUseInlineStylesBlock(true);
+    $this->cssToInlineStyles->setExcludeConditionalInlineStylesBlock(true);
+    $this->cssToInlineStyles->setStripOriginalStyleTags(true);
+    $this->cssToInlineStyles->setExcludeMediaQueries(true);
+    $this->runHTMLToCSS($html, $css, $expected);
   }
 
   public function testExcludeConditionalInlineStylesBlockFalse()
@@ -737,6 +757,28 @@ EOF;
     $expected = '<html><body><style></style><!--[if gte mso 9]><STyle>.test { top: 1em; } </STyle><![endif]--><!-- <style> .test { width: 0 !important; } </style> --><div class="test" style="width: 222px; top: 1em;"><h1>foo</h1><h1>foo2</h1></div></body></html>';
     $this->cssToInlineStyles->setUseInlineStylesBlock(true);
     $this->cssToInlineStyles->setExcludeConditionalInlineStylesBlock(false);
+    $this->cssToInlineStyles->setStripOriginalStyleTags(true);
+    $this->cssToInlineStyles->setExcludeMediaQueries(true);
+    $this->runHTMLToCSS($html, $css, $expected);
+
+    // ---
+
+    $html = '<html><body><!--[if gte mso 9]><style>.test { top: 1em; } </style><![endif]--><style>div { width: 200px; width: 222px; }</style><!-- <style> .test { width: 0 !important; } </style> --><div class="test"><h1>foo</h1><h1>foo2</h1></div></body></html>';
+    $css = '';
+    $expected = '<html><body><!--[if gte mso 9]><style>.test { top: 1em; } </style><![endif]--><style></style><!-- <style> .test { width: 0 !important; } </style> --><div class="test" style="width: 222px; top: 1em;"><h1>foo</h1><h1>foo2</h1></div></body></html>';
+    $this->cssToInlineStyles->setUseInlineStylesBlock(true);
+    $this->cssToInlineStyles->setExcludeConditionalInlineStylesBlock(false);
+    $this->cssToInlineStyles->setStripOriginalStyleTags(true);
+    $this->cssToInlineStyles->setExcludeMediaQueries(true);
+    $this->runHTMLToCSS($html, $css, $expected);
+  }
+
+  public function testBugHtmlCommentWithoutConditionalCommentRegExTooGreedy()
+  {
+    $html = '<html><body><style>div { width: 200px; <!-- width: 220px; --> width: 222px; <!-- width: 224px; --> }</style><div class="test"><h1>foo</h1><h1>foo2</h1></div></body></html>';
+    $css = '';
+    $expected = '<html><body><style></style><div class="test" style="width: 200px; width: 222px;"><h1>foo</h1><h1>foo2</h1></div></body></html>';
+    $this->cssToInlineStyles->setUseInlineStylesBlock(true);
     $this->cssToInlineStyles->setStripOriginalStyleTags(true);
     $this->cssToInlineStyles->setExcludeMediaQueries(true);
     $this->runHTMLToCSS($html, $css, $expected);
