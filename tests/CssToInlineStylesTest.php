@@ -11,7 +11,7 @@ use voku\helper\UTF8;
  *
  * @package voku\CssToInlineStyles\tests
  */
-class CssToInlineStylesTest extends \PHPUnit_Framework_TestCase
+class CssToInlineStylesTest extends \PHPUnit\Framework\TestCase
 {
   /**
    * @var CssToInlineStyles
@@ -296,7 +296,7 @@ EOF;
         ->setCSS($css);
     $actual = $cssToInlineStyles->convert();
 
-    self::assertSame($expected, $actual);
+    self::assertSame($expected, '﻿'. $actual); // UTF-8 Bom + string
   }
 
   public function testKeepMediaQuery()
@@ -958,7 +958,9 @@ EOF
    */
   protected function file_get_contents($filename)
   {
-    $string = UTF8::file_get_contents($filename);
+    $string = file_get_contents($filename);
+
+    $string = str_replace(array("\r\n", "\n\r", "\r"), "\n", $string);
 
     return $this->normalizeString($string);
   }

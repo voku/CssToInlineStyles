@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace voku\CssToInlineStyles;
 
 /**
@@ -65,9 +67,9 @@ class Specificity
    *
    * @return array
    */
-  public function getValues()
+  public function getValues(): array
   {
-    return array($this->a, $this->b, $this->c);
+    return [$this->a, $this->b, $this->c];
   }
 
   /**
@@ -80,7 +82,7 @@ class Specificity
    *
    * @return static
    */
-  public static function fromSelector($selector)
+  public static function fromSelector(string $selector)
   {
     $pattern_a = "  \#";
     $pattern_b = "  (\.[\w]+)                     # classes
@@ -123,7 +125,7 @@ class Specificity
    *
    * @return int
    */
-  public function compareTo(Specificity $specificity)
+  public function compareTo(Specificity $specificity): int
   {
     if ($this->a !== $specificity->a) {
       return $this->a - $specificity->a;
