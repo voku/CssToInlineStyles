@@ -1,3 +1,9 @@
+# Changelog 2.0.0
+
+* drop support for PHP < 7.0
+* use "strict_types"
+* removed (very) old deprecated methods
+
 # Changelog 1.6.1
 
 * Fixed security breach (execution rights)
