@@ -4,7 +4,6 @@ namespace voku\CssToInlineStyles\tests;
 
 use voku\CssToInlineStyles\CssToInlineStyles;
 use voku\CssToInlineStyles\Exception;
-use voku\helper\UTF8;
 
 /**
  * Class CssToInlineStylesTest
