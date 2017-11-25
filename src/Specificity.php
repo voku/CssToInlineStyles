@@ -125,7 +125,7 @@ class Specificity
    *
    * @return int
    */
-  public function compareTo(Specificity $specificity): int
+  public function compareTo(self $specificity): int
   {
     if ($this->a !== $specificity->a) {
       return $this->a - $specificity->a;
