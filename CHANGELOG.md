@@ -1,11 +1,19 @@
+# Changelog 2.0.1
+
+* support for PHP 7.3
+* update vendor
+
+
 # Changelog 2.0.0
 
 * drop support for PHP < 7.0
 * use "strict_types"
 
+
 # Changelog 1.6.1
 
 * Fixed security breach (execution rights)
+
 
 # Changelog 1.6.0
 
@@ -18,6 +26,7 @@
 * Added option to exclude conditional blocks when using inline-styles, thx to [KonstantinShkut](https://github.com/KonstantinShkut/CssToInlineStyles/commit/48ceb8ba7d182ebc1036b06bd9cefe3d6f0bf733),
     for more information see the [Pull Request](https://github.com/KonstantinShkut/CssToInlineStyles/commit/48ceb8ba7d182ebc1036b06bd9cefe3d6f0bf733)
 
+
 # Changelog since 1.5.3
 
 * Fix properties split on base64 encoded url content, thx to [tguyard](https://github.com/Giga-gg),
@@ -27,9 +36,11 @@
 * Remove version from require, thx to [barryvdh](https://github.com/barryvdh),
     for more information see the [Pull Request](https://github.com/tijsverkoyen/CssToInlineStyles/pull/85)
 
+
 # Changelog since 1.5.2
 
 * Make sure the XML header is removed.
+
 
 # Changelog since 1.5.1
 
@@ -47,6 +58,7 @@
     for more information see the [Pull Request](https://github.com/tijsverkoyen/CssToInlineStyles/pull/74)
 * Added a .gitattributes file, thx to [GrahamCampbell](https://github.com/GrahamCampbell),
     for more information see the [Pull Request](https://github.com/tijsverkoyen/CssToInlineStyles/pull/71)
+
 
 # Changelog since 1.5.0
 
