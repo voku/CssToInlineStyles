@@ -26,7 +26,7 @@ class CssToInlineStyles
    *
    * @var string
    */
-  private static $cssMediaQueriesRegEx = '#@media\\s+(?:only\\s)?(?:[\\s{\\(]|screen|all)\\s?[^{]+{.*}\\s*}\\s*#misU';
+  private static $cssMediaQueriesRegEx = '#(?:____SIMPLE_HTML_DOM__VOKU__AT____|@)media\\s+(?:only\\s)?(?:[\\s{\\(]|screen|all)\\s?[^{]+{.*}\\s*}\\s*#misU';
 
   /**
    * regular expression: css charset
@@ -899,7 +899,7 @@ class CssToInlineStyles
    *
    * Info: If this is enabled the media queries will be removed before inlining the rules.
    *
-   * WARNING: If you use inline styles block "<style>" the this option will keep the media queries.
+   * WARNING: If you use inline styles block "<style>" this option will keep the media queries.
    *
    * @param bool $on
    *

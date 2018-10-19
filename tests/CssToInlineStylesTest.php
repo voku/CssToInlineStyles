@@ -263,7 +263,7 @@ EOF;
         ->setCSS($css);
     $actual = $cssToInlineStyles->convert();
 
-    self::assertSame($expected, $actual);
+    self::assertSame(trim($expected), trim($actual));
   }
 
   public function testDuplicateCssWithFoundation()
@@ -279,7 +279,7 @@ EOF;
         ->setHTML($html);
     $actual = $cssToInlineStyles->convert();
 
-    self::assertSame($expected, $actual);
+    self::assertSame(trim($expected), trim($actual));
   }
 
   public function testCssBigFile()
@@ -295,7 +295,7 @@ EOF;
         ->setCSS($css);
     $actual = $cssToInlineStyles->convert();
 
-    self::assertSame($expected, '﻿'. $actual); // UTF-8 Bom + string
+    self::assertSame(rtrim($expected), '﻿'. rtrim($actual)); // UTF-8 Bom + string
   }
 
   public function testKeepMediaQuery()
@@ -315,7 +315,7 @@ EOF;
         ->setCSS($css);
     $actual = $cssToInlineStyles->convert();
 
-    self::assertSame($expected, $actual);
+    self::assertSame(trim($expected), trim($actual));
   }
 
   public function testKeepMediaQueryV2()
@@ -332,7 +332,7 @@ EOF;
     $cssToInlineStyles->setHTML($html);
     $cssToInlineStyles->setCSS($css);
     $actual = $cssToInlineStyles->convert();
-    self::assertSame($expected, $actual);
+    self::assertSame(trim($expected), trim($actual));
   }
 
   public function testLoadCssFile()
@@ -539,7 +539,7 @@ img {
 }
 EOF;
     $expected = <<<EOF
-<a class="one" id="ONE" style="border: 1px solid red; width: 20px !important; border-bottom: 2px; height: 20px; margin: 10px; padding: 100px;">  <img class="two" id="TWO" style="padding-bottom: 20px; padding: 0; border: none; padding-top: 30px;"><img class="three" id="THREE" style="padding-bottom: 20px; border: none; padding: 100px; padding-left: 10px;"><img class="four" id="FOUR" style="padding-bottom: 20px; padding: 0; border: none; margin: 10px; margin-left: 100px;"><img class="five" id="FIVE" style="padding-bottom: 20px; border: none; padding-left: 10px; padding: 100px;"></a>
+<a class="one" id="ONE" style="border: 1px solid red; width: 20px !important; border-bottom: 2px; height: 20px; margin: 10px; padding: 100px;">  <img class="two" id="TWO" style="padding-bottom: 20px; padding: 0; border: none; padding-top: 30px;">  <img class="three" id="THREE" style="padding-bottom: 20px; border: none; padding: 100px; padding-left: 10px;">  <img class="four" id="FOUR" style="padding-bottom: 20px; padding: 0; border: none; margin: 10px; margin-left: 100px;">  <img class="five" id="FIVE" style="padding-bottom: 20px; border: none; padding-left: 10px; padding: 100px;"></a>
 EOF;
     $this->runHTMLToCSS($html, $css, $expected);
   }
@@ -582,7 +582,7 @@ EOF;
   {
     $html = '<style>div { top: 1em; }</style><style>div { left: 1em; }</style><div id="id" class="className"> id="foo" class="bar" </div>';
     $css = ' #id { display: inline; } .className { margin-right: 10px; }';
-    $expected = '<head><style>div { top: 1em; }</style><style>div { left: 1em; }</style></head><div style="top: 1em; left: 1em; margin-right: 10px; display: inline;"> id="foo" class="bar" </div>';
+    $expected = '<style>div { top: 1em; }</style><style>div { left: 1em; }</style><div style="top: 1em; left: 1em; margin-right: 10px; display: inline;"> id="foo" class="bar" </div>';
     $this->cssToInlineStyles->setUseInlineStylesBlock(true);
     $this->cssToInlineStyles->setStripOriginalStyleTags(false);
     $this->cssToInlineStyles->setCleanup(true);
@@ -596,7 +596,7 @@ EOF;
   {
     $html = '<style class="cleanup">div { top: 1em; }</style><style>.cleanup { top: 1em; } div { left: 1em; }</style><div id="id" class="className"> id="foo" class="bar" </div>';
     $css = ' #id { display: inline; } .className { margin-right: 10px; }';
-    $expected = '<head><style>.cleanup { top: 1em; } div { left: 1em; }</style></head><div style="left: 1em; margin-right: 10px; display: inline;"> id="foo" class="bar" </div>';
+    $expected = '<style>.cleanup { top: 1em; } div { left: 1em; }</style><div style="left: 1em; margin-right: 10px; display: inline;"> id="foo" class="bar" </div>';
     $this->cssToInlineStyles->setUseInlineStylesBlock(true);
     $this->cssToInlineStyles->setStripOriginalStyleTags(false);
     $this->cssToInlineStyles->setCleanup(true);
@@ -692,8 +692,7 @@ EOF;
   public function testXMLHeaderIsRemovedv2()
   {
     $html = '<html><body><p>Foo</p></body>';
-    $expected = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html>
+    $expected = '<html>
   <body>
     <p>Foo</p>
   </body>
@@ -872,9 +871,9 @@ background-image: url(\'data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAA//Z\'); }
 <p></p>
 HTML;
     $css = 'p { margin: 10px; }';
-    $this->runHTMLToCSS($html, $css, '<head><style>    p {        padding: 10px;    }</style></head><p style="margin: 10px;"></p>');
+    $this->runHTMLToCSS($html, $css, '<style>    p {        padding: 10px;    }</style><p style="margin: 10px;"></p>');
     $this->cssToInlineStyles->setUseInlineStylesBlock(true);
-    $this->runHTMLToCSS($html, $css, '<head><style>    p {        padding: 10px;    }</style></head><p style="margin: 10px; padding: 10px;"></p>');
+    $this->runHTMLToCSS($html, $css, '<style>    p {        padding: 10px;    }</style><p style="margin: 10px; padding: 10px;"></p>');
   }
 
   public function testSimpleStyleTagsInHtml()
@@ -971,7 +970,7 @@ EOF
    */
   protected function normalizeString($string)
   {
-    return str_replace(array("\r\n", "\r"), "\n", $string);
+    return str_replace(array("\r\n", "\r"), "\n", trim($string));
   }
 
   public function testStyleTagsWithAttributeInHtml()
