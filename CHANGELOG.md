@@ -1,3 +1,9 @@
+# Changelog 2.0.2
+
+* fix reported errors from "phpstan" (level 7)
+* update vendor
+
+
 # Changelog 2.0.1
 
 * support for PHP 7.3
