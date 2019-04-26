@@ -194,7 +194,7 @@ class CssToInlineStyles
 
         // check if there is some link css reference
         if ($this->loadCSSFromHTML) {
-            foreach ($dom->find('link') as $node) {
+            foreach ($dom->findMulti('link') as $node) {
                 $file = ($path ?: __DIR__) . '/' . $node->getAttribute('href');
 
                 if (\file_exists($file)) {
@@ -209,7 +209,7 @@ class CssToInlineStyles
         // should we use inline style-block
         if ($this->useInlineStylesBlock) {
             if ($this->excludeConditionalInlineStylesBlock === true) {
-                $this->html = \preg_replace(self::$excludeConditionalInlineStylesBlockRegEx, '', $this->html);
+                $this->html = (string) \preg_replace(self::$excludeConditionalInlineStylesBlockRegEx, '', $this->html);
             }
 
             $css .= $this->getCssFromInlineHtmlStyleBlock($this->html);
@@ -264,7 +264,7 @@ class CssToInlineStyles
         $css = '';
         $matches = [];
 
-        $htmlNoComments = \preg_replace(self::$htmlCommentWithoutConditionalCommentRegEx, '', $html);
+        $htmlNoComments = (string) \preg_replace(self::$htmlCommentWithoutConditionalCommentRegEx, '', $html);
 
         // match the style blocks
         \preg_match_all(self::$styleTagRegEx, $htmlNoComments, $matches);
@@ -394,7 +394,7 @@ class CssToInlineStyles
      *
      * Info: If this is enabled the class will use the links reference in the HTML.
      *
-     * @param bool [optional] $on Should we process link styles?
+     * @param bool $on [optional] Should we process link styles?
      *
      * @return $this
      */
@@ -444,9 +444,12 @@ class CssToInlineStyles
      */
     private function cleanupHTML(\DOMXPath $xPath)
     {
+        /** @var \DOMAttr[]|\DOMNodeList|false $nodes */
         $nodes = $xPath->query('//@class | //@id');
-        foreach ($nodes as $node) {
-            $node->ownerElement->removeAttributeNode($node);
+        if ($nodes !== false) {
+            foreach ($nodes as $node) {
+                $node->ownerElement->removeAttributeNode($node);
+            }
         }
     }
 
@@ -462,6 +465,7 @@ class CssToInlineStyles
         $properties = [];
 
         // get current styles
+        /** @var \DOMAttr|null $stylesAttribute */
         $stylesAttribute = $element->attributes->getNamedItem('style');
 
         // any styles defined before?
@@ -515,6 +519,7 @@ class CssToInlineStyles
      */
     private function createXPath(\DOMDocument $document, array $cssRules): \DOMXPath
     {
+        /** @var \DOMElement[]|\SplObjectStorage $propertyStorage */
         $propertyStorage = new \SplObjectStorage();
         $xPath = new \DOMXPath($document);
 
@@ -541,7 +546,7 @@ class CssToInlineStyles
                 }
 
                 // search elements
-                /** @var \DOMElement[]|\DOMNodeList $elements */
+                /** @var \DOMElement[]|\DOMNodeList|false $elements */
                 $elements = $xPath->query($query);
 
                 // validate elements
@@ -573,10 +578,10 @@ class CssToInlineStyles
                     if (!isset($propertyStorage[$element])) {
 
                         // init var
+                        /** @var \DOMAttr|null $originalStyle */
                         $originalStyle = $element->attributes->getNamedItem('style');
 
-                        if ($originalStyle) {
-                            /** @noinspection PhpUndefinedFieldInspection */
+                        if ($originalStyle !== null) {
                             $originalStyle = (string) $originalStyle->value;
                         } else {
                             $originalStyle = '';
@@ -630,10 +635,10 @@ class CssToInlineStyles
         );
 
         // remove comments
-        $css = \preg_replace(self::$styleCommentRegEx, '', $css);
+        $css = (string) \preg_replace(self::$styleCommentRegEx, '', $css);
 
         // remove spaces
-        $css = \preg_replace('/\s\s+/u', ' ', $css);
+        $css = (string) \preg_replace('/\s\s+/u', ' ', $css);
 
         // remove css charset
         if ($this->excludeCssCharset === true) {
@@ -658,7 +663,7 @@ class CssToInlineStyles
     private function getMediaQueries($css): string
     {
         // remove comments previously to matching media queries
-        $css = \preg_replace(self::$styleCommentRegEx, '', $css);
+        $css = (string) \preg_replace(self::$styleCommentRegEx, '', $css);
 
         \preg_match_all(self::$cssMediaQueriesRegEx, $css, $matches);
 
@@ -887,21 +892,24 @@ class CssToInlineStyles
     private function stripOriginalStyleTags(\DOMXPath $xPath)
     {
         // get all style tags
+        /** @var \DOMElement[]|\DOMNodeList|false $nodes */
         $nodes = $xPath->query('descendant-or-self::style');
-        foreach ($nodes as $node) {
-            if ($this->excludeMediaQueries === true) {
+        if ($nodes !== false) {
+            foreach ($nodes as $node) {
+                if ($this->excludeMediaQueries === true) {
 
-                // remove comments previously to matching media queries
-                $node->nodeValue = \preg_replace(self::$styleCommentRegEx, '', $node->nodeValue);
+                    // remove comments previously to matching media queries
+                    $nodeValueTmp = (string) \preg_replace(self::$styleCommentRegEx, '', $node->nodeValue);
 
-                // search for Media Queries
-                \preg_match_all(self::$cssMediaQueriesRegEx, $node->nodeValue, $mqs);
+                    // search for Media Queries
+                    \preg_match_all(self::$cssMediaQueriesRegEx, $nodeValueTmp, $mqs);
 
-                // replace the nodeValue with just the Media Queries
-                $node->nodeValue = \implode("\n", $mqs[0]);
-            } else {
-                // remove the entire style tag
-                $node->parentNode->removeChild($node);
+                    // replace the nodeValue with just the Media Queries
+                    $node->nodeValue = \implode("\n", $mqs[0]);
+                } else {
+                    // remove the entire style tag
+                    $node->parentNode->removeChild($node);
+                }
             }
         }
     }
@@ -928,7 +936,7 @@ class CssToInlineStyles
     private function stripeMediaQueries($css): string
     {
         // remove comments previously to matching media queries
-        $css = \preg_replace(self::$styleCommentRegEx, '', $css);
+        $css = (string) \preg_replace(self::$styleCommentRegEx, '', $css);
 
         return (string) \preg_replace(self::$cssMediaQueriesRegEx, '', $css);
     }

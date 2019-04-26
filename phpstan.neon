@@ -6,5 +6,4 @@ parameters:
     autoload_files:
         - %rootDir%/vendor/autoload.php
     ignoreErrors:
-        # phpstan errors?
-        - '#Function mb_decode_numericentity invoked with.*#'
+        - '#Binary operation "-" between voku\\CssToInlineStyles\\Specificity#'
