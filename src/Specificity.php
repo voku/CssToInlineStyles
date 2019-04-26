@@ -13,79 +13,77 @@ namespace voku\CssToInlineStyles;
  */
 class Specificity
 {
+    /**
+     * The number of ID selectors in the selector
+     *
+     * @var int
+     */
+    private $a;
 
-  /**
-   * The number of ID selectors in the selector
-   *
-   * @var int
-   */
-  private $a;
+    /**
+     * The number of class selectors, attributes selectors, and pseudo-classes in the selector
+     *
+     * @var int
+     */
+    private $b;
 
-  /**
-   *
-   * The number of class selectors, attributes selectors, and pseudo-classes in the selector
-   *
-   * @var int
-   */
-  private $b;
+    /**
+     * The number of type selectors and pseudo-elements in the selector
+     *
+     * @var int
+     */
+    private $c;
 
-  /**
-   * The number of type selectors and pseudo-elements in the selector
-   *
-   * @var int
-   */
-  private $c;
+    /**
+     * @param int $a The number of ID selectors in the selector
+     * @param int $b The number of class selectors, attributes selectors, and pseudo-classes in the selector
+     * @param int $c The number of type selectors and pseudo-elements in the selector
+     */
+    public function __construct($a = 0, $b = 0, $c = 0)
+    {
+        $this->a = $a;
+        $this->b = $b;
+        $this->c = $c;
+    }
 
-  /**
-   * @param int $a The number of ID selectors in the selector
-   * @param int $b The number of class selectors, attributes selectors, and pseudo-classes in the selector
-   * @param int $c The number of type selectors and pseudo-elements in the selector
-   */
-  public function __construct($a = 0, $b = 0, $c = 0)
-  {
-    $this->a = $a;
-    $this->b = $b;
-    $this->c = $c;
-  }
+    /**
+     * Increase the current specificity by adding the three values
+     *
+     * @param int $a The number of ID selectors in the selector
+     * @param int $b The number of class selectors, attributes selectors, and pseudo-classes in the selector
+     * @param int $c The number of type selectors and pseudo-elements in the selector
+     */
+    public function increase($a, $b, $c)
+    {
+        $this->a += $a;
+        $this->b += $b;
+        $this->c += $c;
+    }
 
-  /**
-   * Increase the current specificity by adding the three values
-   *
-   * @param int $a The number of ID selectors in the selector
-   * @param int $b The number of class selectors, attributes selectors, and pseudo-classes in the selector
-   * @param int $c The number of type selectors and pseudo-elements in the selector
-   */
-  public function increase($a, $b, $c)
-  {
-    $this->a += $a;
-    $this->b += $b;
-    $this->c += $c;
-  }
+    /**
+     * Get the specificity values as an array
+     *
+     * @return array
+     */
+    public function getValues(): array
+    {
+        return [$this->a, $this->b, $this->c];
+    }
 
-  /**
-   * Get the specificity values as an array
-   *
-   * @return array
-   */
-  public function getValues(): array
-  {
-    return [$this->a, $this->b, $this->c];
-  }
-
-  /**
-   * Calculate the specificity based on a CSS Selector string,
-   * Based on the patterns from premailer/css_parser by Alex Dunae
-   *
-   * @see https://github.com/premailer/css_parser/blob/master/lib/css_parser/regexps.rb
-   *
-   * @param string $selector
-   *
-   * @return static
-   */
-  public static function fromSelector(string $selector)
-  {
-    $pattern_a = "  \#";
-    $pattern_b = "  (\.[\w]+)                     # classes
+    /**
+     * Calculate the specificity based on a CSS Selector string,
+     * Based on the patterns from premailer/css_parser by Alex Dunae
+     *
+     * @see https://github.com/premailer/css_parser/blob/master/lib/css_parser/regexps.rb
+     *
+     * @param string $selector
+     *
+     * @return static
+     */
+    public static function fromSelector(string $selector)
+    {
+        $pattern_a = "  \#";
+        $pattern_b = "  (\.[\w]+)                     # classes
                         |
                         \[(\w+)                       # attributes
                         |
@@ -102,7 +100,7 @@ class Specificity
                           |empty|contains
                         ))";
 
-    $pattern_c = "  ((^|[\s\+\>\~]+)[\w]+       # elements
+        $pattern_c = "  ((^|[\s\+\>\~]+)[\w]+       # elements
                         |
                         \:{1,2}(                    # pseudo-elements
                           after|before
@@ -111,30 +109,30 @@ class Specificity
                         )
                       )";
 
-    return new static(
-        preg_match_all("/{$pattern_a}/ix", $selector, $matches),
-        preg_match_all("/{$pattern_b}/ix", $selector, $matches),
-        preg_match_all("/{$pattern_c}/ix", $selector, $matches)
+        return new static(
+        \preg_match_all("/{$pattern_a}/ix", $selector, $matches),
+        \preg_match_all("/{$pattern_b}/ix", $selector, $matches),
+        \preg_match_all("/{$pattern_c}/ix", $selector, $matches)
     );
-  }
-
-  /**
-   * Returns <0 when $specificity is greater, 0 when equal, >0 when smaller
-   *
-   * @param Specificity $specificity
-   *
-   * @return int
-   */
-  public function compareTo(self $specificity): int
-  {
-    if ($this->a !== $specificity->a) {
-      return $this->a - $specificity->a;
     }
 
-    if ($this->b !== $specificity->b) {
-      return $this->b - $specificity->b;
-    }
+    /**
+     * Returns <0 when $specificity is greater, 0 when equal, >0 when smaller
+     *
+     * @param Specificity $specificity
+     *
+     * @return int
+     */
+    public function compareTo(self $specificity): int
+    {
+        if ($this->a !== $specificity->a) {
+            return $this->a - $specificity->a;
+        }
 
-    return $this->c - $specificity->c;
-  }
+        if ($this->b !== $specificity->b) {
+            return $this->b - $specificity->b;
+        }
+
+        return $this->c - $specificity->c;
+    }
 }
