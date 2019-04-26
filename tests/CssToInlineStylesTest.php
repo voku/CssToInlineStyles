@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace voku\CssToInlineStyles\tests;
 
 use voku\CssToInlineStyles\CssToInlineStyles;
@@ -622,7 +624,7 @@ EOF;
 
     public function testNoHtml()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException('Exception');
         $this->expectExceptionMessage('No HTML provided.');
 
         $this->cssToInlineStyles->setHTML('');

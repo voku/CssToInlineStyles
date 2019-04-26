@@ -34,7 +34,7 @@ return PhpCsFixer\Config::create()
                                 ],
                                 'date_time_immutable'                           => false,
                                 'declare_equal_normalize'                       => true,
-                                'declare_strict_types'                          => false, // some tests need declare_strict_types === 0
+                                'declare_strict_types'                          => true,
                                 'dir_constant'                                  => true,
                                 'elseif'                                        => true,
                                 'encoding'                                      => true,
@@ -209,7 +209,7 @@ return PhpCsFixer\Config::create()
                                 'static_lambda'                                 => true,
                                 'strict_comparison'                             => true,
                                 'strict_param'                                  => true,
-                                'string_line_ending'                            => false, // bug for e.g. "'<xonxxx=1'"
+                                'string_line_ending'                            => true,
                                 'switch_case_semicolon_to_colon'                => true,
                                 'switch_case_space'                             => true,
                                 'ternary_operator_spaces'                       => true,
