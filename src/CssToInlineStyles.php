@@ -441,10 +441,12 @@ class CssToInlineStyles
      * Remove id and class attributes.
      *
      * @param \DOMXPath $xPath the DOMXPath for the entire document
+     *
+     * @return void
      */
     private function cleanupHTML(\DOMXPath $xPath)
     {
-        /** @var \DOMAttr[]|\DOMNodeList|false $nodes */
+        /** @var \DOMAttr[]|\DOMNodeList<\DOMAttr>|false $nodes */
         $nodes = $xPath->query('//@class | //@id');
         if ($nodes !== false) {
             foreach ($nodes as $node) {
@@ -546,7 +548,7 @@ class CssToInlineStyles
                 }
 
                 // search elements
-                /** @var \DOMElement[]|\DOMNodeList|false $elements */
+                /** @var \DOMElement[]|\DOMNodeList<\DOMElement>|false $elements */
                 $elements = $xPath->query($query);
 
                 // validate elements
@@ -556,8 +558,6 @@ class CssToInlineStyles
 
                 // loop found elements
                 foreach ($elements as $element) {
-
-                    /** @var \DOMElement */
                     if (
                         $ruleSelector === '*'
                         &&
@@ -799,10 +799,13 @@ class CssToInlineStyles
      *
      * INFO: Lower specificity will be sorted to the beginning of the array.
      *
-     * @param Specificity[] $e1 the first element
-     * @param Specificity[] $e2 the second element
+     * @param array $e1 the first element
+     * @param array $e2 the second element
      *
      * @return int
+     *
+     * @psalm-param array<specificity: Specificity, order: int> $e1
+     * @psalm-param array<specificity: Specificity, order: int> $e2
      */
     private static function sortOnSpecificity(array $e1, array $e2): int
     {
@@ -888,11 +891,13 @@ class CssToInlineStyles
      * Strip style tags into the generated HTML.
      *
      * @param \DOMXPath $xPath the DOMXPath for the entire document
+     *
+     * @return void
      */
     private function stripOriginalStyleTags(\DOMXPath $xPath)
     {
         // get all style tags
-        /** @var \DOMElement[]|\DOMNodeList|false $nodes */
+        /** @var \DOMElement[]|\DOMNodeList<\DOMElement>|false $nodes */
         $nodes = $xPath->query('descendant-or-self::style');
         if ($nodes !== false) {
             foreach ($nodes as $node) {
@@ -908,7 +913,9 @@ class CssToInlineStyles
                     $node->nodeValue = \implode("\n", $mqs[0]);
                 } else {
                     // remove the entire style tag
-                    $node->parentNode->removeChild($node);
+                    if ($node->parentNode !== null) {
+                        $node->parentNode->removeChild($node);
+                    }
                 }
             }
         }

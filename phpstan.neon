@@ -1,9 +1,9 @@
 parameters:
+    level: max
     reportUnmatchedIgnoredErrors: false
-    excludes_analyse:
-        - %rootDir%/vendor/*
-        - %rootDir%/tests/*
-    autoload_files:
-        - %rootDir%/vendor/autoload.php
+    checkGenericClassInNonGenericObjectType: true
+    checkMissingIterableValueType: false
+    paths:
+        - %currentWorkingDirectory%/src/
     ignoreErrors:
-        - '#Binary operation "-" between voku\\CssToInlineStyles\\Specificity#'
+        - '#Unsafe usage of new static#'

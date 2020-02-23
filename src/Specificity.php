@@ -52,6 +52,8 @@ class Specificity
      * @param int $a The number of ID selectors in the selector
      * @param int $b The number of class selectors, attributes selectors, and pseudo-classes in the selector
      * @param int $c The number of type selectors and pseudo-elements in the selector
+     *
+     * @return void
      */
     public function increase($a, $b, $c)
     {
@@ -110,10 +112,10 @@ class Specificity
                       )";
 
         return new static(
-        \preg_match_all("/{$pattern_a}/ix", $selector, $matches),
-        \preg_match_all("/{$pattern_b}/ix", $selector, $matches),
-        \preg_match_all("/{$pattern_c}/ix", $selector, $matches)
-    );
+            (int)\preg_match_all("/{$pattern_a}/ix", $selector, $matches),
+            (int)\preg_match_all("/{$pattern_b}/ix", $selector, $matches),
+            (int)\preg_match_all("/{$pattern_c}/ix", $selector, $matches)
+        );
     }
 
     /**
