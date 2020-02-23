@@ -1,27 +1,33 @@
-# Changelog 2.0.2
+# Changelog 2.0.3 (2020-02-23)
+
+* update "symfony/css-selector"
+* fix phpstan reported errors
+
+
+# Changelog 2.0.2 (2019-04-26)
 
 * fix reported errors from "phpstan" (level 7)
 * update vendor
 
 
-# Changelog 2.0.1
+# Changelog 2.0.1 (2018-10-20)
 
 * support for PHP 7.3
 * update vendor
 
 
-# Changelog 2.0.0
+# Changelog 2.0.0 (2017-11-25)
 
 * drop support for PHP < 7.0
 * use "strict_types"
 
 
-# Changelog 1.6.1
+# Changelog 1.6.1 (2015-06-29)
 
 * Fixed security breach (execution rights)
 
 
-# Changelog 1.6.0
+# Changelog 1.6.0 (2015-06-29)
 
 * Fixed UTF8 usage 
 * Fixed "DOMDocument" encoding
