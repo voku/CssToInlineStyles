@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['7.3', '7.4', '8.0', '8.1', '8.2', '8.3']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: none
+          tools: composer:v2
+
+      - run: composer update --no-interaction --prefer-dist --no-progress
+
+      - run: vendor/bin/phpunit -c phpunit.xml
+
+  static-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer:v2
+
+      - run: composer update --no-interaction --prefer-dist --no-progress
+
+      - run: vendor/bin/phpstan analyse
+
+  coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: xdebug
+          tools: composer:v2
+
+      - run: composer update --no-interaction --prefer-dist --no-progress
+
+      - run: mkdir -p build/logs
+
+      - run: vendor/bin/phpunit -c phpunit.xml --coverage-clover build/logs/clover.xml
+
+      - uses: codecov/codecov-action@v5
+        with:
+          files: build/logs/clover.xml

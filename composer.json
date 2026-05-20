@@ -33,7 +33,8 @@
     "ext-dom": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "~6.0 || ~7.0"
+    "phpstan/phpstan": "^1.12",
+    "phpunit/phpunit": "^9.6"
   },
   "autoload": {
     "psr-4": {
