@@ -7,7 +7,6 @@
 [![Latest Stable Version](https://poser.pugx.org/voku/css-to-inline-styles/v/stable)](https://packagist.org/packages/voku/css-to-inline-styles) 
 [![Total Downloads](https://poser.pugx.org/voku/css-to-inline-styles/downloads)](https://packagist.org/packages/voku/css-to-inline-styles) 
 [![Latest Unstable Version](https://poser.pugx.org/voku/css-to-inline-styles/v/unstable)](https://packagist.org/packages/voku/css-to-inline-styles) 
-[![CI](https://github.com/voku/CssToInlineStyles/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/voku/CssToInlineStyles/actions/workflows/ci.yml)
 [![License](https://poser.pugx.org/voku/css-to-inline-styles/license)](https://packagist.org/packages/voku/css-to-inline-styles)
 
 # CssToInlineStyles class
