@@ -18,12 +18,12 @@ final class CssToInlineStylesTest extends \PHPUnit\Framework\TestCase
      */
     protected $cssToInlineStyles;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->cssToInlineStyles = new CssToInlineStyles();
     }
 
-    protected function teardown()
+    protected function tearDown(): void
     {
         $this->cssToInlineStyles = null;
     }
@@ -521,7 +521,7 @@ EOF;
         $this->cssToInlineStyles->setCSS($css);
         $actual = $this->cssToInlineStyles->convert(true);
 
-        static::assertContains('<img></img>', $actual);
+        static::assertStringContainsString('<img></img>', $actual);
     }
 
     public function testCleanup()
@@ -602,14 +602,14 @@ EOF;
         $this->cssToInlineStyles->setEncoding('ISO-8859-1');
         $result = $this->runHTMLToCSS($html, $css, $expected);
 
-        static::assertContains('<p>H', $result);
-        static::assertContains('Iñtërnâtiônàlizætiøn', $result);
+        static::assertStringContainsString('<p>H', $result);
+        static::assertStringContainsString('Iñtërnâtiônàlizætiøn', $result);
     }
 
     public function testEncodingUtf8()
     {
         $testString = \file_get_contents(__DIR__ . '/fixtures/test1Utf8.txt');
-        static::assertContains('Iñtërnâtiônàlizætiøn', $testString);
+        static::assertStringContainsString('Iñtërnâtiônàlizætiøn', $testString);
 
         $html = '<p>' . $testString . '</p>';
         $css = '';
@@ -618,13 +618,13 @@ EOF;
         $this->cssToInlineStyles->setEncoding('UTF-8');
         $result = $this->runHTMLToCSS($html, $css, $expected);
 
-        static::assertContains('<p>Hírek', $result);
-        static::assertContains('Iñtërnâtiônàlizætiøn', $result);
+        static::assertStringContainsString('<p>Hírek', $result);
+        static::assertStringContainsString('Iñtërnâtiônàlizætiøn', $result);
     }
 
     public function testNoHtml()
     {
-        $this->expectException('Exception');
+        $this->expectException(\Exception::class);
         $this->expectExceptionMessage('No HTML provided.');
 
         $this->cssToInlineStyles->setHTML('');
@@ -640,7 +640,7 @@ EOF;
         $this->cssToInlineStyles->setHTML($html);
         $this->cssToInlineStyles->setCSS('');
 
-        static::assertNotContains('<?xml', $this->cssToInlineStyles->convert(true));
+        static::assertStringNotContainsString('<?xml', $this->cssToInlineStyles->convert(true));
     }
 
     public function testXMLHeaderIsRemovedv2()
