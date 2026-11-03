@@ -20,7 +20,7 @@ jobs:
         php: ['7.3', '7.4']
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -49,7 +49,7 @@ jobs:
         php: ['8.3', '8.4', '8.5']
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -62,13 +62,24 @@ jobs:
       - name: Validate Composer manifest
         run: composer validate --no-check-publish
 
-      - name: Resolve runtime dependency graph without legacy PHPUnit
-        run: composer update --no-dev --prefer-dist --no-interaction --no-progress
+      - name: Prepare runtime-only dependency manifest
+        run: |
+          php -r '
+            $manifest = json_decode(file_get_contents("composer.json"), true, 512, JSON_THROW_ON_ERROR);
+            unset($manifest["require-dev"], $manifest["autoload-dev"]);
+            file_put_contents(
+              "composer.ci-runtime.json",
+              json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . PHP_EOL
+            );
+          '
+
+      - name: Resolve actual runtime dependencies without dev-only packages
+        run: COMPOSER=composer.ci-runtime.json composer update --no-dev --prefer-dist --no-interaction --no-progress
 
       - name: Record the selected versions for Renovate review
         run: |
-          composer show symfony/css-selector
-          composer show voku/simple_html_dom
+          COMPOSER=composer.ci-runtime.json composer show symfony/css-selector
+          COMPOSER=composer.ci-runtime.json composer show voku/simple_html_dom
 
       - name: Check PHP source syntax
         run: find src -type f -name '*.php' -print0 | xargs -0 -n 1 php -l
