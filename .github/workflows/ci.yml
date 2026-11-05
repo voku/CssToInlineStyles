@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  legacy-unit-tests:
+    name: PHPUnit (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.3', '7.4']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, libxml, simplexml
+          coverage: xdebug
+          tools: composer:v2.2
+
+      - name: Validate Composer manifest
+        run: composer validate --no-check-publish
+
+      - name: Resolve and install test dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run existing PHPUnit suite
+        run: php vendor/bin/phpunit -c phpunit.xml
+
+  runtime-smoke:
+    name: Runtime smoke (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.3', '8.4', '8.5']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, libxml, simplexml
+          coverage: none
+          tools: composer:v2
+
+      - name: Validate Composer manifest
+        run: composer validate --no-check-publish
+
+      - name: Prepare runtime-only dependency manifest
+        run: |
+          php -r '
+            $manifest = json_decode(file_get_contents("composer.json"), true, 512, JSON_THROW_ON_ERROR);
+            unset($manifest["require-dev"], $manifest["autoload-dev"]);
+            file_put_contents(
+              "composer.ci-runtime.json",
+              json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . PHP_EOL
+            );
+          '
+
+      - name: Resolve actual runtime dependencies without dev-only packages
+        run: COMPOSER=composer.ci-runtime.json composer update --no-dev --prefer-dist --no-interaction --no-progress
+
+      - name: Record the selected versions for Renovate review
+        run: |
+          COMPOSER=composer.ci-runtime.json composer show symfony/css-selector
+          COMPOSER=composer.ci-runtime.json composer show voku/simple_html_dom
+
+      - name: Check PHP source syntax
+        run: find src -type f -name '*.php' -print0 | xargs -0 -n 1 php -l
+
+      - name: Verify CSS conversion on the resolved dependency graph
+        run: php tests/smoke.php
